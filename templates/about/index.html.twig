@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}À propos — HAKI YETU asbl{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+        <p class="section-eyebrow">À propos</p>
+        <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">Qui est HAKI YETU asbl ?</h1>
+
+        <div class="prose-body mt-6 space-y-4">
+            <p>
+                HAKI YETU asbl est une association sans but lucratif de droit congolais, créée en
+                mai 2011 par des personnes vivant avec handicap, à la suite de la recrudescence de
+                la discrimination, de l'exclusion — surtout des enfants handicapés — et de la
+                pauvreté extrême des personnes vivant avec handicap dans les territoires d'Uvira,
+                de Fizi et de Mwenga, au Sud-Kivu.
+            </p>
+            <p>
+                À travers des séances de sensibilisation dans les ménages sur l'intégration des
+                enfants handicapés au sein des familles, et dans les groupements sociaux sur les
+                droits des personnes vivant avec handicap, l'initiative a rencontré le soutien de
+                plusieurs personnalités civiles, politiques et religieuses.
+            </p>
+        </div>
+
+        <div class="mt-10 grid gap-6 sm:grid-cols-2">
+            <div class="rounded-xl border border-brand-200 bg-white p-6">
+                <h2 class="font-display text-lg font-semibold text-navy-900">Vision</h2>
+                <p class="mt-2 text-sm text-ink-900/70">Exclusion Zéro.</p>
+                <p class="mt-1 text-xs text-ink-900/50">Cible : personnes handicapées. Bénéficiaires : personnes handicapées et autres personnes vulnérables.</p>
+            </div>
+            <div class="rounded-xl border border-brand-200 bg-white p-6">
+                <h2 class="font-display text-lg font-semibold text-navy-900">Mission</h2>
+                <p class="mt-2 text-sm text-ink-900/70">
+                    Accompagner les personnes vivant avec handicap dans leur diversité, dans le
+                    processus de leur intégration participative et effective aux instances de prise
+                    de décision, des actions de paix et de développement.
+                </p>
+            </div>
+        </div>
+
+        <div class="mt-6 rounded-xl bg-navy-900 p-6 text-white">
+            <h2 class="font-display text-lg font-semibold">Valeurs</h2>
+            <p class="mt-2 text-sm text-brand-100/80">
+                Respect de la dignité humaine, l'intégrité, l'équité et la solidarité.
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="font-display text-2xl font-semibold text-navy-900">Rayon d'action</h2>
+            <p class="prose-body mt-3">
+                HAKI YETU a son siège au Sud-Kivu et intervient dans trois provinces de la RD
+                Congo : Sud-Kivu, Nord-Kivu et Kasaï. L'association cherche à étendre ses actions
+                aux autres provinces de la RD Congo et à la sous-région des Grands Lacs.
+            </p>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="font-display text-2xl font-semibold text-navy-900">Structure organisationnelle</h2>
+            <dl class="mt-4 space-y-4">
+                {% for organe in [
+                    {titre: "Assemblée Générale (A.G)", texte: "L'organe suprême de HAKI YETU, composé de tous les membres effectifs de l'organisation."},
+                    {titre: "Conseil d'Administration (C.A)", texte: "L'organe de direction et d'orientation de toutes les actions de l'organisation. Ses membres sont élus par l'assemblée générale pour un mandat de quatre ans, renouvelable une seule fois."},
+                    {titre: "Commission de contrôle", texte: "L'organe de contrôle administratif et financier de HAKI YETU."},
+                    {titre: "Secrétariat exécutif", texte: "L'organe technique chargé de la gestion quotidienne de l'organisation."}
+                ] %}
+                    <div class="rounded-lg border border-brand-200 bg-white p-5">
+                        <dt class="font-display font-semibold text-navy-900">{{ organe.titre }}</dt>
+                        <dd class="mt-1 text-sm text-ink-900/70">{{ organe.texte }}</dd>
+                    </div>
+                {% endfor %}
+            </dl>
+        </div>
+
+        <div class="mt-10">
+            <h2 class="font-display text-2xl font-semibold text-navy-900">Nos partenaires</h2>
+            <ul class="mt-4 flex flex-wrap gap-3">
+                {% for partenaire in ['Fondation ABILIS', 'MIVA Suisse', 'Aide fraternelle salvatorienne', 'Handicap International', "Mairie de la ville d'Uvira"] %}
+                    <li class="rounded-lg border border-brand-200 bg-white px-4 py-2 text-sm font-medium text-navy-700">{{ partenaire }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endblock %}

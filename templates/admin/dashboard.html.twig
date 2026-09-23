@@ -1,0 +1,221 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}Tableau de bord{% endblock %}
+
+{% block main %}
+    <div class="row mb-4">
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Messages non lus</h6>
+                            <h2 class="card-title mb-0">{{ nb_messages_non_lus }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-envelope fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\MessageCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Total messages</h6>
+                            <h2 class="card-title mb-0">{{ nb_messages_total }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-comments fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\MessageCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Activités</h6>
+                            <h2 class="card-title mb-0">{{ nb_activites }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-hands-helping fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\ActiviteCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Albums photos</h6>
+                            <h2 class="card-title mb-0">{{ nb_albums }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-images fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\AlbumCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-secondary text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Annonces actives</h6>
+                            <h2 class="card-title mb-0">{{ nb_annonces_actives }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-bullhorn fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\AnnonceCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-dark text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Total annonces</h6>
+                            <h2 class="card-title mb-0">{{ nb_annonces_total }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-newspaper fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\AnnonceCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-hands-helping text-info me-2"></i>
+                        Dernières activités
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if latest_activites|length > 0 %}
+                        <div class="list-group list-group-flush">
+                            {% for activite in latest_activites %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ activite.titre }}</strong>
+                                        {% if activite.date %}
+                                            <small class="text-muted d-block">{{ activite.date|date('d/m/Y') }}</small>
+                                        {% endif %}
+                                    </div>
+                                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\ActiviteCrudController').setAction('edit').setEntityId(activite.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Aucune activité pour le moment.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\ActiviteCrudController') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-plus me-1"></i> Ajouter une activité
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <h5 class="card-title mb-0">
+                        <i class="fas fa-envelope text-primary me-2"></i>
+                        Messages non lus
+                    </h5>
+                </div>
+                <div class="card-body">
+                    {% if latest_messages|length > 0 %}
+                        <div class="list-group list-group-flush">
+                            {% for message in latest_messages %}
+                                <div class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>{{ message.nom }}</strong>
+                                        <small class="text-muted d-block">{{ message.email }}</small>
+                                        <small class="text-muted">{{ message.createdAt|date('d/m/Y H:i') }}</small>
+                                    </div>
+                                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\MessageCrudController').setAction('edit').setEntityId(message.id) }}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="text-muted mb-0">Aucun message non lu.</p>
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white">
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\MessageCrudController') }}" class="btn btn-primary btn-sm">
+                        <i class="fas fa-inbox me-1"></i> Voir tous les messages
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-lightbulb text-warning me-2"></i>
+                        Actions rapides
+                    </h5>
+                    <div class="row mt-3">
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\AnnonceCrudController').setAction('new') }}" class="btn btn-outline-primary w-100">
+                                <i class="fas fa-bullhorn me-2"></i> Nouvelle annonce
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\ActiviteCrudController').setAction('new') }}" class="btn btn-outline-success w-100">
+                                <i class="fas fa-hands-helping me-2"></i> Nouvelle activité
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\AlbumCrudController').setAction('new') }}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-images me-2"></i> Nouvel album
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="/" target="_blank" class="btn btn-outline-info w-100">
+                                <i class="fas fa-globe me-2"></i> Voir le site
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

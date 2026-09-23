@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@source not "../../public";
+
+@theme {
+    /* Palette — inspirée du dépliant HAKI YETU (bleu nuit, rouge-terre, fond chaud) */
+    --color-brand-50: #fbf6ea;
+    --color-brand-100: #f7f1e6;
+    --color-brand-200: #ecd9b8;
+    --color-brand-700: #c1440e;
+    --color-brand-800: #9c360b;
+
+    --color-navy-50: #eef2f6;
+    --color-navy-600: #2a4c6e;
+    --color-navy-700: #1c3a5a;
+    --color-navy-900: #12253a;
+
+    --color-sage-600: #3f6e52;
+
+    --color-ink-900: #221f1a;
+
+    --font-display: "Fraunces", ui-serif, Georgia, serif;
+    --font-sans: "Work Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 5rem;
+    }
+
+    body {
+        font-family: var(--font-sans);
+        color: var(--color-ink-900);
+        background-color: var(--color-brand-100);
+    }
+
+    h1, h2, h3, h4 {
+        font-family: var(--font-display);
+    }
+
+    :focus-visible {
+        outline: 3px solid var(--color-brand-700);
+        outline-offset: 2px;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg bg-brand-700 px-6 py-3 text-base font-semibold text-white shadow-sm transition hover:bg-brand-800 focus-visible:outline-brand-700;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-lg border-2 border-navy-700 px-6 py-3 text-base font-semibold text-navy-700 transition hover:bg-navy-700 hover:text-white;
+    }
+
+    .section-eyebrow {
+        @apply text-sm font-semibold text-brand-700;
+    }
+
+    .prose-body {
+        @apply max-w-prose text-base leading-relaxed text-ink-900/80;
+    }
+}

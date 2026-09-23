@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Galerie photo — HAKI YETU asbl | Formations, distributions et activités{% endblock %}
+
+{% block meta_description %}Galerie photo de HAKI YETU asbl : formations, distributions, sessions de sensibilisation, activités à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo). Revivez nos actions en images.{% endblock %}
+
+{% block og_title %}Galerie photo — HAKI YETU asbl | Formations, distributions et activités{% endblock %}
+{% block og_description %}Galerie photo de HAKI YETU asbl : formations, distributions, sessions de sensibilisation, activités à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo). Revivez nos actions en images.{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <p class="section-eyebrow">En images</p>
+        <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">Galerie photo</h1>
+        <p class="prose-body mt-4">Formations, distributions, sessions de sensibilisation... revivez nos activités en images, classées par album.</p>
+
+        {% if albums.getTotalItemCount() > 0 %}
+            <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {% for album in albums %}
+                    <a href="{{ path('app_galerie_show', {id: album.id}) }}" class="group block overflow-hidden rounded-xl bg-white ring-1 ring-brand-200">
+                        {% set cover = album.coverImage %}
+                        {% if cover %}
+                            <img src="{{ vich_uploader_asset(cover, 'imageFile')|imagine_filter('medium') }}" alt="" loading="lazy" class="h-52 w-full object-cover transition duration-300 group-hover:scale-105">
+                        {% else %}
+                            <div class="flex h-52 w-full items-center justify-center bg-navy-50 text-navy-600">
+                                <span class="font-display text-sm">Album photo</span>
+                            </div>
+                        {% endif %}
+                        <div class="p-5">
+                            <h2 class="font-display text-lg font-semibold text-navy-900">{{ album.titre }}</h2>
+                            {% if album.date %}
+                                <p class="mt-1 text-xs font-medium uppercase tracking-wide text-brand-700">{{ album.date|date('d/m/Y') }}</p>
+                            {% endif %}
+                            {% if album.description %}
+                                <p class="mt-2 text-sm text-ink-900/70">{{ album.description|u.truncate(90, '…') }}</p>
+                            {% endif %}
+                            <p class="mt-2 text-xs text-ink-900/50">{{ album.images|length }} photo(s)</p>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="mt-10 flex justify-center">
+                {{ knp_pagination_render(albums) }}
+            </div>
+        {% else %}
+            <div class="mt-10 rounded-xl border border-dashed border-brand-200 bg-white p-10 text-center text-ink-900/60">
+                Aucun album publié pour le moment.
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}

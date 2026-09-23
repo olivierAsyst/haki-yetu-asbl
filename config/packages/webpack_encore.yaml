@@ -1,0 +1,7 @@
+webpack_encore:
+    output_path: '%kernel.project_dir%/public/build'
+    strict_mode: true
+    cache: true
+
+    # If using the .env file to control the environment, you can override this in .env.local
+    crossorigin: false

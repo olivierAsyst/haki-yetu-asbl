@@ -1,0 +1,9 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    globals:
+        contact_recipient_email: '%env(CONTACT_RECIPIENT_EMAIL)%'
+        site_name: "HAKI YETU asbl"
+
+when@test:
+    twig:
+        strict_variables: true

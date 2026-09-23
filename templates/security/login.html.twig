@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion — Back-office HAKI YETU</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    {{ encore_entry_link_tags('app') }}
+</head>
+<body class="flex min-h-screen items-center justify-center bg-navy-900 px-4">
+    <div class="w-full max-w-sm rounded-2xl bg-white p-8 shadow-xl">
+        <div class="text-center">
+            <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-navy-700 font-display text-xl font-semibold text-white">HY</span>
+            <h1 class="mt-4 font-display text-xl font-semibold text-navy-900">Back-office HAKI YETU</h1>
+            <p class="mt-1 text-sm text-ink-900/60">Connectez-vous pour gérer le contenu du site.</p>
+        </div>
+
+        {% if error %}
+            <div class="mt-6 rounded-lg border border-brand-700/30 bg-brand-700/10 px-4 py-3 text-sm text-brand-800">
+                {{ error.messageKey|trans(error.messageData, 'security') }}
+            </div>
+        {% endif %}
+
+        <form method="post" class="mt-6 space-y-4">
+            <div>
+                <label for="email" class="mb-1.5 block text-sm font-medium text-navy-900">E-mail</label>
+                <input type="email" value="{{ last_username }}" name="email" id="email" required autofocus
+                       class="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-700/30">
+            </div>
+            <div>
+                <label for="password" class="mb-1.5 block text-sm font-medium text-navy-900">Mot de passe</label>
+                <input type="password" name="password" id="password" required
+                       class="w-full rounded-lg border border-stone-300 px-4 py-2.5 focus:border-brand-700 focus:outline-none focus:ring-2 focus:ring-brand-700/30">
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+            <button type="submit" class="btn-primary w-full">Se connecter</button>
+        </form>
+
+        <a href="{{ path('app_home') }}" class="mt-6 block text-center text-sm text-ink-900/60 hover:text-brand-700">← Retour au site</a>
+    </div>
+</body>
+</html>

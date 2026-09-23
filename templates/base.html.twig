@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}HAKI YETU asbl — Pour l'exclusion zéro des personnes vivant avec handicap{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}HAKI YETU asbl accompagne les personnes vivant avec handicap à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo) vers une intégration participative et effective.{% endblock %}">
+
+    <!-- SEO Meta Tags -->
+    <meta name="keywords" content="handicap, RD Congo, Sud-Kivu, Uvira, Fizi, Mwenga, inclusion, droits humains, association asbl, ONG, personnes handicapées">
+    <meta name="author" content="HAKI YETU asbl">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+    <meta property="og:title" content="{% block og_title %}HAKI YETU asbl — Pour l'exclusion zéro des personnes vivant avec handicap{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}HAKI YETU asbl accompagne les personnes vivant avec handicap à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo) vers une intégration participative et effective.{% endblock %}">
+    <meta property="og:image" content="{{ absolute_url(asset('images/haki.png')) }}">
+    <meta property="og:locale" content="fr_FR">
+    <meta property="og:site_name" content="HAKI YETU asbl">
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:url" content="{{ app.request.schemeAndHttpHost ~ app.request.requestUri }}">
+    <meta name="twitter:title" content="{% block twitter_title %}HAKI YETU asbl — Pour l'exclusion zéro des personnes vivant avec handicap{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}HAKI YETU asbl accompagne les personnes vivant avec handicap à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo) vers une intégration participative et effective.{% endblock %}">
+    <meta name="twitter:image" content="{{ absolute_url(asset('images/haki.png')) }}">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "NGO",
+        "name": "HAKI YETU asbl",
+        "description": "Association de défense des droits des personnes vivant avec handicap à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo)",
+        "url": "{{ absolute_url(path('app_home')) }}",
+        "logo": "{{ absolute_url(asset('images/haki.png')) }}",
+        "foundingDate": "2011-05",
+        "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Qt Kimanga, Av du Congo, N°68",
+            "addressLocality": "Uvira",
+            "addressRegion": "Sud-Kivu",
+            "postalCode": "BP 18",
+            "addressCountry": "CD"
+        },
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "telephone": "+243994116041",
+            "email": "hakiyetuass@yahoo.fr",
+            "contactType": "customer service"
+        },
+        "sameAs": [
+            "https://www.facebook.com"
+        ]
+    }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body class="flex min-h-screen flex-col bg-brand-100 text-ink-900 antialiased">
+
+<a href="#contenu" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-navy-900 focus:px-4 focus:py-2 focus:text-white">
+    Aller au contenu principal
+</a>
+
+<header class="sticky top-0 z-40 border-b border-brand-200 bg-brand-50/95 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
+        <a href="{{ path('app_home') }}" class="flex items-center gap-3">
+            <span class="flex h-11 w-11 items-center justify-center rounded-full bg-navy-700 font-display text-lg font-semibold text-white">
+                <img
+                    class "fit-picture"
+                    src="{{ asset('images/haki.png') }}"
+                    alt="Tranche de pamplemousse sur une pile d'autres tranches" />
+            </span>
+            <span class="leading-tight">
+                <span class="block font-display text-lg font-semibold text-navy-900">HAKI YETU</span>
+                <span class="block text-xs font-medium uppercase tracking-wide text-ink-900/60">asbl — Uvira, RD Congo</span>
+            </span>
+        </a>
+
+        <nav class="hidden items-center gap-8 md:flex" aria-label="Navigation principale">
+            {% set nav_links = {
+                'app_home': "Accueil",
+                'app_activites': "Activités",
+                'app_galerie': "Galerie",
+                'app_about': "À propos",
+                'app_contact': "Contact"
+            } %}
+            {% for route, label in nav_links %}
+                <a href="{{ path(route) }}"
+                   class="text-sm font-medium transition hover:text-brand-700 {{ app.request.attributes.get('_route') == route ? 'text-brand-700' : 'text-ink-900' }}">
+                    {{ label }}
+                </a>
+            {% endfor %}
+        </nav>
+
+        <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
+                class="inline-flex items-center justify-center rounded-lg border border-brand-200 p-2 text-navy-900 md:hidden">
+            <span class="sr-only">Ouvrir le menu</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+        </button>
+    </div>
+
+    <nav id="mobile-menu" class="hidden border-t border-brand-200 bg-brand-50 md:hidden" aria-label="Navigation mobile">
+        <div class="flex flex-col px-4 py-3">
+            {% for route, label in nav_links %}
+                <a href="{{ path(route) }}"
+                   class="rounded-lg px-3 py-3 text-base font-medium {{ app.request.attributes.get('_route') == route ? 'bg-brand-200/60 text-brand-800' : 'text-ink-900' }}">
+                    {{ label }}
+                </a>
+            {% endfor %}
+        </div>
+    </nav>
+</header>
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div data-flash class="mx-auto mt-4 max-w-6xl px-4 transition-opacity duration-500 sm:px-6 lg:px-8" role="status">
+            <div class="flex items-start gap-3 rounded-lg border px-4 py-3 text-sm
+                {{ label == 'success' ? 'border-sage-600/30 bg-sage-600/10 text-sage-600' : (label == 'warning' ? 'border-brand-700/30 bg-brand-700/10 text-brand-800' : 'border-navy-600/30 bg-navy-600/10 text-navy-700') }}">
+                <span>{{ message }}</span>
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}
+
+<main id="contenu" class="flex-1">
+    {% block body %}{% endblock %}
+</main>
+
+<footer class="mt-16 border-t border-brand-200 bg-navy-900 text-brand-50">
+    <div class="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:px-6 md:grid-cols-3 lg:px-8">
+        <div>
+            <span class="font-display text-xl font-semibold text-white">HAKI YETU asbl</span>
+            <p class="mt-3 max-w-xs text-sm text-brand-50/70">
+                « Pour l'exclusion zéro des personnes vivant avec handicap. »
+                Association sans but lucratif de droit congolais, créée en mai 2011.
+            </p>
+        </div>
+
+        <div>
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-brand-200">Contact</h2>
+            <ul class="mt-3 space-y-2 text-sm text-brand-50/80">
+                <li>Économat Général du Diocèse d'Uvira</li>
+                <li>Qt Kimanga, Av du Congo, N°68, Ville d'Uvira</li>
+                <li>B.P. 18 Uvira, Sud-Kivu, RD Congo</li>
+                <li><a class="hover:text-white" href="tel:+243994116041">+243 994 116 041</a></li>
+                <li><a class="hover:text-white" href="mailto:hakiyetuass@yahoo.fr">hakiyetuass@yahoo.fr</a></li>
+            </ul>
+        </div>
+
+        <div>
+            <h2 class="text-sm font-semibold uppercase tracking-wide text-brand-200">Liens rapides</h2>
+            <ul class="mt-3 space-y-2 text-sm text-brand-50/80">
+                <li><a class="hover:text-white" href="{{ path('app_activites') }}">Nos activités</a></li>
+                <li><a class="hover:text-white" href="{{ path('app_galerie') }}">Galerie photos</a></li>
+                <li><a class="hover:text-white" href="{{ path('app_contact') }}">Nous contacter</a></li>
+                <li><a class="hover:text-white" href="https://www.facebook.com" rel="noopener" target="_blank">Page Facebook : Haki yetu asbl</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="border-t border-white/10 py-4 text-center text-xs text-brand-50/60">
+        © {{ "now"|date("Y") }} HAKI YETU asbl — Uvira, Fizi, Mwenga · Sud-Kivu, RD Congo
+    </div>
+</footer>
+
+</body>
+</html>

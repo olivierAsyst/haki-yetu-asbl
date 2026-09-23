@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos activités — HAKI YETU asbl | Formations et actions sur le terrain{% endblock %}
+
+{% block meta_description %}Découvrez les activités de HAKI YETU asbl : formations professionnelles, accompagnement scolaire, coopératives, sensibilisation à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo).{% endblock %}
+
+{% block og_title %}Nos activités — HAKI YETU asbl | Formations et actions sur le terrain{% endblock %}
+{% block og_description %}Découvrez les activités de HAKI YETU asbl : formations professionnelles, accompagnement scolaire, coopératives, sensibilisation à Uvira, Fizi et Mwenga (Sud-Kivu, RD Congo).{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <p class="section-eyebrow">Sur le terrain</p>
+        <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">Nos activités</h1>
+        <p class="prose-body mt-4">
+            Formations professionnelles, accompagnement scolaire, coopératives, sensibilisation...
+            découvrez les actions menées par HAKI YETU à Uvira, Fizi et Mwenga.
+        </p>
+
+        {% if activites.getTotalItemCount() > 0 %}
+            <div class="mt-10 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {% for activite in activites %}
+                    <a href="{{ path('app_activites_show', {slug: activite.slug}) }}" class="group flex h-full flex-col overflow-hidden rounded-xl bg-white ring-1 ring-brand-200 transition hover:shadow-md">
+                        {% if activite.imageName %}
+                            <img src="{{ vich_uploader_asset(activite, 'imageFile')|imagine_filter('medium') }}" alt="" loading="lazy" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
+                        {% else %}
+                            <div class="flex h-48 w-full items-center justify-center bg-navy-50 text-navy-600">
+                                <span class="font-display text-sm">HAKI YETU</span>
+                            </div>
+                        {% endif %}
+                        <div class="flex flex-1 flex-col p-5">
+                            <h2 class="font-display text-lg font-semibold text-navy-900 group-hover:text-brand-700">{{ activite.titre }}</h2>
+                            {% if activite.date %}
+                                <p class="mt-1 text-xs font-medium uppercase tracking-wide text-brand-700">{{ activite.date|date('d/m/Y') }}</p>
+                            {% endif %}
+                            {% if activite.description %}
+                                <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-900/70">{{ activite.description|u.truncate(100, '…') }}</p>
+                            {% endif %}
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+
+            <div class="mt-10 flex justify-center">
+                {{ knp_pagination_render(activites) }}
+            </div>
+        {% else %}
+            <div class="mt-10 rounded-xl border border-dashed border-brand-200 bg-white p-10 text-center text-ink-900/60">
+                Aucune activité publiée pour le moment. Revenez bientôt !
+            </div>
+        {% endif %}
+    </section>
+{% endblock %}
