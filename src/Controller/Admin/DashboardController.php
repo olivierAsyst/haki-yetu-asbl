@@ -8,10 +8,14 @@ use App\Entity\Annonce;
 use App\Entity\ImageAlbum;
 use App\Entity\AdminUser;
 use App\Entity\Message;
+use App\Entity\OffreEmploi;
+use App\Entity\Candidature;
 use App\Repository\ActiviteRepository;
 use App\Repository\AlbumRepository;
 use App\Repository\AnnonceRepository;
 use App\Repository\MessageRepository;
+use App\Repository\OffreEmploiRepository;
+use App\Repository\CandidatureRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -24,7 +28,9 @@ class DashboardController extends AbstractDashboardController
         private readonly MessageRepository $messageRepository,
         private readonly ActiviteRepository $activiteRepository,
         private readonly AlbumRepository $albumRepository,
-        private readonly AnnonceRepository $annonceRepository
+        private readonly AnnonceRepository $annonceRepository,
+        private readonly OffreEmploiRepository $offreEmploiRepository,
+        private readonly CandidatureRepository $candidatureRepository
     ) {
     }
 
@@ -38,8 +44,12 @@ class DashboardController extends AbstractDashboardController
             'nb_albums' => $this->albumRepository->count([]),
             'nb_annonces_actives' => $this->annonceRepository->count(['actif' => true]),
             'nb_annonces_total' => $this->annonceRepository->count([]),
+            'nb_offres_actives' => $this->offreEmploiRepository->count(['actif' => true]),
+            'nb_offres_total' => $this->offreEmploiRepository->count([]),
+            'nb_candidatures' => $this->candidatureRepository->count([]),
             'latest_activites' => $this->activiteRepository->findBy([], ['createdAt' => 'DESC'], 3),
             'latest_messages' => $this->messageRepository->findBy(['lu' => false], ['createdAt' => 'DESC'], 5),
+            'latest_candidatures' => $this->candidatureRepository->findBy([], ['createdAt' => 'DESC'], 5),
         ]);
     }
 
@@ -67,5 +77,8 @@ class DashboardController extends AbstractDashboardController
             ->setBadge($this->messageRepository->count(['lu' => false]) ?: null, 'danger');
         yield MenuItem::section('Administration');
         yield MenuItem::linkToCrud('Comptes admin', 'fa fa-user-shield', AdminUser::class);
+        yield MenuItem::section('Recrutement');
+        yield MenuItem::linkToCrud('Offres d\'emploi', 'fa fa-briefcase', OffreEmploi::class);
+        yield MenuItem::linkToCrud('Candidatures', 'fa fa-users', Candidature::class);
     }
 }

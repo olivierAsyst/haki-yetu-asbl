@@ -107,6 +107,57 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Offres actives</h6>
+                            <h2 class="card-title mb-0">{{ nb_offres_actives }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-briefcase fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\OffreEmploiCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Total offres</h6>
+                            <h2 class="card-title mb-0">{{ nb_offres_total }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-file-alt fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\OffreEmploiCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Candidatures</h6>
+                            <h2 class="card-title mb-0">{{ nb_candidatures }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\CandidatureCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="row mb-4">

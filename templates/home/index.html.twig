@@ -9,63 +9,76 @@
 
 {% block body %}
 
-    <section class="relative overflow-hidden">
-        <div class="mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
-            <div>
+    <section class="relative overflow-hidden bg-gradient-to-br from-navy-50 via-brand-50 to-navy-100">
+        <div class="absolute inset-0 bg-pattern opacity-30"></div>
+        <div class="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 sm:px-6 md:grid-cols-2 md:items-center md:py-24 lg:px-8">
+            <div class="animate-fade-in-up">
                 <p class="section-eyebrow">Association de défense des droits · Uvira, Sud-Kivu</p>
-                <h1 class="mt-3 font-display text-4xl font-semibold leading-tight text-navy-900 sm:text-5xl">
-                    Pour l'exclusion zéro des personnes vivant avec handicap.
+                <h1 class="mt-3 font-display text-4xl font-bold leading-tight text-navy-900 sm:text-5xl lg:text-6xl">
+                    Pour l'<span class="text-gradient">exclusion zéro</span> des personnes vivant avec handicap.
                 </h1>
-                <p class="prose-body mt-6">
+                <p class="prose-body mt-6 text-lg">
                     Depuis 2011, HAKI YETU accompagne les personnes vivant avec handicap d'Uvira,
                     Fizi et Mwenga dans leur diversité, vers une intégration participative et
                     effective aux instances de décision, aux actions de paix et de développement.
                 </p>
                 <div class="mt-8 flex flex-wrap gap-4">
-                    <a href="{{ path('app_about') }}" class="btn-primary">Découvrir l'association</a>
-                    <a href="{{ path('app_contact') }}" class="btn-secondary">Nous contacter</a>
+                    <a href="{{ path('app_about') }}" class="btn-primary">
+                        <i class="fas fa-arrow-right"></i> Découvrir l'association
+                    </a>
+                    <a href="{{ path('app_contact') }}" class="btn-secondary">
+                        <i class="fas fa-envelope"></i> Nous contacter
+                    </a>
                 </div>
             </div>
 
-            <div class="relative">
-                <div class="aspect-[4/3] w-full rounded-2xl bg-navy-700 p-8 text-brand-50 shadow-lg">
-                    <p class="font-display text-xl italic leading-snug text-white">
-                        « Respect de la dignité humaine, l'intégrité, l'équité et la solidarité. »
-                    </p>
-                    <p class="mt-4 text-sm text-brand-100/80">— Valeurs de HAKI YETU asbl</p>
-                    <div class="mt-8 flex items-center gap-4 border-t border-white/15 pt-6">
-                        <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-4 border-brand-700 text-2xl font-display font-semibold">
-                            ♿
-                        </span>
-                        <p class="text-sm text-brand-100/80">
-                            Vision : exclusion zéro. Cible : personnes handicapées. Bénéficiaires :
-                            personnes handicapées et autres personnes vulnérables.
+            <div class="relative animate-fade-in">
+                <div class="card-gradient aspect-[4/3] w-full p-8 text-brand-50 shadow-2xl">
+                    <div class="relative z-10">
+                        <p class="font-display text-2xl italic leading-snug text-white">
+                            « Respect de la dignité humaine, l'intégrité, l'équité et la solidarité. »
                         </p>
+                        <p class="mt-4 text-sm text-brand-100/90">— Valeurs de HAKI YETU asbl</p>
+                        <div class="mt-8 flex items-center gap-4 border-t border-white/20 pt-6">
+                            <span class="flex h-16 w-16 shrink-0 items-center justify-center rounded-full border-4 border-brand-700 bg-brand-800 text-3xl font-display font-semibold shadow-lg">
+                                ♿
+                            </span>
+                            <p class="text-sm text-brand-100/90 leading-relaxed">
+                                <strong>Vision :</strong> exclusion zéro.<br>
+                                <strong>Cible :</strong> personnes handicapées.<br>
+                                <strong>Bénéficiaires :</strong> personnes handicapées et autres personnes vulnérables.
+                            </p>
+                        </div>
                     </div>
                 </div>
-                <span class="absolute -bottom-5 -right-5 hidden rounded-xl bg-brand-700 px-5 py-3 font-display text-sm font-semibold text-white shadow-md sm:block">
-                    Depuis mai 2011
+                <span class="absolute -bottom-5 -right-5 hidden rounded-xl bg-gradient-to-r from-brand-700 to-brand-800 px-6 py-4 font-display text-sm font-semibold text-white shadow-xl animate-fade-in sm:block">
+                    <i class="fas fa-calendar-alt mr-2"></i> Depuis mai 2011
                 </span>
             </div>
         </div>
     </section>
 
     {% if annonces|length > 0 %}
-        <section class="bg-navy-900 py-10 text-white" aria-labelledby="annonces-titre">
+        <section class="bg-gradient-to-r from-navy-800 to-navy-900 py-12 text-white" aria-labelledby="annonces-titre">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-                <h2 id="annonces-titre" class="font-display text-2xl font-semibold">À l'affiche</h2>
-                <div class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl text-brand-400"><i class="fas fa-bullhorn"></i></span>
+                    <h2 id="annonces-titre" class="font-display text-3xl font-bold">À l'affiche</h2>
+                </div>
+                <div class="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                     {% for annonce in annonces %}
-                        <article class="rounded-xl bg-white/5 p-5 ring-1 ring-white/10">
-                            <span class="inline-block rounded-full bg-brand-700 px-3 py-1 text-xs font-semibold uppercase tracking-wide">
+                        <article class="card-modern bg-white/10 backdrop-blur-sm p-6 ring-1 ring-white/20 transition-all duration-300 hover:bg-white/20">
+                            <span class="badge-modern badge-primary mb-3">
                                 {{ annonce.typeLabel }}
                             </span>
-                            <h3 class="mt-3 font-display text-lg font-semibold leading-snug">{{ annonce.titre }}</h3>
+                            <h3 class="font-display text-lg font-bold leading-snug text-white">{{ annonce.titre }}</h3>
                             {% if annonce.dateEvenement %}
-                                <p class="mt-1 text-sm text-brand-100/70">{{ annonce.dateEvenement|date('d/m/Y') }}</p>
+                                <p class="mt-2 text-sm text-brand-100/90">
+                                    <i class="fas fa-calendar-alt opacity-75 mr-2"></i> {{ annonce.dateEvenement|date('d/m/Y') }}
+                                </p>
                             {% endif %}
                             {% if annonce.contenu %}
-                                <p class="mt-2 text-sm text-brand-100/80">{{ annonce.contenu|u.truncate(110, '…') }}</p>
+                                <p class="mt-3 text-sm text-brand-100/80 leading-relaxed">{{ annonce.contenu|u.truncate(110, '…') }}</p>
                             {% endif %}
                         </article>
                     {% endfor %}
@@ -74,47 +87,52 @@
         </section>
     {% endif %}
 
-    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="impact-titre">
-        <p class="section-eyebrow">Nos réalisations</p>
-        <h2 id="impact-titre" class="mt-2 font-display text-3xl font-semibold text-navy-900">Un impact mesuré sur le terrain</h2>
+    <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="impact-titre">
+        <div class="text-center">
+            <p class="section-eyebrow">Nos réalisations</p>
+            <h2 id="impact-titre" class="mt-2 font-display text-4xl font-bold text-navy-900">Un impact mesuré sur le terrain</h2>
+        </div>
 
-        <dl class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <dl class="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {% set stats = [
-                {value: '450', label: "enfants vivant avec handicap accompagnés à l'école"},
-                {value: '350', label: 'personnes formées en cordonnerie'},
-                {value: '141', label: 'personnes en formation professionnelle (coupe et couture, saponification)'},
-                {value: '90', label: 'personnes ayant reçu un micro-crédit'}
+                {value: '450', label: "enfants vivant avec handicap accompagnés à l'école", icon: 'fas fa-graduation-cap'},
+                {value: '350', label: 'personnes formées en cordonnerie', icon: 'fas fa-tools'},
+                {value: '141', label: 'personnes en formation professionnelle (coupe et couture, saponification)', icon: 'fas fa-award'},
+                {value: '90', label: 'personnes ayant reçu un micro-crédit', icon: 'fas fa-hand-holding-usd'}
             ] %}
             {% for stat in stats %}
-                <div class="rounded-xl border border-brand-200 bg-white p-6">
+                <div class="stat-card text-center">
                     <dt class="sr-only">{{ stat.label }}</dt>
                     <dd>
-                        <span class="font-display text-3xl font-semibold text-brand-700">{{ stat.value }}</span>
-                        <p class="mt-2 text-sm text-ink-900/70">{{ stat.label }}</p>
+                        <span class="text-5xl mb-4 block text-brand-700"><i class="{{ stat.icon }}"></i></span>
+                        <span class="stat-number">{{ stat.value }}</span>
+                        <p class="mt-3 text-sm text-ink-900/70 leading-relaxed">{{ stat.label }}</p>
                     </dd>
                 </div>
             {% endfor %}
         </dl>
     </section>
 
-    <section class="bg-brand-50 py-16" aria-labelledby="secteurs-titre">
+    <section class="bg-gradient-to-br from-brand-50 to-navy-50 py-20" aria-labelledby="secteurs-titre">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-            <p class="section-eyebrow">Secteurs d'intervention</p>
-            <h2 id="secteurs-titre" class="mt-2 font-display text-3xl font-semibold text-navy-900">Où nous agissons</h2>
+            <div class="text-center">
+                <p class="section-eyebrow">Secteurs d'intervention</p>
+                <h2 id="secteurs-titre" class="mt-2 font-display text-4xl font-bold text-navy-900">Où nous agissons</h2>
+            </div>
 
-            <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <ul class="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {% for secteur in [
-                    "Droits humains et gouvernance inclusive",
-                    "Éducation inclusive",
-                    "Santé, droit sexuel et reproductif",
-                    "Renforcement des capacités intégrant l'approche genre",
-                    "Sports paralympiques et loisirs",
-                    "Urgence et aides humanitaires",
-                    "Protection de l'enfance en situation de handicap"
+                    {label: "Droits humains et gouvernance inclusive", icon: "fas fa-balance-scale"},
+                    {label: "Éducation inclusive", icon: "fas fa-book-reader"},
+                    {label: "Santé, droit sexuel et reproductif", icon: "fas fa-heartbeat"},
+                    {label: "Renforcement des capacités intégrant l'approche genre", icon: "fas fa-users"},
+                    {label: "Sports paralympiques et loisirs", icon: "fas fa-trophy"},
+                    {label: "Urgence et aides humanitaires", icon: "fas fa-first-aid"},
+                    {label: "Protection de l'enfance en situation de handicap", icon: "fas fa-child"}
                 ] %}
-                    <li class="flex items-start gap-3 rounded-lg bg-white p-4 ring-1 ring-brand-200">
-                        <span class="mt-1 h-2 w-2 shrink-0 rounded-full bg-brand-700"></span>
-                        <span class="text-sm text-ink-900/80">{{ secteur }}</span>
+                    <li class="feature-card flex items-start gap-4">
+                        <span class="text-3xl text-brand-700"><i class="{{ secteur.icon }}"></i></span>
+                        <span class="text-sm font-medium text-ink-900/90 leading-relaxed">{{ secteur.label }}</span>
                     </li>
                 {% endfor %}
             </ul>
@@ -122,34 +140,38 @@
     </section>
 
     {% if activites|length > 0 %}
-        <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="activites-titre">
+        <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="activites-titre">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
                     <p class="section-eyebrow">Actualité</p>
-                    <h2 id="activites-titre" class="mt-2 font-display text-3xl font-semibold text-navy-900">Activités récentes</h2>
+                    <h2 id="activites-titre" class="mt-2 font-display text-4xl font-bold text-navy-900">Activités récentes</h2>
                 </div>
-                <a href="{{ path('app_activites') }}" class="text-sm font-semibold text-brand-700 hover:text-brand-800">
+                <a href="{{ path('app_activites') }}" class="btn-tertiary">
                     Voir toutes les activités →
                 </a>
             </div>
 
-            <div class="mt-8 grid gap-6 md:grid-cols-3">
+            <div class="mt-10 grid gap-8 md:grid-cols-3">
                 {% for activite in activites %}
-                    <a href="{{ path('app_activites_show', {slug: activite.slug}) }}" class="group block overflow-hidden rounded-xl bg-white ring-1 ring-brand-200 transition hover:shadow-md">
-                        {% if activite.imageName %}
-                            <img src="{{ vich_uploader_asset(activite, 'imageFile')|imagine_filter('thumbnail') }}" alt="" loading="lazy" class="h-44 w-full object-cover transition duration-300 group-hover:scale-105">
-                        {% else %}
-                            <div class="flex h-44 w-full items-center justify-center bg-navy-50 text-navy-600">
-                                <span class="font-display text-sm">HAKI YETU</span>
-                            </div>
-                        {% endif %}
-                        <div class="p-5">
-                            <h3 class="font-display text-lg font-semibold text-navy-900 group-hover:text-brand-700">{{ activite.titre }}</h3>
+                    <a href="{{ path('app_activites_show', {slug: activite.slug}) }}" class="card-modern group block overflow-hidden">
+                        <div class="image-overlay">
+                            {% if activite.imageName %}
+                                <img src="{{ vich_uploader_asset(activite, 'imageFile')|imagine_filter('thumbnail') }}" alt="" loading="lazy" class="h-48 w-full object-cover transition duration-500 group-hover:scale-110">
+                            {% else %}
+                                <div class="flex h-48 w-full items-center justify-center bg-gradient-to-br from-navy-50 to-navy-100 text-navy-600">
+                                    <span class="font-display text-lg font-semibold">HAKI YETU</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="p-6">
+                            <h3 class="font-display text-xl font-bold text-navy-900 group-hover:text-brand-700 transition-colors">{{ activite.titre }}</h3>
                             {% if activite.date %}
-                                <p class="mt-1 text-xs font-medium uppercase tracking-wide text-brand-700">{{ activite.date|date('d/m/Y') }}</p>
+                                <p class="mt-2 text-sm font-semibold uppercase tracking-wide text-brand-700">
+                                    <i class="fas fa-calendar-alt opacity-75 mr-2"></i> {{ activite.date|date('d/m/Y') }}
+                                </p>
                             {% endif %}
                             {% if activite.description %}
-                                <p class="mt-2 text-sm text-ink-900/70">{{ activite.description|u.truncate(100, '…') }}</p>
+                                <p class="mt-3 text-sm text-ink-900/70 leading-relaxed">{{ activite.description|u.truncate(100, '…') }}</p>
                             {% endif %}
                         </div>
                     </a>
@@ -159,32 +181,36 @@
     {% endif %}
 
     {% if albums|length > 0 %}
-        <section class="bg-brand-50 py-16" aria-labelledby="galerie-titre">
+        <section class="bg-gradient-to-br from-navy-50 to-brand-50 py-20" aria-labelledby="galerie-titre">
             <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
                 <div class="flex flex-wrap items-end justify-between gap-4">
                     <div>
                         <p class="section-eyebrow">En images</p>
-                        <h2 id="galerie-titre" class="mt-2 font-display text-3xl font-semibold text-navy-900">Galerie</h2>
+                        <h2 id="galerie-titre" class="mt-2 font-display text-4xl font-bold text-navy-900">Galerie</h2>
                     </div>
-                    <a href="{{ path('app_galerie') }}" class="text-sm font-semibold text-brand-700 hover:text-brand-800">
+                    <a href="{{ path('app_galerie') }}" class="btn-tertiary">
                         Voir tous les albums →
                     </a>
                 </div>
 
-                <div class="mt-8 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
+                <div class="mt-10 grid gap-8 sm:grid-cols-2 md:grid-cols-3">
                     {% for album in albums %}
-                        <a href="{{ path('app_galerie_show', {id: album.id}) }}" class="group block overflow-hidden rounded-xl bg-white ring-1 ring-brand-200">
-                            {% set cover = album.coverImage %}
-                            {% if cover %}
-                                <img src="{{ vich_uploader_asset(cover, 'imageFile') }}" alt="" loading="lazy" class="h-48 w-full object-cover transition duration-300 group-hover:scale-105">
-                            {% else %}
-                                <div class="flex h-48 w-full items-center justify-center bg-navy-50 text-navy-600">
-                                    <span class="font-display text-sm">Album photo</span>
-                                </div>
-                            {% endif %}
-                            <div class="p-4">
-                                <h3 class="font-display font-semibold text-navy-900">{{ album.titre }}</h3>
-                                <p class="mt-1 text-xs text-ink-900/60">{{ album.images|length }} photo(s)</p>
+                        <a href="{{ path('app_galerie_show', {id: album.id}) }}" class="card-modern group block overflow-hidden">
+                            <div class="image-overlay">
+                                {% set cover = album.coverImage %}
+                                {% if cover %}
+                                    <img src="{{ vich_uploader_asset(cover, 'imageFile')|imagine_filter('medium') }}" alt="" loading="lazy" class="h-56 w-full object-cover transition duration-500 group-hover:scale-110">
+                                {% else %}
+                                    <div class="flex h-56 w-full items-center justify-center bg-gradient-to-br from-navy-50 to-navy-100 text-navy-600">
+                                        <span class="font-display text-lg font-semibold">Album photo</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="p-6">
+                                <h3 class="font-display text-xl font-bold text-navy-900 group-hover:text-brand-700 transition-colors">{{ album.titre }}</h3>
+                                <p class="mt-2 text-sm text-ink-900/60">
+                                    <i class="fas fa-images opacity-75 mr-2"></i> {{ album.images|length }} photo(s)
+                                </p>
                             </div>
                         </a>
                     {% endfor %}
@@ -193,12 +219,16 @@
         </section>
     {% endif %}
 
-    <section class="mx-auto max-w-6xl px-4 py-16 sm:px-6 lg:px-8" aria-labelledby="partenaires-titre">
-        <p class="section-eyebrow">Ils nous soutiennent</p>
-        <h2 id="partenaires-titre" class="mt-2 font-display text-3xl font-semibold text-navy-900">Nos partenaires</h2>
-        <ul class="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-sm font-semibold text-navy-700">
+    <section class="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8" aria-labelledby="partenaires-titre">
+        <div class="text-center">
+            <p class="section-eyebrow">Ils nous soutiennent</p>
+            <h2 id="partenaires-titre" class="mt-2 font-display text-4xl font-bold text-navy-900">Nos partenaires</h2>
+        </div>
+        <ul class="mt-12 flex flex-wrap justify-center gap-4">
             {% for partenaire in ['Fondation ABILIS', 'MIVA Suisse', 'Aide fraternelle salvatorienne', 'Handicap International', "Mairie de la ville d'Uvira", 'Conférence Épiscopale Italienne'] %}
-                <li class="rounded-lg border border-brand-200 bg-white px-4 py-2">{{ partenaire }}</li>
+                <li class="feature-card bg-white px-6 py-4 text-sm font-semibold text-navy-700 shadow-md">
+                    <i class="fas fa-handshake mr-2 text-brand-700"></i> {{ partenaire }}
+                </li>
             {% endfor %}
         </ul>
     </section>

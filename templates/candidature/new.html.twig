@@ -1,0 +1,116 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Postuler — {{ offre.titre }} — HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Postulez à l'offre {{ offre.titre }} chez HAKI YETU asbl. Déposez votre CV et lettre de motivation.{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-3xl px-4 py-20 sm:px-6 lg:px-8">
+        <div class="mb-6">
+            <a href="{{ path('app_emplois_show', {slug: offre.slug}) }}" class="text-sm font-semibold text-brand-700 hover:text-brand-800 transition-colors">
+                <i class="fas fa-arrow-left mr-2"></i> Retour à l'offre
+            </a>
+        </div>
+
+        <div class="text-center mb-8">
+            <h1 class="font-display text-4xl font-bold text-navy-900">Postuler à cette offre</h1>
+            <p class="mt-2 text-lg text-ink-900/70">{{ offre.titre }}</p>
+        </div>
+
+        <div class="card-modern p-8">
+            {{ form_start(form, {'attr': {'enctype': 'multipart/form-data', 'id': 'candidature-form', 'data-turbo': 'false'}}) }}
+
+            {% for flash in app.flashes('success') %}
+                <div class="mb-6 p-6 bg-green-50 border-2 border-green-600 rounded-xl text-green-800 animate-fade-in">
+                    <div class="flex items-center gap-3">
+                        <span class="text-3xl"><i class="fas fa-check-circle"></i></span>
+                        <div>
+                            <p class="font-bold text-lg">{{ flash }}</p>
+                            <p class="text-sm mt-1">Vous allez être redirigé vers la page de l'offre dans quelques secondes...</p>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                    setTimeout(function() {
+                        window.location.href = "{{ path('app_emplois_show', {slug: offre.slug}) }}";
+                    }, 3000);
+                </script>
+            {% endfor %}
+
+            {% for flash in app.flashes('error') %}
+                <div class="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-red-700">
+                    <i class="fas fa-exclamation-circle mr-2"></i> {{ flash }}
+                </div>
+            {% endfor %}
+
+            {% if not form.vars.valid %}
+                <div class="mb-6 p-4 bg-red-50 border-2 border-red-200 rounded-xl text-red-700">
+                    <i class="fas fa-exclamation-circle mr-2"></i> Veuillez corriger les erreurs ci-dessous.
+                </div>
+            {% endif %}
+
+            <div class="grid gap-6 md:grid-cols-2">
+                {{ form_row(form.nom) }}
+                {{ form_row(form.prenom) }}
+            </div>
+
+            <div class="grid gap-6 md:grid-cols-2 mt-6">
+                {{ form_row(form.email) }}
+                {{ form_row(form.telephone) }}
+            </div>
+
+            <div class="mt-6">
+                {{ form_row(form.adresse) }}
+            </div>
+
+            <div class="mt-6">
+                {{ form_row(form.cvFileFile) }}
+                <p class="text-xs text-ink-900/60 mt-1">Formats acceptés : PDF, Word (5 Mo max).</p>
+            </div>
+
+            <div class="mt-6">
+                {{ form_row(form.lettreMotivationFileFile) }}
+                <p class="text-xs text-ink-900/60 mt-1">Formats acceptés : PDF, Word (5 Mo max). Facultatif.</p>
+            </div>
+
+            <div class="mt-6">
+                {{ form_row(form.autresDocumentsFile) }}
+                <p class="text-xs text-ink-900/60 mt-1">Formats acceptés : PDF, ZIP (10 Mo max). Regroupez vos diplômes, formations, certificats, etc. dans un fichier ZIP ou PDF. Facultatif.</p>
+            </div>
+
+            <div class="mt-6">
+                {{ form_row(form.message) }}
+            </div>
+
+            <div class="mt-8">
+                <button type="submit" id="submit-btn" class="btn-primary w-full relative">
+                    <span id="btn-text">
+                        <i class="fas fa-paper-plane mr-2"></i> Envoyer ma candidature
+                    </span>
+                    <span id="btn-loading" class="hidden">
+                        <i class="fas fa-spinner fa-spin mr-2"></i> Envoi en cours...
+                    </span>
+                </button>
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('candidature-form');
+                const btn = document.getElementById('submit-btn');
+                const btnText = document.getElementById('btn-text');
+                const btnLoading = document.getElementById('btn-loading');
+                
+                if (form && btn) {
+                    form.addEventListener('submit', function(e) {
+                        btn.disabled = true;
+                        btnText.classList.add('hidden');
+                        btnLoading.classList.remove('hidden');
+                    });
+                }
+            });
+        </script>
+    </section>
+{% endblock %}

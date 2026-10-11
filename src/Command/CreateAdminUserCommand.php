@@ -31,6 +31,7 @@ class CreateAdminUserCommand extends Command
         $email = $io->ask('Adresse e-mail de connexion', 'admin@hakiyetu.org');
         $nomComplet = $io->ask('Nom complet', 'Administrateur HAKI YETU');
         $password = $io->askHidden('Mot de passe (ne sera pas affiché)');
+        // 000000000
 
         if (empty($password) || \strlen($password) < 8) {
             $io->error('Le mot de passe doit contenir au moins 8 caractères.');
