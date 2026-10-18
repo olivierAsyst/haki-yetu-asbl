@@ -1,0 +1,309 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des dons - HAKI YETU asbl{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <span class="section-eyebrow">Administration</span>
+                <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Gestion des dons</h1>
+                <p class="mt-4 prose-body">
+                    Gérez les dons reçus, suivez les statistiques et mettez à jour les statuts.
+                </p>
+            </div>
+            
+            <div class="flex gap-2">
+                <a href="{{ path('app_don') }}" class="btn-secondary" target="_blank">
+                    <i class="fas fa-eye mr-2"></i> Voir la page don
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Statistiques -->
+    <div class="mb-8 grid gap-6 md:grid-cols-4">
+        <div class="card-gradient">
+            <div class="p-6">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                        <i class="fas fa-money-bill-wave text-xl text-white"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-brand-100/80">Total collecté</p>
+                        <p class="text-2xl font-bold text-white">{{ statistiques.total|number_format(2, ',', ' ') }} USD</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-modern">
+            <div class="p-6">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+                        <i class="fas fa-clock text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-navy-600">En attente</p>
+                        <p class="text-2xl font-bold text-navy-900">{{ statistiques.en_attente|number_format(2, ',', ' ') }} USD</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-modern">
+            <div class="p-6">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-navy-100 text-navy-700">
+                        <i class="fas fa-users text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-navy-600">Dons</p>
+                        <p class="text-2xl font-bold text-navy-900">{{ dons|length }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-modern">
+            <div class="p-6">
+                <div class="flex items-center gap-3">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-sage-100 text-sage-700">
+                        <i class="fas fa-chart-line text-xl"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm text-navy-600">Moyenne</p>
+                        <p class="text-2xl font-bold text-navy-900">
+                            {% if dons|length > 0 %}
+                                {{ (statistiques.total / dons|length)|number_format(2, ',', ' ') }} USD
+                            {% else %}
+                                0 USD
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Graphiques et statistiques détaillées -->
+    <div class="mb-8 grid gap-6 lg:grid-cols-2">
+        <div class="card-modern">
+            <div class="p-6">
+                <h3 class="mb-4 font-display text-xl font-bold text-navy-900">Dons par type</h3>
+                <div class="space-y-3">
+                    {% for stat in statistiques.par_type %}
+                        <div>
+                            <div class="mb-1 flex justify-between text-sm">
+                                <span class="font-medium text-navy-700">
+                                    {% if stat.type == 'unique' %}Don unique
+                                    {% elseif stat.type == 'mensuel' %}Don mensuel
+                                    {% elseif stat.type == 'trimestriel' %}Don trimestriel
+                                    {% elseif stat.type == 'annuel' %}Don annuel
+                                    {% elseif stat.type == 'projet' %}Pour projet
+                                    {% elseif stat.type == 'urgence' %}Urgence
+                                    {% else %}{{ stat.type }}
+                                    {% endif %}
+                                </span>
+                                <span class="text-navy-900">{{ stat.total|number_format(2, ',', ' ') }} USD</span>
+                            </div>
+                            <div class="h-2 overflow-hidden rounded-full bg-navy-100">
+                                <div class="h-full bg-brand-700 rounded-full" style="width: {{ (stat.total / statistiques.total) * 100 }}%"></div>
+                            </div>
+                            <div class="mt-1 text-xs text-navy-500">{{ stat.nombre }} don(s)</div>
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-navy-600 text-center py-4">Aucune statistique disponible</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-modern">
+            <div class="p-6">
+                <h3 class="mb-4 font-display text-xl font-bold text-navy-900">Dons par méthode</h3>
+                <div class="space-y-3">
+                    {% for stat in statistiques.par_methode %}
+                        <div>
+                            <div class="mb-1 flex justify-between text-sm">
+                                <span class="font-medium text-navy-700">
+                                    {% if stat.methode == 'mobile_money' %}Mobile Money
+                                    {% elseif stat.methode == 'virement_bancaire' %}Virement bancaire
+                                    {% elseif stat.methode == 'wave' %}Wave
+                                    {% elseif stat.methode == 'western_union' %}Western Union
+                                    {% elseif stat.methode == 'moneygram' %}MoneyGram
+                                    {% elseif stat.methode == 'especes' %}Espèces
+                                    {% else %}{{ stat.methode }}
+                                    {% endif %}
+                                </span>
+                                <span class="text-navy-900">{{ stat.total|number_format(2, ',', ' ') }} USD</span>
+                            </div>
+                            <div class="h-2 overflow-hidden rounded-full bg-navy-100">
+                                <div class="h-full bg-navy-700 rounded-full" style="width: {{ (stat.total / statistiques.total) * 100 }}%"></div>
+                            </div>
+                            <div class="mt-1 text-xs text-navy-500">{{ stat.nombre }} don(s)</div>
+                        </div>
+                    {% else %}
+                        <p class="text-sm text-navy-600 text-center py-4">Aucune statistique disponible</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Liste des dons -->
+    <div class="card-modern">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-navy-200">
+                <thead class="bg-navy-700">
+                    <tr>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Date</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Donateur</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Montant</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Type</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Méthode</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Statut</th>
+                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-navy-200">
+                    {% for don in dons %}
+                        <tr class="hover:bg-navy-50 transition-colors">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-navy-900">
+                                {{ don.createdAt|date('d/m/Y') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-navy-900">
+                                    {% if don.anonyme %}
+                                        <span class="italic">Anonyme</span>
+                                    {% else %}
+                                        {{ don.nom }}
+                                    {% endif %}
+                                </div>
+                                <div class="text-xs text-navy-600">{{ don.email }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-navy-900 font-bold">
+                                {{ don.getMontantFormate() }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-navy-900">
+                                {{ don.getTypeDonLabel() }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-navy-900">
+                                {{ don.getMethodePaiementLabel() }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                {% set statut_couleurs = {
+                                    'en_attente': 'bg-yellow-100 text-yellow-800',
+                                    'confirme': 'bg-blue-100 text-blue-800',
+                                    'paye': 'bg-green-100 text-green-800',
+                                    'annule': 'bg-red-100 text-red-800',
+                                    'rembourse': 'bg-gray-100 text-gray-800'
+                                } %}
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ statut_couleurs[don.statut] }}">
+                                    {{ don.getStatutLabel() }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a href="{{ path('app_don_show', {'id': don.id}) }}" class="text-brand-700 hover:text-brand-800 mr-3">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+                                <a href="{{ path('app_don_edit', {'id': don.id}) }}" class="text-navy-700 hover:text-navy-800 mr-3">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <form action="{{ path('app_don_delete', {'id': don.id}) }}" method="post" class="inline" 
+                                      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce don ?');">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ don.id) }}">
+                                    <button type="submit" class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="7" class="px-6 py-12 text-center text-navy-600">
+                                <i class="fas fa-inbox text-4xl text-navy-300 mb-4 block"></i>
+                                <p class="text-lg font-semibold">Aucun don enregistré</p>
+                                <p class="text-sm mt-2">Les dons apparaîtront ici une fois soumis</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        {% if dons|length > 0 %}
+            <div class="px-6 py-4 border-t border-navy-200">
+                <div class="flex items-center justify-between">
+                    <div class="text-sm text-navy-600">
+                        Affichage de <span class="font-medium">{{ dons|length }}</span> dons récents
+                    </div>
+                    <div class="text-sm text-navy-600">
+                        Export : 
+                        <a href="#" class="ml-2 text-brand-700 hover:text-brand-800">
+                            <i class="fas fa-file-excel mr-1"></i> Excel
+                        </a>
+                        <a href="#" class="ml-2 text-brand-700 hover:text-brand-800">
+                            <i class="fas fa-file-pdf mr-1"></i> PDF
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Ajouter un filtre rapide par statut
+        const statutFiltres = document.createElement('div');
+        statutFiltres.className = 'mb-4 flex flex-wrap gap-2';
+        statutFiltres.innerHTML = `
+            <button class="badge-modern badge-primary" data-statut="tous">Tous</button>
+            <button class="badge-modern badge-secondary" data-statut="en_attente">En attente</button>
+            <button class="badge-modern badge-success" data-statut="paye">Payés</button>
+            <button class="badge-modern badge-warning" data-statut="annule">Annulés</button>
+        `;
+        
+        document.querySelector('.card-modern').prepend(statutFiltres);
+        
+        // Fonction de filtrage
+        const lignes = document.querySelectorAll('tbody tr');
+        const boutonsFiltre = document.querySelectorAll('[data-statut]');
+        
+        boutonsFiltre.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const statut = this.getAttribute('data-statut');
+                
+                // Mettre à jour les boutons actifs
+                boutonsFiltre.forEach(b => {
+                    b.classList.remove('border-brand-700', 'bg-brand-50');
+                });
+                this.classList.add('border-brand-700', 'bg-brand-50');
+                
+                // Filtrer les lignes
+                lignes.forEach(ligne => {
+                    if (statut === 'tous') {
+                        ligne.style.display = '';
+                    } else {
+                        const statutLigne = ligne.querySelector('[class*="bg-"]').textContent.trim();
+                        const statutMapping = {
+                            'en_attente': 'En attente',
+                            'paye': 'Payé',
+                            'annule': 'Annulé',
+                            'rembourse': 'Remboursé'
+                        };
+                        
+                        if (statutLigne === statutMapping[statut]) {
+                            ligne.style.display = '';
+                        } else {
+                            ligne.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -33,6 +33,12 @@ class Activite
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $date = null;
 
+    #[ORM\Column(length: 100, nullable: true)]
+    private ?string $categorie = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lieu = null;
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imageName = null;
 
@@ -104,6 +110,30 @@ class Activite
     public function setDate(?\DateTimeImmutable $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getCategorie(): ?string
+    {
+        return $this->categorie;
+    }
+
+    public function setCategorie(?string $categorie): static
+    {
+        $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function getLieu(): ?string
+    {
+        return $this->lieu;
+    }
+
+    public function setLieu(?string $lieu): static
+    {
+        $this->lieu = $lieu;
 
         return $this;
     }

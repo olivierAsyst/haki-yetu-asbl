@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ rapport.titre }} - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Modifiez les informations du rapport "{{ rapport.titre }}" sur la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block og_title %}Modifier {{ rapport.titre }} - HAKI YETU asbl{% endblock %}
+{% block og_description %}Modifiez les informations du rapport "{{ rapport.titre }}" sur la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block twitter_title %}Modifier {{ rapport.titre }} - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}Modifiez les informations du rapport "{{ rapport.titre }}" sur la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <a href="{{ path('app_rapports_show', {'id': rapport.id}) }}" class="inline-flex items-center text-brand-700 hover:text-brand-800 mb-6">
+            <i class="fas fa-arrow-left mr-2"></i> Retour au rapport
+        </a>
+        
+        <div class="mb-6">
+            <span class="section-eyebrow">Administration</span>
+            <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Modifier le rapport</h1>
+            <p class="mt-4 prose-body">
+                Modifiez les informations du rapport "{{ rapport.titre }}". 
+                Les modifications seront immédiatement visibles sur le site.
+            </p>
+        </div>
+    </div>
+    
+    <div class="card-modern">
+        <div class="p-6 md:p-8">
+            {{ form_start(form) }}
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Informations principales</h2>
+                        <div class="space-y-4">
+                            {{ form_row(form.titre) }}
+                            {{ form_row(form.description) }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Métadonnées</h2>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            {{ form_row(form.annee) }}
+                            {{ form_row(form.periode) }}
+                            {{ form_row(form.type) }}
+                            {{ form_row(form.langue) }}
+                            {{ form_row(form.datePublication) }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Fichier du rapport</h2>
+                        
+                        {% if rapport.fichierName %}
+                            <div class="mb-6 rounded-xl border-2 border-brand-200 bg-brand-50 p-6">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-navy-700 shadow-md">
+                                            <i class="{{ rapport.getFichierIcone() }} text-xl"></i>
+                                        </div>
+                                        <div>
+                                            <h3 class="font-display text-lg font-bold text-navy-900">Fichier actuel</h3>
+                                            <p class="text-sm text-navy-600">
+                                                {{ rapport.fichierName }} • 
+                                                {{ (rapport.fichierSize / 1024 / 1024)|round(2) }} Mo
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <a href="{{ path('app_rapports_download', {'id': rapport.id}) }}" class="btn-tertiary">
+                                        <i class="fas fa-download mr-2"></i> Télécharger
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="rounded-xl border-2 border-dashed border-navy-200 bg-navy-50 p-6">
+                            <div class="mb-4 text-center">
+                                <i class="fas fa-file-upload text-4xl text-navy-400 mb-3"></i>
+                                <h3 class="font-display text-lg font-bold text-navy-900">Nouveau fichier (optionnel)</h3>
+                                <p class="mt-2 text-sm text-navy-600">
+                                    Laissez vide pour conserver le fichier actuel<br>
+                                    Formats acceptés : PDF, Word, Excel • Taille max : 10 Mo
+                                </p>
+                            </div>
+                            {{ form_row(form.fichierFile) }}
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-navy-200">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                            <a href="{{ path('app_rapports_show', {'id': rapport.id}) }}" class="btn-secondary order-2 sm:order-1">
+                                <i class="fas fa-times mr-2"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn-primary order-1 sm:order-2">
+                                <i class="fas fa-save mr-2"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    
+    <div class="mt-8 rounded-xl bg-brand-50 border border-brand-200 p-6">
+        <h3 class="mb-3 font-display text-lg font-bold text-brand-800">
+            <i class="fas fa-exclamation-triangle mr-2"></i> À noter
+        </h3>
+        <ul class="space-y-2 text-sm text-brand-700">
+            <li class="flex items-start gap-2">
+                <i class="fas fa-info-circle mt-1"></i>
+                <span>La modification d'un rapport ne supprime pas l'ancien fichier si vous en téléchargez un nouveau</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-info-circle mt-1"></i>
+                <span>La date de "Dernière mise à jour" sera automatiquement mise à jour</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-info-circle mt-1"></i>
+                <span>Les modifications sont immédiatement visibles par les visiteurs du site</span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

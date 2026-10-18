@@ -1,0 +1,289 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Appels d'urgence — HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Appels d'urgence humanitaire de HAKI YETU asbl pour répondre aux besoins critiques des personnes handicapées à Uvira, Fizi et Mwenga (RD Congo). Soutenez nos actions d'urgence.{% endblock %}
+
+{% block og_title %}Appels d'urgence — HAKI YETU asbl{% endblock %}
+{% block og_description %}Soutenez les appels d'urgence humanitaire de HAKI YETU pour aider les personnes handicapées en situation de crise.{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-b from-brand-50/30 to-white">
+    <section class="relative overflow-hidden">
+        <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+            <!-- Header -->
+            <div class="text-center mb-16">
+                <h1 class="text-4xl font-display font-bold tracking-tight text-navy-900 sm:text-5xl lg:text-6xl">
+                    <span class="block">Appels d'urgence</span>
+                    <span class="block text-brand-600">Humanitaires</span>
+                </h1>
+                <p class="mx-auto mt-6 max-w-2xl text-lg leading-8 text-navy-600">
+                    Réponses immédiates aux situations critiques affectant les personnes handicapées dans nos zones d'intervention.
+                </p>
+            </div>
+
+            <!-- Urgent Appeal Banner -->
+            {% if urgences_actives|length > 0 %}
+                {% set urgence_principale = urgences_actives|first %}
+                <div class="mb-16 overflow-hidden rounded-2xl border-4 border-red-200 bg-gradient-to-r from-red-50 to-orange-50 shadow-xl">
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
+                        <div class="p-8 lg:p-12">
+                            <div class="flex items-center gap-3 mb-4">
+                                <span class="flex h-10 w-10 items-center justify-center rounded-full bg-red-500 text-white">
+                                    <i class="fas fa-exclamation-triangle text-lg"></i>
+                                </span>
+                                <span class="text-sm font-semibold uppercase tracking-wide text-red-700">
+                                    Urgence Principale
+                                </span>
+                            </div>
+                            <h2 class="text-3xl font-display font-bold text-navy-900 mb-4">
+                                {{ urgence_principale.titre }}
+                            </h2>
+                            <p class="text-navy-700 mb-6">
+                                {{ urgence_principale.description|slice(0, 200) }}...
+                            </p>
+                            
+                            <!-- Progress Bar -->
+                            <div class="mb-6">
+                                <div class="flex justify-between text-sm font-medium text-navy-700 mb-2">
+                                    <span>Collecte en cours</span>
+                                    <span>{{ urgence_principale.getPourcentageCollecte }}%</span>
+                                </div>
+                                <div class="h-4 overflow-hidden rounded-full bg-red-100">
+                                    <div class="h-full bg-gradient-to-r from-red-500 to-orange-500 rounded-full transition-all duration-500" 
+                                         style="width: {{ urgence_principale.getPourcentageCollecte }}%"></div>
+                                </div>
+                                <div class="flex justify-between mt-2 text-sm text-navy-600">
+                                    <span>{{ urgence_principale.montantCollecte|number_format(0, ',', ' ') }} CDF collectés</span>
+                                    <span>{{ urgence_principale.montantCible|number_format(0, ',', ' ') }} CDF cibles</span>
+                                </div>
+                            </div>
+                            
+                            <div class="flex flex-wrap gap-4">
+                                <a href="{{ path('app_urgence_don', {'id': urgence_principale.id}) }}" 
+                                   class="btn-humanitarian bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-700 hover:to-orange-700">
+                                    <i class="fas fa-heart mr-2"></i>Soutenir cette urgence
+                                </a>
+                                <a href="{{ path('app_urgence_show', {'id': urgence_principale.id}) }}" 
+                                   class="btn-humanitarian-secondary">
+                                    <i class="fas fa-info-circle mr-2"></i>En savoir plus
+                                </a>
+                            </div>
+                        </div>
+                        <div class="relative bg-gradient-to-br from-red-400 to-orange-400 p-8 lg:p-12">
+                            <div class="absolute inset-0 bg-pattern opacity-10"></div>
+                            <div class="relative z-10 flex flex-col justify-center h-full">
+                                <div class="grid grid-cols-2 gap-6">
+                                    <div class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-red-600 mb-2">
+                                                <i class="fas fa-map-marker-alt"></i>
+                                            </div>
+                                            <div class="text-sm font-medium text-navy-700">{{ urgence_principale.lieu }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-orange-600 mb-2">
+                                                <i class="fas fa-users"></i>
+                                            </div>
+                                            <div class="text-sm font-medium text-navy-700">Personnes handicapées</div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-red-600 mb-2">
+                                                <i class="fas fa-calendar"></i>
+                                            </div>
+                                            <div class="text-sm font-medium text-navy-700">
+                                                {{ urgence_principale.dateDebut|date('d/m/Y') }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-lg">
+                                        <div class="text-center">
+                                            <div class="text-3xl font-bold text-orange-600 mb-2">
+                                                <i class="fas fa-target"></i>
+                                            </div>
+                                            <div class="text-sm font-medium text-navy-700">Objectif atteint</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Active Emergencies -->
+            <div class="mb-16">
+                <div class="flex items-center justify-between mb-8">
+                    <h2 class="text-2xl font-display font-bold text-navy-900">Urgences en cours</h2>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_urgence_new') }}" class="btn-humanitarian">
+                            <i class="fas fa-plus mr-2"></i>Nouvelle urgence
+                        </a>
+                    {% endif %}
+                </div>
+
+                {% if urgences_actives|length > 0 %}
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {% for urgence in urgences_actives %}
+                            <div class="group relative overflow-hidden rounded-2xl border border-navy-200 bg-white shadow-lg hover:shadow-2xl transition-all duration-300">
+                                <div class="absolute top-0 right-0 bg-red-500 text-white px-4 py-1 rounded-bl-lg text-sm font-semibold">
+                                    {{ urgence.type|replace({'_': ' '})|title }}
+                                </div>
+                                
+                                <div class="p-6 pt-10">
+                                    <div class="mb-4">
+                                        <span class="inline-flex items-center gap-2 text-sm font-medium text-navy-600 mb-2">
+                                            <i class="fas fa-map-marker-alt text-brand-500"></i>
+                                            {{ urgence.lieu }}
+                                        </span>
+                                        <h3 class="text-xl font-display font-bold text-navy-900 group-hover:text-brand-600 transition-colors">
+                                            <a href="{{ path('app_urgence_show', {'id': urgence.id}) }}" class="hover:underline">
+                                                {{ urgence.titre }}
+                                            </a>
+                                        </h3>
+                                    </div>
+                                    
+                                    <p class="text-navy-700 mb-4 line-clamp-3">
+                                        {{ urgence.description|slice(0, 150) }}...
+                                    </p>
+                                    
+                                    <!-- Progress -->
+                                    <div class="mb-6">
+                                        <div class="flex justify-between text-sm font-medium text-navy-700 mb-1">
+                                            <span>{{ urgence.getPourcentageCollecte }}% atteint</span>
+                                            <span>{{ urgence.montantCollecte|number_format(0, ',', ' ') }}/{{ urgence.montantCible|number_format(0, ',', ' ') }} CDF</span>
+                                        </div>
+                                        <div class="h-2 overflow-hidden rounded-full bg-navy-100">
+                                            <div class="h-full bg-gradient-to-r from-brand-400 to-brand-300 rounded-full transition-all duration-500" 
+                                                 style="width: {{ urgence.getPourcentageCollecte }}%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Info Row -->
+                                    <div class="flex items-center justify-between text-sm text-navy-600">
+                                        <span class="flex items-center gap-1">
+                                            <i class="fas fa-calendar text-brand-500"></i>
+                                            {{ urgence.dateDebut|date('d/m/Y') }}
+                                        </span>
+                                        {% if urgence.dateFin %}
+                                            <span class="flex items-center gap-1">
+                                                <i class="fas fa-clock text-brand-500"></i>
+                                                {{ urgence.getJoursRestants }} jours restants
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                    
+                                    <!-- Actions -->
+                                    <div class="mt-6 flex gap-3">
+                                        <a href="{{ path('app_urgence_don', {'id': urgence.id}) }}" 
+                                           class="flex-1 btn-humanitarian text-center py-2 text-sm">
+                                            <i class="fas fa-heart mr-1"></i>Donner
+                                        </a>
+                                        <a href="{{ path('app_urgence_show', {'id': urgence.id}) }}" 
+                                           class="flex-1 btn-humanitarian-secondary text-center py-2 text-sm">
+                                            <i class="fas fa-info-circle mr-1"></i>Détails
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center py-12 border-2 border-dashed border-navy-200 rounded-2xl">
+                        <div class="mx-auto h-16 w-16 flex items-center justify-center rounded-full bg-brand-100 text-brand-600 mb-4">
+                            <i class="fas fa-check-circle text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-medium text-navy-900 mb-2">Aucune urgence active</h3>
+                        <p class="text-navy-600 max-w-md mx-auto">
+                            Il n'y a actuellement aucune urgence en cours. Tous les appels précédents ont été traités avec succès grâce à votre soutien.
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Archived Emergencies -->
+            {% if urgences_archivees|length > 0 %}
+                <div class="mb-8">
+                    <h2 class="text-2xl font-display font-bold text-navy-900 mb-6">Urgences traitées</h2>
+                    <div class="overflow-hidden rounded-2xl border border-navy-200 bg-navy-50/50">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0">
+                            {% for urgence in urgences_archivees %}
+                                <div class="p-6 border-b border-r border-navy-200 hover:bg-white/50 transition-colors">
+                                    <div class="flex items-center justify-between mb-3">
+                                        <span class="text-xs font-medium uppercase tracking-wide text-navy-500">
+                                            {{ urgence.type|replace({'_': ' '})|title }}
+                                        </span>
+                                        <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">
+                                            <i class="fas fa-check mr-1"></i>Terminée
+                                        </span>
+                                    </div>
+                                    <h4 class="font-display font-bold text-navy-900 mb-2">{{ urgence.titre }}</h4>
+                                    <div class="flex items-center text-sm text-navy-600 mb-3">
+                                        <i class="fas fa-map-marker-alt mr-2 text-brand-500"></i>
+                                        {{ urgence.lieu }}
+                                    </div>
+                                    <div class="text-sm">
+                                        <div class="flex justify-between mb-1">
+                                            <span class="font-medium">Montant collecté :</span>
+                                            <span class="font-bold text-green-600">{{ urgence.montantCollecte|number_format(0, ',', ' ') }} CDF</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="font-medium">Objectif atteint :</span>
+                                            <span class="font-bold text-green-600">{{ urgence.getPourcentageCollecte }}%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Stats Section -->
+            <div class="mt-16 pt-12 border-t border-navy-200">
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+                    <div class="text-center">
+                        <div class="text-4xl font-display font-bold text-brand-600 mb-2">
+                            {{ urgences_actives|length }}
+                        </div>
+                        <div class="text-sm font-medium text-navy-700">Urgences actives</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-display font-bold text-green-600 mb-2">
+                            {{ urgences_archivees|length }}
+                        </div>
+                        <div class="text-sm font-medium text-navy-700">Urgences traitées</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-display font-bold text-navy-600 mb-2">
+                            {{ (urgences_actives|reduce((total, u) => total + u.montantCible, 0))|number_format(0, ',', ' ') }}
+                        </div>
+                        <div class="text-sm font-medium text-navy-700">CDF cibles total</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl font-display font-bold text-orange-600 mb-2">
+                            {{ (urgences_actives|reduce((total, u) => total + u.montantCollecte, 0))|number_format(0, ',', ' ') }}
+                        </div>
+                        <div class="text-sm font-medium text-navy-700">CDF collectés total</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% block stylesheets %}
+<style>
+.line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+</style>
+{% endblock %}
+{% endblock %}

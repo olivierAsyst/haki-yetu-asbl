@@ -19,18 +19,61 @@ class ActiviteController extends AbstractController
         PaginatorInterface $paginator,
         Request $request
     ): Response {
-        $query = $activiteRepository->createQueryBuilder('a')
-            ->orderBy('a.date', 'DESC')
-            ->getQuery();
+        // Récupérer les filtres depuis la requête
+        $filters = [
+            'categorie' => $request->query->get('categorie'),
+            'annee' => $request->query->get('annee'),
+            'lieu' => $request->query->get('lieu'),
+            'search' => $request->query->get('search'),
+        ];
+
+        // Créer la requête avec filtres
+        $query = $activiteRepository->createQueryBuilder('a');
+
+        // Appliquer les filtres
+        if (!empty($filters['categorie'])) {
+            $query->andWhere('a.categorie = :categorie')
+                ->setParameter('categorie', $filters['categorie']);
+        }
+
+        if (!empty($filters['annee'])) {
+            // Approche compatible: filtrer par plage de dates
+            $startDate = new \DateTimeImmutable($filters['annee'] . '-01-01 00:00:00');
+            $endDate = new \DateTimeImmutable($filters['annee'] . '-12-31 23:59:59');
+            $query->andWhere('a.date >= :startDate AND a.date <= :endDate')
+                ->setParameter('startDate', $startDate)
+                ->setParameter('endDate', $endDate);
+        }
+
+        if (!empty($filters['lieu'])) {
+            $query->andWhere('a.lieu LIKE :lieu')
+                ->setParameter('lieu', '%' . $filters['lieu'] . '%');
+        }
+
+        if (!empty($filters['search'])) {
+            $query->andWhere('a.titre LIKE :search OR a.description LIKE :search')
+                ->setParameter('search', '%' . $filters['search'] . '%');
+        }
+
+        $query->orderBy('a.date', 'DESC');
 
         $activites = $paginator->paginate(
-            $query,
+            $query->getQuery(),
             $request->query->getInt('page', 1),
             9
         );
 
+        // Récupérer les valeurs distinctes pour les filtres
+        $categories = $activiteRepository->findDistinctCategories();
+        $annees = $activiteRepository->findDistinctAnnees();
+        $lieux = $activiteRepository->findDistinctLieux();
+
         return $this->render('activites/index.html.twig', [
             'activites' => $activites,
+            'filters' => $filters,
+            'categories' => $categories,
+            'annees' => $annees,
+            'lieux' => $lieux,
         ]);
     }
 

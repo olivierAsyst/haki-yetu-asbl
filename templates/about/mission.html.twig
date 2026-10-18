@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notre Mission — HAKI YETU asbl{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="mb-12 text-center">
+            <p class="section-eyebrow">À propos</p>
+            <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">Notre Mission</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-ink-900/80">
+                Découvrez le cœur de notre engagement pour l'inclusion des personnes vivant avec handicap.
+            </p>
+        </div>
+
+        <div class="rounded-3xl bg-gradient-to-br from-brand-700 to-brand-800 p-8 md:p-12 text-white mb-12">
+            <div class="max-w-4xl mx-auto text-center">
+                <div class="inline-flex items-center justify-center h-20 w-20 rounded-full bg-white/20 mb-8">
+                    <i class="fas fa-bullseye text-3xl text-white"></i>
+                </div>
+                <h2 class="font-display text-3xl font-semibold mb-6">Mission Centrale</h2>
+                <p class="text-xl text-brand-100/90 leading-relaxed">
+                    Accompagner les personnes vivant avec handicap dans leur diversité, dans le processus de leur intégration participative et effective aux instances de prise de décision, des actions de paix et de développement.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 mb-16">
+            <div class="bg-white rounded-2xl p-8 border border-brand-200 shadow-lg">
+                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-navy-900 text-white mb-6">
+                    <i class="fas fa-eye text-2xl"></i>
+                </div>
+                <h3 class="font-display text-2xl font-semibold text-navy-900 mb-4">Notre Vision</h3>
+                <p class="text-ink-900/70 leading-relaxed mb-4">
+                    Un monde où les personnes vivant avec handicap jouissent pleinement de leurs droits et participent activement au développement de leurs communautés, sans discrimination ni exclusion.
+                </p>
+                <p class="text-ink-900/70 leading-relaxed">
+                    Nous aspirons à une société inclusive où chaque personne, quelles que soient ses capacités, peut contribuer et bénéficier équitablement des opportunités de développement.
+                </p>
+            </div>
+
+            <div class="bg-white rounded-2xl p-8 border border-brand-200 shadow-lg">
+                <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-700 text-white mb-6">
+                    <i class="fas fa-heart text-2xl"></i>
+                </div>
+                <h3 class="font-display text-2xl font-semibold text-navy-900 mb-4">Nos Valeurs</h3>
+                <ul class="space-y-4">
+                    {% for valeur in [
+                        { icon: 'fas fa-handshake', titre: 'Solidarité', desc: 'Agir ensemble pour le bien-être collectif' },
+                        { icon: 'fas fa-scale-balanced', titre: 'Équité', desc: 'Assurer un traitement juste et égal pour tous' },
+                        { icon: 'fas fa-user-shield', titre: 'Dignité', desc: 'Respecter l\'intégrité et la valeur de chaque personne' },
+                        { icon: 'fas fa-people-arrows', titre: 'Inclusion', desc: 'Créer des espaces accessibles à tous sans exception' },
+                        { icon: 'fas fa-hand-holding-heart', titre: 'Transparence', desc: 'Agir avec honnêteté et rendre compte de nos actions' }
+                    ] %}
+                        <li class="flex items-start gap-3">
+                            <div class="flex h-8 w-8 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+                                <i class="{{ valeur.icon }} text-sm"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-navy-900">{{ valeur.titre }}</h4>
+                                <p class="text-sm text-ink-900/70">{{ valeur.desc }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-navy-50 to-white rounded-2xl p-8 border border-navy-200 mb-16">
+            <h2 class="font-display text-2xl font-semibold text-navy-900 mb-8 text-center">Domaines d'Intervention</h2>
+            <div class="grid gap-6 md:grid-cols-3">
+                {% for domaine in [
+                    { icon: 'fas fa-graduation-cap', titre: 'Éducation Inclusive', desc: 'Accès à l\'éducation pour les enfants et jeunes handicapés' },
+                    { icon: 'fas fa-briefcase-medical', titre: 'Santé et Réadaptation', desc: 'Services de santé accessibles et programmes de réadaptation' },
+                    { icon: 'fas fa-chart-line', titre: 'Autonomisation Économique', desc: 'Formation professionnelle et appui à l\'entrepreneuriat' },
+                    { icon: 'fas fa-gavel', titre: 'Plaidoyer et Droits', desc: 'Défense des droits et sensibilisation communautaire' },
+                    { icon: 'fas fa-home', titre: 'Protection Sociale', desc: 'Accompagnement social et accès aux services de base' },
+                    { icon: 'fas fa-hands-helping', titre: 'Renforcement Institutionnel', desc: 'Appui aux organisations de personnes handicapées' }
+                ] %}
+                    <div class="bg-white rounded-xl p-6 border border-navy-200 hover:border-brand-400 transition-colors">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-navy-900 text-white mb-4">
+                            <i class="{{ domaine.icon }} text-xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-navy-900 mb-2">{{ domaine.titre }}</h4>
+                        <p class="text-sm text-ink-900/70">{{ domaine.desc }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <h2 class="font-display text-2xl font-semibold text-navy-900 mb-6">Notre Engagement en Chiffres</h2>
+            <div class="grid gap-6 md:grid-cols-4">
+                {% for stat in [
+                    { nombre: '12+', label: 'Années d\'expérience' },
+                    { nombre: '5,000+', label: 'Bénéficiaires directs' },
+                    { nombre: '50+', label: 'Communautés touchées' },
+                    { nombre: '15+', label: 'Partenaires actifs' }
+                ] %}
+                    <div class="text-center p-6">
+                        <div class="text-5xl font-bold text-brand-700 mb-2">{{ stat.nombre }}</div>
+                        <p class="text-sm text-ink-900/70">{{ stat.label }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

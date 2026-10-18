@@ -1,0 +1,154 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Gestion des partenaires - HAKI YETU asbl{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <span class="section-eyebrow">Administration</span>
+                <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Gestion des partenaires</h1>
+                <p class="mt-4 prose-body">
+                    Gérez les partenaires affichés sur le site public. 
+                    Vous pouvez ajouter, modifier, supprimer ou activer/désactiver les partenaires.
+                </p>
+            </div>
+            
+            <a href="{{ path('app_partenaires_new') }}" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i> Nouveau partenaire
+            </a>
+        </div>
+    </div>
+    
+    {% if partenaires is empty %}
+        <div class="rounded-2xl bg-white p-12 text-center shadow-lg shadow-navy-900/10">
+            <i class="fas fa-handshake text-5xl text-navy-300 mb-6"></i>
+            <h3 class="font-display text-2xl font-bold text-navy-900 mb-4">Aucun partenaire</h3>
+            <p class="prose-body mb-6">Commencez par ajouter votre premier partenaire.</p>
+            <a href="{{ path('app_partenaires_new') }}" class="btn-primary">
+                <i class="fas fa-plus mr-2"></i> Ajouter un partenaire
+            </a>
+        </div>
+    {% else %}
+        <div class="overflow-hidden rounded-2xl shadow-lg">
+            <table class="table-modern">
+                <thead>
+                    <tr>
+                        <th class="px-6 py-4 text-left">Logo</th>
+                        <th class="px-6 py-4 text-left">Nom</th>
+                        <th class="px-6 py-4 text-left">Type</th>
+                        <th class="px-6 py-4 text-left">Catégorie</th>
+                        <th class="px-6 py-4 text-left">Statut</th>
+                        <th class="px-6 py-4 text-left">Ordre</th>
+                        <th class="px-6 py-4 text-left">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for partenaire in partenaires %}
+                        <tr>
+                            <td class="px-6 py-4">
+                                {% if partenaire.logoName %}
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-navy-100">
+                                        <img 
+                                            src="{{ asset('/uploads/partenaires/' ~ partenaire.logoName) }}" 
+                                            alt="Logo {{ partenaire.nom }}"
+                                            class="max-h-10 max-w-10 object-contain"
+                                        >
+                                    </div>
+                                {% else %}
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-navy-100 text-navy-600">
+                                        <i class="fas fa-handshake"></i>
+                                    </div>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="font-medium text-navy-900">{{ partenaire.nom }}</div>
+                                {% if partenaire.url %}
+                                    <div class="text-xs text-navy-600 truncate max-w-xs">{{ partenaire.url }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if partenaire.type %}
+                                    <span class="badge-modern badge-primary text-xs">
+                                        {{ partenaire.type|replace({'_': ' '})|title }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-sm text-navy-600">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if partenaire.categorie %}
+                                    <span class="badge-modern badge-secondary text-xs">
+                                        {{ partenaire.categorie|capitalize }}
+                                    </span>
+                                {% else %}
+                                    <span class="text-sm text-navy-600">-</span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                {% if partenaire.actif %}
+                                    <span class="inline-flex items-center rounded-full bg-sage-100 px-3 py-1 text-xs font-medium text-sage-800">
+                                        <i class="fas fa-check-circle mr-1"></i> Actif
+                                    </span>
+                                {% else %}
+                                    <span class="inline-flex items-center rounded-full bg-navy-100 px-3 py-1 text-xs font-medium text-navy-800">
+                                        <i class="fas fa-times-circle mr-1"></i> Inactif
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4">
+                                <span class="text-sm text-navy-900">{{ partenaire.ordreAffichage ?? '-' }}</span>
+                            </td>
+                            <td class="px-6 py-4">
+                                <div class="flex gap-2">
+                                    <a href="{{ path('app_partenaires_edit', {'id': partenaire.id}) }}" 
+                                       class="inline-flex items-center rounded-lg border border-navy-300 bg-white px-3 py-2 text-xs font-medium text-navy-700 hover:bg-navy-50">
+                                        <i class="fas fa-edit mr-1"></i> Modifier
+                                    </a>
+                                    
+                                    <form action="{{ path('app_partenaires_toggle', {'id': partenaire.id}) }}" method="post" class="inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ partenaire.id) }}">
+                                        <button type="submit" 
+                                                class="inline-flex items-center rounded-lg border border-navy-300 bg-white px-3 py-2 text-xs font-medium text-navy-700 hover:bg-navy-50">
+                                            {% if partenaire.actif %}
+                                                <i class="fas fa-toggle-on mr-1"></i> Désactiver
+                                            {% else %}
+                                                <i class="fas fa-toggle-off mr-1"></i> Activer
+                                            {% endif %}
+                                        </button>
+                                    </form>
+                                    
+                                    <form action="{{ path('app_partenaires_delete', {'id': partenaire.id}) }}" method="post" class="inline" 
+                                          onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer ce partenaire ?');">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ partenaire.id) }}">
+                                        <button type="submit" 
+                                                class="inline-flex items-center rounded-lg border border-red-300 bg-white px-3 py-2 text-xs font-medium text-red-700 hover:bg-red-50">
+                                            <i class="fas fa-trash mr-1"></i> Supprimer
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="mt-8 flex items-center justify-between">
+            <div class="text-sm text-navy-600">
+                <span class="font-medium">{{ partenaires|length }}</span> partenaires au total
+            </div>
+            
+            <div class="flex gap-4">
+                <a href="{{ path('app_partenaires') }}" class="btn-secondary" target="_blank">
+                    <i class="fas fa-eye mr-2"></i> Voir sur le site
+                </a>
+                <a href="{{ path('app_partenaires_new') }}" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i> Nouveau partenaire
+                </a>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

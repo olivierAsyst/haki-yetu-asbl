@@ -34,4 +34,50 @@ class AnnonceRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+
+    /**
+     * Recherche les annonces avec filtres
+     *
+     * @param string|null $type
+     * @param string|null $search
+     * @return Annonce[]
+     */
+    public function findByFilters(?string $type = null, ?string $search = null): array
+    {
+        $qb = $this->createQueryBuilder('a')
+            ->andWhere('a.actif = true')
+            ->orderBy('a.dateEvenement', 'DESC')
+            ->addOrderBy('a.createdAt', 'DESC');
+
+        if ($type) {
+            $qb->andWhere('a.type = :type')
+                ->setParameter('type', $type);
+        }
+
+        if ($search) {
+            $qb->andWhere('a.titre LIKE :search OR a.contenu LIKE :search')
+                ->setParameter('search', '%' . $search . '%');
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Trouve les annonces récentes
+     *
+     * @param int $limit
+     * @return Annonce[]
+     */
+    public function findRecent(int $limit = 6): array
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.actif = true')
+            ->orderBy('a.dateEvenement', 'DESC')
+            ->addOrderBy('a.createdAt', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }

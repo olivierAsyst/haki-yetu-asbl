@@ -53,6 +53,14 @@ class ActiviteCrudController extends AbstractCrudController
         yield DateField::new('date', 'Date de l\'activité')
             ->setRequired(false);
 
+        yield TextField::new('categorie', 'Catégorie')
+            ->setRequired(false)
+            ->setHelp('Ex: Formation, Sensibilisation, Distribution, Événement, etc.');
+
+        yield TextField::new('lieu', 'Lieu')
+            ->setRequired(false)
+            ->setHelp('Ex: Uvira, Fizi, Mwenga, Kinshasa, etc.');
+
         yield ImageField::new('imageName', 'Image')
             ->setBasePath('/uploads/activites')
             ->setUploadDir('public/uploads/activites')

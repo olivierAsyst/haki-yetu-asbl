@@ -18,6 +18,90 @@
             </p>
         </div>
 
+        <div class="mt-8 mb-8 rounded-2xl bg-white p-6 shadow-lg shadow-navy-900/10">
+            <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Filtrer les activités</h2>
+            
+            <form method="get" class="grid gap-4 md:grid-cols-4">
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-navy-700" for="categorie">Catégorie</label>
+                    <select id="categorie" name="categorie" class="input-modern w-full">
+                        <option value="">Toutes les catégories</option>
+                        {% for categorie in categories %}
+                            <option value="{{ categorie }}" {{ filters.categorie == categorie ? 'selected' : '' }}>{{ categorie }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-navy-700" for="annee">Année</label>
+                    <select id="annee" name="annee" class="input-modern w-full">
+                        <option value="">Toutes les années</option>
+                        {% for annee in annees %}
+                            <option value="{{ annee }}" {{ filters.annee == annee ? 'selected' : '' }}>{{ annee }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div>
+                    <label class="mb-2 block text-sm font-medium text-navy-700" for="lieu">Lieu</label>
+                    <select id="lieu" name="lieu" class="input-modern w-full">
+                        <option value="">Tous les lieux</option>
+                        {% for lieu in lieux %}
+                            <option value="{{ lieu }}" {{ filters.lieu == lieu ? 'selected' : '' }}>{{ lieu }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="flex items-end">
+                    <button type="submit" class="btn-primary w-full">
+                        <i class="fas fa-search"></i> Filtrer
+                    </button>
+                </div>
+            </form>
+            
+            {% if filters.search %}
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-navy-600">Résultats pour : "{{ filters.search }}"</p>
+                    <a href="{{ path('app_activites') }}" class="text-sm text-brand-700 hover:text-brand-800">
+                        <i class="fas fa-times"></i> Effacer la recherche
+                    </a>
+                </div>
+            {% endif %}
+            
+            <div class="mt-4 flex flex-wrap gap-2">
+                {% if filters.categorie or filters.annee or filters.lieu %}
+                    <span class="text-sm text-navy-600">Filtres actifs :</span>
+                    {% if filters.categorie %}
+                        <span class="badge-modern badge-primary">
+                            <i class="fas fa-tag mr-1"></i> {{ filters.categorie }}
+                            <a href="{{ path('app_activites', {'annee': filters.annee, 'lieu': filters.lieu}) }}" class="ml-1">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </span>
+                    {% endif %}
+                    {% if filters.annee %}
+                        <span class="badge-modern badge-secondary">
+                            <i class="fas fa-calendar mr-1"></i> {{ filters.annee }}
+                            <a href="{{ path('app_activites', {'categorie': filters.categorie, 'lieu': filters.lieu}) }}" class="ml-1">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </span>
+                    {% endif %}
+                    {% if filters.lieu %}
+                        <span class="badge-modern badge-success">
+                            <i class="fas fa-map-marker-alt mr-1"></i> {{ filters.lieu }}
+                            <a href="{{ path('app_activites', {'categorie': filters.categorie, 'annee': filters.annee}) }}" class="ml-1">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        </span>
+                    {% endif %}
+                    <a href="{{ path('app_activites') }}" class="text-sm text-brand-700 hover:text-brand-800 ml-auto">
+                        <i class="fas fa-redo mr-1"></i> Réinitialiser
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+
         {% if activites.getTotalItemCount() > 0 %}
             <div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
                 {% for activite in activites %}
@@ -32,12 +116,27 @@
                             {% endif %}
                         </div>
                         <div class="flex flex-1 flex-col p-6">
+                            <div class="mb-3 flex flex-wrap gap-2">
+                                {% if activite.categorie %}
+                                    <span class="badge-modern badge-primary text-xs">
+                                        <i class="fas fa-tag mr-1"></i> {{ activite.categorie }}
+                                    </span>
+                                {% endif %}
+                                {% if activite.lieu %}
+                                    <span class="badge-modern badge-secondary text-xs">
+                                        <i class="fas fa-map-marker-alt mr-1"></i> {{ activite.lieu }}
+                                    </span>
+                                {% endif %}
+                            </div>
+                            
                             <h2 class="font-display text-xl font-bold text-navy-900 group-hover:text-brand-700 transition-colors">{{ activite.titre }}</h2>
+                            
                             {% if activite.date %}
                                 <p class="mt-2 text-sm font-semibold uppercase tracking-wide text-brand-700">
-                                    <span class="opacity-75">📅</span> {{ activite.date|date('d/m/Y') }}
+                                    <i class="fas fa-calendar-alt opacity-75 mr-1"></i> {{ activite.date|date('d/m/Y') }}
                                 </p>
                             {% endif %}
+                            
                             {% if activite.description %}
                                 <p class="mt-3 flex-1 text-sm leading-relaxed text-ink-900/70">{{ activite.description|u.truncate(100, '…') }}</p>
                             {% endif %}

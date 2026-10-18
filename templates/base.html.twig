@@ -77,7 +77,7 @@
     Aller au contenu principal
 </a>
 
-<header class="sticky top-0 z-50 border-b border-navy-200 glass shadow-lg">
+<header class="sticky top-0 z-50 border-b border-navy-800/30 bg-gradient-to-b from-white/95 to-white/90 backdrop-blur-lg shadow-lg shadow-navy-900/10">
     <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
         <a href="{{ path('app_home') }}" class="flex items-center gap-4 transition-transform hover:scale-105">
             <span class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-navy-700 to-navy-900 font-display text-lg font-bold text-white shadow-lg shadow-navy-700/30">
@@ -93,20 +93,69 @@
         </a>
 
         <nav class="hidden items-center gap-2 md:flex" aria-label="Navigation principale">
-            {% set nav_links = {
-                'app_home': "Accueil",
-                'app_activites': "Activités",
-                'app_galerie': "Galerie",
-                'app_emplois': "Emplois",
-                'app_about': "À propos",
-                'app_contact': "Contact"
-            } %}
-            {% for route, label in nav_links %}
-                <a href="{{ path(route) }}"
-                   class="nav-link {{ app.request.attributes.get('_route') == route ? 'active text-brand-700' : '' }}">
-                    {{ label }}
-                </a>
-            {% endfor %}
+            <a href="{{ path('app_home') }}" class="nav-link {{ app.request.attributes.get('_route') == 'app_home' ? 'active text-brand-700' : '' }}">
+                Accueil
+            </a>
+            
+            <!-- À propos de nous (avec sous-menu) -->
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-1 hover:text-brand-700 {{ app.request.attributes.get('_route') matches '/^app_about.*/' ? 'text-brand-700' : '' }}">
+                    À propos de nous
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="absolute left-0 mt-2 w-48 rounded-lg border border-navy-200 bg-white py-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <a href="{{ path('app_about_objectifs') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Objectifs</a>
+                    <a href="{{ path('app_about_mission') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Mission</a>
+                    <a href="{{ path('app_about_equipe') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Notre Équipe</a>
+                    <a href="{{ path('app_about') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Présentation</a>
+                </div>
+            </div>
+            
+            <!-- Notre travail (avec sous-menu) -->
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-1 hover:text-brand-700 {{ app.request.attributes.get('_route') matches '/^app_activites.*/' or app.request.attributes.get('_route') matches '/^app_rapports.*/' ? 'text-brand-700' : '' }}">
+                    Notre travail
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="absolute left-0 mt-2 w-48 rounded-lg border border-navy-200 bg-white py-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <a href="{{ path('app_activites') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Activités</a>
+                    <a href="{{ path('app_rapports_index') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Rapports</a>
+                </div>
+            </div>
+            
+            <!-- Autre actualités (avec sous-menu) -->
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-1 hover:text-brand-700 {{ app.request.attributes.get('_route') matches '/^app_annonces.*/' or app.request.attributes.get('_route') matches '/^app_galerie.*/' ? 'text-brand-700' : '' }}">
+                    Autre actualités
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="absolute left-0 mt-2 w-48 rounded-lg border border-navy-200 bg-white py-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <a href="{{ path('app_annonces_index') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Actualités</a>
+                    <a href="{{ path('app_galerie') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Médias</a>
+                </div>
+            </div>
+            
+            <!-- Travaillez avec nous (avec sous-menu) -->
+            <div class="relative group">
+                <button class="nav-link flex items-center gap-1 hover:text-brand-700 {{ app.request.attributes.get('_route') matches '/^app_partenaires.*/' or app.request.attributes.get('_route') matches '/^app_don.*/' or app.request.attributes.get('_route') matches '/^app_emplois.*/' or app.request.attributes.get('_route') matches '/^app_contact.*/' ? 'text-brand-700' : '' }}">
+                    Travaillez avec nous
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="absolute left-0 mt-2 w-56 rounded-lg border border-navy-200 bg-white py-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                    <a href="{{ path('app_partenaires') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Devenir partenaires</a>
+                    <a href="{{ path('app_don') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Don</a>
+                    <a href="{{ path('app_emplois') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Emplois</a>
+                    <a href="{{ path('app_contact') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Contact</a>
+                </div>
+            </div>
         </nav>
 
         <button id="menu-toggle" type="button" aria-expanded="false" aria-controls="mobile-menu"
@@ -120,12 +169,69 @@
 
     <nav id="mobile-menu" class="hidden border-t border-navy-200 bg-white/95 backdrop-blur-lg md:hidden" aria-label="Navigation mobile">
         <div class="flex flex-col px-4 py-4 space-y-2">
-            {% for route, label in nav_links %}
-                <a href="{{ path(route) }}"
-                   class="rounded-xl px-4 py-3 text-base font-semibold transition-all duration-300 {{ app.request.attributes.get('_route') == route ? 'bg-brand-700 text-white shadow-lg' : 'text-navy-900 hover:bg-navy-50' }}">
-                    {{ label }}
-                </a>
-            {% endfor %}
+            <a href="{{ path('app_home') }}" class="rounded-xl px-4 py-3 text-base font-semibold transition-all duration-300 {{ app.request.attributes.get('_route') == 'app_home' ? 'bg-brand-700 text-white shadow-lg' : 'text-navy-900 hover:bg-navy-50' }}">
+                Accueil
+            </a>
+            
+            <!-- À propos de nous (mobile) -->
+            <details class="group">
+                <summary class="flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-navy-900 hover:bg-navy-50 cursor-pointer">
+                    À propos de nous
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </summary>
+                <div class="ml-4 mt-2 space-y-2">
+                    <a href="{{ path('app_about_objectifs') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Objectifs</a>
+                    <a href="{{ path('app_about_mission') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Mission</a>
+                    <a href="{{ path('app_about_equipe') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Notre Équipe</a>
+                    <a href="{{ path('app_about') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Présentation</a>
+                </div>
+            </details>
+            
+            <!-- Notre travail (mobile) -->
+            <details class="group">
+                <summary class="flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-navy-900 hover:bg-navy-50 cursor-pointer">
+                    Notre travail
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </summary>
+                <div class="ml-4 mt-2 space-y-2">
+                    <a href="{{ path('app_activites') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Activités</a>
+                    <a href="{{ path('app_rapports_index') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Rapports</a>
+                </div>
+            </details>
+            
+            <!-- Autre actualités (mobile) -->
+            <details class="group">
+                <summary class="flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-navy-900 hover:bg-navy-50 cursor-pointer">
+                    Autre actualités
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </summary>
+                <div class="ml-4 mt-2 space-y-2">
+                    <a href="{{ path('app_annonces_index') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Actualités</a>
+                    <a href="{{ path('app_galerie') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Médias</a>
+                </div>
+            </details>
+            
+            <!-- Travaillez avec nous (mobile) -->
+            <details class="group">
+                <summary class="flex items-center justify-between rounded-xl px-4 py-3 text-base font-semibold text-navy-900 hover:bg-navy-50 cursor-pointer">
+                    Travaillez avec nous
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 group-open:rotate-180 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </summary>
+                <div class="ml-4 mt-2 space-y-2">
+                    <a href="{{ path('app_partenaires') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Devenir partenaires</a>
+                    <a href="{{ path('app_don') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Don</a>
+                    <a href="{{ path('app_emplois') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Emplois</a>
+                    <a href="{{ path('app_contact') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Contact</a>
+                </div>
+            </details>
         </div>
     </nav>
 </header>

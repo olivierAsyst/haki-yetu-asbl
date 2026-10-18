@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter un rapport - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Ajoutez un nouveau rapport officiel (annuel, financier, d'activités) à la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block og_title %}Ajouter un rapport - HAKI YETU asbl{% endblock %}
+{% block og_description %}Ajoutez un nouveau rapport officiel (annuel, financier, d'activités) à la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block twitter_title %}Ajouter un rapport - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}Ajoutez un nouveau rapport officiel (annuel, financier, d'activités) à la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <a href="{{ path('app_rapports_index') }}" class="inline-flex items-center text-brand-700 hover:text-brand-800 mb-6">
+            <i class="fas fa-arrow-left mr-2"></i> Retour aux rapports
+        </a>
+        
+        <div class="mb-6">
+            <span class="section-eyebrow">Administration</span>
+            <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Ajouter un nouveau rapport</h1>
+            <p class="mt-4 prose-body">
+                Remplissez ce formulaire pour ajouter un nouveau rapport officiel à la plateforme. 
+                Tous les champs marqués d'un astérisque (*) sont obligatoires.
+            </p>
+        </div>
+    </div>
+    
+    <div class="card-modern">
+        <div class="p-6 md:p-8">
+            {{ form_start(form) }}
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Informations principales</h2>
+                        <div class="space-y-4">
+                            {{ form_row(form.titre) }}
+                            {{ form_row(form.description) }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Métadonnées</h2>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            {{ form_row(form.annee) }}
+                            {{ form_row(form.periode) }}
+                            {{ form_row(form.type) }}
+                            {{ form_row(form.langue) }}
+                            {{ form_row(form.datePublication) }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Fichier du rapport</h2>
+                        <div class="rounded-xl border-2 border-dashed border-navy-200 bg-navy-50 p-6">
+                            <div class="mb-4 text-center">
+                                <i class="fas fa-file-upload text-4xl text-navy-400 mb-3"></i>
+                                <h3 class="font-display text-lg font-bold text-navy-900">Déposer le fichier</h3>
+                                <p class="mt-2 text-sm text-navy-600">
+                                    Formats acceptés : PDF, Word (.doc, .docx), Excel (.xls, .xlsx)<br>
+                                    Taille maximale : 10 Mo
+                                </p>
+                            </div>
+                            {{ form_row(form.fichierFile) }}
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-navy-200">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                            <a href="{{ path('app_rapports_index') }}" class="btn-secondary order-2 sm:order-1">
+                                <i class="fas fa-times mr-2"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn-primary order-1 sm:order-2">
+                                <i class="fas fa-save mr-2"></i> Enregistrer le rapport
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    
+    <div class="mt-8 rounded-xl bg-brand-50 border border-brand-200 p-6">
+        <h3 class="mb-3 font-display text-lg font-bold text-brand-800">
+            <i class="fas fa-lightbulb mr-2"></i> Conseils pour l'ajout de rapports
+        </h3>
+        <ul class="space-y-2 text-sm text-brand-700">
+            <li class="flex items-start gap-2">
+                <i class="fas fa-check mt-1"></i>
+                <span>Utilisez un titre clair et descriptif qui identifie facilement le rapport</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-check mt-1"></i>
+                <span>Ajoutez une description détaillée pour aider les visiteurs à comprendre le contenu</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-check mt-1"></i>
+                <span>Spécifiez l'année et la période/exercice pour faciliter le filtrage</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-check mt-1"></i>
+                <span>Vérifiez que le fichier téléchargé est lisible et de bonne qualité</span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

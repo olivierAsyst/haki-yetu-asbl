@@ -19,9 +19,26 @@
             <header class="mb-8">
                 <p class="section-eyebrow">Activité</p>
                 <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">{{ activite.titre }}</h1>
-                {% if activite.date %}
-                    <p class="mt-2 text-sm font-medium uppercase tracking-wide text-brand-700">{{ activite.date|date('d/m/Y') }}</p>
-                {% endif %}
+                
+                <div class="mt-4 flex flex-wrap gap-3">
+                    {% if activite.categorie %}
+                        <span class="badge-modern badge-primary">
+                            <i class="fas fa-tag mr-1"></i> {{ activite.categorie }}
+                        </span>
+                    {% endif %}
+                    
+                    {% if activite.lieu %}
+                        <span class="badge-modern badge-secondary">
+                            <i class="fas fa-map-marker-alt mr-1"></i> {{ activite.lieu }}
+                        </span>
+                    {% endif %}
+                    
+                    {% if activite.date %}
+                        <span class="badge-modern badge-success">
+                            <i class="fas fa-calendar-alt mr-1"></i> {{ activite.date|date('d/m/Y') }}
+                        </span>
+                    {% endif %}
+                </div>
             </header>
 
             {% if activite.imageName %}

@@ -1,0 +1,69 @@
+{% if annonces|length > 0 %}
+    <section class="bg-gradient-to-r from-navy-900 to-navy-800 py-16 text-white" aria-labelledby="annonces-titre">
+        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                        <i class="fas fa-newspaper text-2xl"></i>
+                    </div>
+                    <h2 id="annonces-titre" class="font-display text-3xl font-bold md:text-4xl">Dernières actualités</h2>
+                </div>
+                <p class="mx-auto mt-4 max-w-2xl text-lg text-brand-100/90">
+                    Restez informé des dernières nouvelles et événements de HAKI YETU.
+                </p>
+            </div>
+
+            <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                {% for annonce in annonces|slice(0, 3) %}
+                    <article class="group bg-white/10 backdrop-blur-sm rounded-xl border border-white/20 overflow-hidden hover:bg-white/15 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="inline-flex items-center rounded-full bg-brand-500/20 px-3 py-1 text-xs font-medium text-white">
+                                    {{ annonce.getTypeLabel() }}
+                                </div>
+                                {% if annonce.dateEvenement %}
+                                    <time class="text-xs text-brand-100/70">
+                                        {{ annonce.dateEvenement|date('d/m/Y') }}
+                                    </time>
+                                {% endif %}
+                            </div>
+                            
+                            <h3 class="font-display text-lg font-bold leading-snug text-white mb-3 group-hover:text-brand-300 transition-colors">
+                                {{ annonce.titre }}
+                            </h3>
+                            
+                            {% if annonce.contenu %}
+                                <p class="text-sm text-brand-100/80 leading-relaxed mb-4 line-clamp-3">
+                                    {{ annonce.contenu|u.truncate(120, '…') }}
+                                </p>
+                            {% endif %}
+                            
+                            <div class="flex items-center justify-between pt-4 border-t border-white/20">
+                                <a href="{{ path('app_annonces_show', {'id': annonce.id}) }}" class="inline-flex items-center text-brand-300 text-sm font-medium hover:text-brand-200">
+                                    Lire la suite
+                                    <i class="fas fa-arrow-right ml-1.5 text-xs"></i>
+                                </a>
+                                
+                                {% if annonce.isExpired() %}
+                                    <span class="inline-flex items-center gap-1 rounded-full bg-white/20 px-2.5 py-1 text-xs font-medium text-white/80">
+                                        <i class="fas fa-clock text-xs"></i>
+                                        Terminé
+                                    </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+            </div>
+            
+            {% if annonces|length > 3 %}
+                <div class="mt-12 text-center">
+                    <a href="{{ path('app_annonces_index') }}" class="inline-flex items-center gap-2 rounded-lg bg-white px-6 py-3 text-sm font-semibold text-navy-900 hover:bg-brand-50 transition-colors shadow-sm">
+                        <i class="fas fa-list"></i>
+                        Voir toutes les actualités
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endif %}

@@ -1,0 +1,222 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de don - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Merci pour votre don à HAKI YETU asbl. Votre soutien nous aide à poursuivre notre mission pour l'exclusion zéro des personnes vivant avec handicap.{% endblock %}
+
+{% block og_title %}Confirmation de don - HAKI YETU asbl{% endblock %}
+{% block og_description %}Merci pour votre don à HAKI YETU asbl. Votre soutien nous aide à poursuivre notre mission pour l'exclusion zéro des personnes vivant avec handicap.{% endblock %}
+
+{% block twitter_title %}Confirmation de don - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}Merci pour votre don à HAKI YETU asbl. Votre soutien nous aide à poursuivre notre mission pour l'exclusion zéro des personnes vivant avec handicap.{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="text-center mb-8">
+        <div class="mb-6">
+            <div class="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-brand-700 to-brand-800 text-white">
+                <i class="fas fa-heart text-3xl"></i>
+            </div>
+        </div>
+        
+        <h1 class="mt-4 font-display text-4xl font-bold text-navy-900 md:text-5xl">Merci pour votre don !</h1>
+        <p class="mt-4 prose-body text-lg">
+            Votre générosité fait toute la différence. Nous vous avons envoyé un email de confirmation 
+            avec les détails de votre don et les instructions de paiement.
+        </p>
+    </div>
+
+    <div class="card-modern mb-8">
+        <div class="p-6 md:p-8">
+            <h2 class="mb-6 font-display text-2xl font-bold text-navy-900">Récapitulatif de votre don</h2>
+            
+            <div class="grid gap-6 md:grid-cols-2">
+                <div>
+                    <h3 class="mb-4 text-lg font-semibold text-navy-900">Informations du don</h3>
+                    <dl class="space-y-3">
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Numéro de référence</dt>
+                            <dd class="text-navy-900 font-mono">DON-{{ don.id|string|pad_start(6, '0') }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Montant</dt>
+                            <dd class="text-navy-900 font-bold text-xl">{{ don.getMontantFormate() }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Type de don</dt>
+                            <dd class="text-navy-900">{{ don.getTypeDonLabel() }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Méthode de paiement</dt>
+                            <dd class="text-navy-900">{{ don.getMethodePaiementLabel() }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Statut</dt>
+                            <dd>
+                                <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-medium bg-yellow-100 text-yellow-800">
+                                    <i class="fas fa-clock mr-1"></i> {{ don.getStatutLabel() }}
+                                </span>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+                
+                <div>
+                    <h3 class="mb-4 text-lg font-semibold text-navy-900">Informations personnelles</h3>
+                    <dl class="space-y-3">
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Nom</dt>
+                            <dd class="text-navy-900">
+                                {% if don.anonyme %}
+                                    <span class="italic">Anonyme</span>
+                                {% else %}
+                                    {{ don.nom }}
+                                {% endif %}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Email</dt>
+                            <dd class="text-navy-900">{{ don.email }}</dd>
+                        </div>
+                        <div>
+                            <dt class="text-sm font-medium text-navy-700">Date</dt>
+                            <dd class="text-navy-900">{{ don.createdAt|date('d/m/Y à H:i') }}</dd>
+                        </div>
+                        {% if don.message %}
+                            <div>
+                                <dt class="text-sm font-medium text-navy-700">Votre message</dt>
+                                <dd class="text-navy-900 italic">{{ don.message }}</dd>
+                            </div>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-navy-200">
+                <h3 class="mb-4 text-lg font-semibold text-navy-900">Instructions de paiement</h3>
+                
+                <div class="rounded-xl bg-navy-50 p-6">
+                    {% if don.methodePaiement == 'mobile_money' %}
+                        <h4 class="mb-3 font-bold text-navy-900">Paiement par Mobile Money</h4>
+                        <ol class="space-y-3 text-sm text-navy-600">
+                            <li class="flex items-start gap-2">
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-700 text-xs font-bold text-white">1</span>
+                                <span>Effectuez un transfert Mobile Money à l'un de nos numéros :</span>
+                            </li>
+                            <li class="ml-8">
+                                <ul class="space-y-2">
+                                    <li><strong>Airtel Money :</strong> +243 994 116 041</li>
+                                    <li><strong>Orange Money :</strong> +243 999 644 524</li>
+                                </ul>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-700 text-xs font-bold text-white">2</span>
+                                <span>Indiquez dans le message du transfert : <code class="bg-white px-2 py-1 rounded">DON-{{ don.id|string|pad_start(6, '0') }}</code></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-700 text-xs font-bold text-white">3</span>
+                                <span>Une fois le transfert effectué, nous mettrons à jour le statut de votre don</span>
+                            </li>
+                        </ol>
+                        
+                    {% elseif don.methodePaiement == 'virement_bancaire' %}
+                        <h4 class="mb-3 font-bold text-navy-900">Virement bancaire</h4>
+                        <div class="space-y-3 text-sm text-navy-600">
+                            <p><strong>Veuillez effectuer le virement aux coordonnées suivantes :</strong></p>
+                            <div class="bg-white p-4 rounded-lg">
+                                <p><strong>Banque :</strong> BIAC (Banque Internationale pour l'Afrique au Congo)</p>
+                                <p><strong>Titulaire :</strong> HAKI YETU asbl</p>
+                                <p><strong>Numéro de compte :</strong> 012-3456789-90</p>
+                                <p><strong>Code Swift :</strong> BIAFCDK1</p>
+                                <p><strong>Communication :</strong> DON-{{ don.id|string|pad_start(6, '0') }} - {{ don.nom }}</p>
+                            </div>
+                        </div>
+                        
+                    {% elseif don.methodePaiement == 'wave' %}
+                        <h4 class="mb-3 font-bold text-navy-900">Paiement par Wave</h4>
+                        <p class="text-sm text-navy-600">
+                            Effectuez le paiement Wave au numéro <strong>+243 994 116 041</strong> avec la communication <code class="bg-white px-2 py-1 rounded">DON-{{ don.id|string|pad_start(6, '0') }}</code>.
+                        </p>
+                        
+                    {% elseif don.methodePaiement == 'western_union' or don.methodePaiement == 'moneygram' %}
+                        <h4 class="mb-3 font-bold text-navy-900">Western Union / MoneyGram</h4>
+                        <p class="text-sm text-navy-600">
+                            Effectuez le transfert au nom de <strong>HAKI YETU asbl</strong>. 
+                            Une fois effectué, envoyez-nous les détails du transfert à <a href="mailto:hakiyetuass@yahoo.fr" class="text-brand-700 hover:text-brand-800">hakiyetuass@yahoo.fr</a>.
+                        </p>
+                        
+                    {% elseif don.methodePaiement == 'especes' %}
+                        <h4 class="mb-3 font-bold text-navy-900">Dépôt en espèces</h4>
+                        <p class="text-sm text-navy-600">
+                            Vous pouvez déposer votre don directement à notre siège :<br>
+                            <strong>Économat Général du Diocèse d'Uvira<br>
+                            Qt Kimanga, Av du Congo, N°68<br>
+                            Ville d'Uvira, Sud-Kivu, RD Congo</strong>
+                        </p>
+                        
+                    {% else %}
+                        <p class="text-sm text-navy-600">
+                            Vous recevrez par email les instructions détaillées pour finaliser votre don.
+                        </p>
+                    {% endif %}
+                </div>
+                
+                <div class="mt-4 text-sm text-navy-600">
+                    <p class="flex items-center gap-2">
+                        <i class="fas fa-envelope text-brand-700"></i>
+                        <span>Un email récapitulatif vous a été envoyé à <strong>{{ don.email }}</strong></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2">
+        <div class="card-modern">
+            <div class="p-6">
+                <h3 class="mb-4 font-display text-xl font-bold text-navy-900">Suivi de votre don</h3>
+                <ul class="space-y-3 text-sm text-navy-600">
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check text-brand-700 mt-1"></i>
+                        <span>Vous recevrez un email de confirmation dès que votre don sera traité</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check text-brand-700 mt-1"></i>
+                        <span>Pour les dons récurrents, vous recevrez un rappel avant chaque prélèvement</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check text-brand-700 mt-1"></i>
+                        <span>Le reçu fiscal (si demandé) sera envoyé dans les 30 jours</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="card-modern">
+            <div class="p-6">
+                <h3 class="mb-4 font-display text-xl font-bold text-navy-900">Prochaines étapes</h3>
+                <div class="space-y-4">
+                    <a href="{{ path('app_activites') }}" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700">
+                        <i class="fas fa-running text-brand-700"></i>
+                        <span>Découvrir nos activités sur le terrain</span>
+                    </a>
+                    <a href="{{ path('app_rapports_index') }}" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700">
+                        <i class="fas fa-file-alt text-brand-700"></i>
+                        <span>Consulter nos rapports annuels</span>
+                    </a>
+                    <a href="{{ path('app_home') }}" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700">
+                        <i class="fas fa-home text-brand-700"></i>
+                        <span>Retourner à l'accueil</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="mt-8 text-center">
+        <p class="text-sm text-navy-600">
+            Des questions ? Contactez-nous à <a href="mailto:hakiyetuass@yahoo.fr" class="text-brand-700 hover:text-brand-800">hakiyetuass@yahoo.fr</a> ou au <a href="tel:+243994116041" class="text-brand-700 hover:text-brand-800">+243 994 116 041</a>
+        </p>
+    </div>
+</div>
+{% endblock %}

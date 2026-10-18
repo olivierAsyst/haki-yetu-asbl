@@ -1,0 +1,252 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Partenaires - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Découvrez nos partenaires institutionnels, techniques et financiers qui nous accompagnent dans notre mission pour l'exclusion zéro des personnes vivant avec handicap.{% endblock %}
+
+{% block og_title %}Nos Partenaires - HAKI YETU asbl{% endblock %}
+{% block og_description %}Découvrez nos partenaires institutionnels, techniques et financiers qui nous accompagnent dans notre mission pour l'exclusion zéro des personnes vivant avec handicap.{% endblock %}
+
+{% block twitter_title %}Nos Partenaires - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}Découvrez nos partenaires institutionnels, techniques et financiers qui nous accompagnent dans notre mission pour l'exclusion zéro des personnes vivant avec handicap.{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mb-12 text-center">
+        <span class="section-eyebrow">Collaboration et partenariat</span>
+        <h1 class="mt-2 font-display text-4xl font-bold text-navy-900 md:text-5xl">Nos Partenaires</h1>
+        <p class="mx-auto mt-6 max-w-2xl prose-body">
+            Notre action serait impossible sans le soutien de nos précieux partenaires. 
+            Découvrez les organisations qui nous accompagnent dans notre mission pour l'exclusion zéro des personnes vivant avec handicap.
+        </p>
+    </div>
+
+    {% if partenairesParCategorie is empty %}
+        <div class="rounded-2xl bg-white p-12 text-center shadow-lg shadow-navy-900/10">
+            <i class="fas fa-handshake text-5xl text-navy-300 mb-6"></i>
+            <h3 class="font-display text-2xl font-bold text-navy-900 mb-4">Nos partenaires</h3>
+            <p class="prose-body mb-6">La liste de nos partenaires sera bientôt disponible.</p>
+            <p class="text-sm text-navy-600">Vous souhaitez devenir partenaire ? <a href="{{ path('app_contact') }}" class="text-brand-700 hover:text-brand-800">Contactez-nous</a></p>
+        </div>
+    {% else %}
+        {% for categorie, partenaires in partenairesParCategorie %}
+            <div class="mb-16">
+                <div class="mb-8">
+                    <h2 class="font-display text-3xl font-bold text-navy-900">
+                        {{ categorie }}
+                    </h2>
+                    <div class="mt-2 h-1 w-20 bg-brand-700"></div>
+                </div>
+                
+                <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    {% for partenaire in partenaires %}
+                        <div class="card-modern">
+                            <div class="p-6">
+                                <div class="mb-6 flex justify-center">
+                                    {% if partenaire.logoName %}
+                                        <div class="flex h-40 w-full items-center justify-center rounded-xl bg-white p-6">
+                                            <img 
+                                                src="{{ asset('/uploads/partenaires/' ~ partenaire.logoName) }}" 
+                                                alt="Logo {{ partenaire.nom }}"
+                                                class="max-h-28 max-w-full object-contain"
+                                                loading="lazy"
+                                            >
+                                        </div>
+                                    {% else %}
+                                        <div class="flex h-40 w-full items-center justify-center rounded-xl bg-navy-100 text-navy-700">
+                                            <i class="fas fa-handshake text-5xl"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <h3 class="mb-3 font-display text-xl font-bold text-navy-900 text-center">{{ partenaire.nom }}</h3>
+                                
+                                {% if partenaire.type %}
+                                    <div class="mb-4 text-center">
+                                        <span class="badge-modern badge-primary">
+                                            {% if partenaire.type == 'institutionnel' %}Institutionnel
+                                            {% elseif partenaire.type == 'ong_internationale' %}ONG Internationale
+                                            {% elseif partenaire.type == 'ong_nationale' %}ONG Nationale
+                                            {% elseif partenaire.type == 'organisme_public' %}Organisme Public
+                                            {% elseif partenaire.type == 'entreprise_privee' %}Entreprise Privée
+                                            {% elseif partenaire.type == 'bailleur_fonds' %}Bailleur de Fonds
+                                            {% elseif partenaire.type == 'partenaire_technique' %}Partenaire Technique
+                                            {% else %}{{ partenaire.type|capitalize }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                {% endif %}
+                                
+                                {% if partenaire.description %}
+                                    <p class="mb-6 text-sm text-navy-600 line-clamp-4">{{ partenaire.description|u.truncate(200, '...') }}</p>
+                                {% endif %}
+                                
+                                <div class="flex flex-col gap-3">
+                                    {% if partenaire.url %}
+                                        <a href="{{ partenaire.url }}" target="_blank" rel="noopener" class="btn-tertiary text-center">
+                                            <i class="fas fa-external-link-alt mr-2"></i> Visiter le site
+                                        </a>
+                                    {% endif %}
+                                    
+                                    <button type="button" 
+                                            class="btn-secondary text-center" 
+                                            onclick="document.getElementById('modal-{{ partenaire.id }}').classList.remove('hidden')">
+                                        <i class="fas fa-info-circle mr-2"></i> Plus d'informations
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Modal pour plus d'informations -->
+                        <div id="modal-{{ partenaire.id }}" class="fixed inset-0 z-50 hidden overflow-y-auto">
+                            <div class="flex min-h-screen items-center justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+                                <div class="fixed inset-0 bg-navy-900 bg-opacity-75 transition-opacity" 
+                                     onclick="document.getElementById('modal-{{ partenaire.id }}').classList.add('hidden')"></div>
+                                
+                                <span class="hidden sm:inline-block sm:h-screen sm:align-middle">&#8203;</span>
+                                
+                                <div class="inline-block transform overflow-hidden rounded-2xl bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-2xl sm:align-middle">
+                                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                        <div class="sm:flex sm:items-start">
+                                            <div class="mt-3 text-center sm:mt-0 sm:text-left w-full">
+                                                <div class="mb-6 flex items-center justify-between">
+                                                    <h3 class="font-display text-2xl font-bold text-navy-900">{{ partenaire.nom }}</h3>
+                                                    <button type="button" 
+                                                            class="text-navy-400 hover:text-navy-600"
+                                                            onclick="document.getElementById('modal-{{ partenaire.id }}').classList.add('hidden')">
+                                                        <i class="fas fa-times text-xl"></i>
+                                                    </button>
+                                                </div>
+                                                
+                                                <div class="mb-8 flex justify-center">
+                                                    {% if partenaire.logoName %}
+                                                        <div class="flex h-48 w-full items-center justify-center rounded-xl bg-white p-8">
+                                                            <img 
+                                                                src="{{ asset('/uploads/partenaires/' ~ partenaire.logoName) }}" 
+                                                                alt="Logo {{ partenaire.nom }}"
+                                                                class="max-h-32 max-w-full object-contain"
+                                                                loading="lazy"
+                                                            >
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                
+                                                {% if partenaire.description %}
+                                                    <div class="mb-6">
+                                                        <h4 class="mb-3 text-lg font-semibold text-navy-900">À propos</h4>
+                                                        <div class="prose-body">
+                                                            {{ partenaire.description|nl2br }}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                
+                                                <div class="grid gap-4 sm:grid-cols-2">
+                                                    {% if partenaire.type %}
+                                                        <div>
+                                                            <h4 class="text-sm font-semibold uppercase tracking-wider text-navy-700">Type</h4>
+                                                            <p class="text-navy-900">
+                                                                {% if partenaire.type == 'institutionnel' %}Institutionnel
+                                                                {% elseif partenaire.type == 'ong_internationale' %}ONG Internationale
+                                                                {% elseif partenaire.type == 'ong_nationale' %}ONG Nationale
+                                                                {% elseif partenaire.type == 'organisme_public' %}Organisme Public
+                                                                {% elseif partenaire.type == 'entreprise_privee' %}Entreprise Privée
+                                                                {% elseif partenaire.type == 'bailleur_fonds' %}Bailleur de Fonds
+                                                                {% elseif partenaire.type == 'partenaire_technique' %}Partenaire Technique
+                                                                {% else %}{{ partenaire.type|capitalize }}
+                                                                {% endif %}
+                                                            </p>
+                                                        </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if partenaire.categorie %}
+                                                        <div>
+                                                            <h4 class="text-sm font-semibold uppercase tracking-wider text-navy-700">Catégorie</h4>
+                                                            <p class="text-navy-900">{{ partenaire.categorie|capitalize }}</p>
+                                                        </div>
+                                                    {% endif %}
+                                                    
+                                                    {% if partenaire.url %}
+                                                        <div class="sm:col-span-2">
+                                                            <h4 class="text-sm font-semibold uppercase tracking-wider text-navy-700">Site web</h4>
+                                                            <a href="{{ partenaire.url }}" target="_blank" rel="noopener" class="text-brand-700 hover:text-brand-800 break-all">
+                                                                {{ partenaire.url }}
+                                                            </a>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="bg-navy-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+                                        <button type="button" 
+                                                class="btn-primary w-full sm:ml-3 sm:w-auto"
+                                                onclick="document.getElementById('modal-{{ partenaire.id }}').classList.add('hidden')">
+                                            Fermer
+                                        </button>
+                                        {% if partenaire.url %}
+                                            <a href="{{ partenaire.url }}" 
+                                               target="_blank" 
+                                               rel="noopener"
+                                               class="mt-3 inline-flex w-full justify-center rounded-xl border border-navy-300 bg-white px-4 py-2 text-base font-medium text-navy-700 shadow-sm hover:bg-navy-50 sm:mt-0 sm:w-auto">
+                                                <i class="fas fa-external-link-alt mr-2"></i> Visiter le site
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    {% endif %}
+    
+    <div class="mt-16 rounded-2xl bg-gradient-to-br from-navy-700 to-navy-900 p-8 text-white shadow-xl">
+        <div class="grid gap-8 md:grid-cols-2">
+            <div>
+                <h2 class="mb-4 font-display text-2xl font-bold">Devenir partenaire</h2>
+                <p class="mb-6 text-brand-50/80">
+                    Vous souhaitez soutenir notre mission et devenir partenaire de HAKI YETU asbl ? 
+                    Ensemble, nous pouvons faire plus pour l'inclusion des personnes vivant avec handicap.
+                </p>
+                <ul class="space-y-3 text-sm text-brand-50/80">
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check mt-1 text-brand-300"></i>
+                        <span>Partagez notre vision d'une société inclusive</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check mt-1 text-brand-300"></i>
+                        <span>Soutenez nos projets sur le terrain</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check mt-1 text-brand-300"></i>
+                        <span>Contribuez à notre expertise technique</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fas fa-check mt-1 text-brand-300"></i>
+                        <span>Participez à notre réseau de partenaires</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="flex flex-col justify-center">
+                <h3 class="mb-4 font-display text-xl font-bold">Contactez-nous</h3>
+                <p class="mb-6 text-brand-50/80">
+                    Pour discuter d'un partenariat ou pour plus d'informations, n'hésitez pas à nous contacter.
+                </p>
+                <a href="{{ path('app_contact') }}" class="btn-primary bg-white text-navy-900 hover:bg-brand-100 text-center">
+                    <i class="fas fa-envelope mr-2"></i> Nous contacter
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="mt-8 text-center">
+            <a href="{{ path('app_partenaires_admin') }}" class="btn-secondary">
+                <i class="fas fa-cog mr-2"></i> Gérer les partenaires
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

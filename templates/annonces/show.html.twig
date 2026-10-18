@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ annonce.titre }} — HAKI YETU asbl{% endblock %}
+
+{% block body %}
+    <article class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="mb-10">
+            <a href="{{ path('app_annonces_index') }}" class="inline-flex items-center text-brand-700 font-medium hover:text-brand-800 mb-6 text-sm">
+                <i class="fas fa-arrow-left mr-2"></i>
+                Retour aux actualités
+            </a>
+            
+            <div class="mb-6">
+                <div class="inline-flex items-center rounded-full bg-brand-100 px-3 py-1 text-xs font-medium text-brand-800 mb-4">
+                    {{ annonce.getTypeLabel() }}
+                </div>
+                <h1 class="font-display text-3xl md:text-4xl font-semibold text-navy-900 mb-4">{{ annonce.titre }}</h1>
+            </div>
+            
+            <div class="flex items-center text-sm text-ink-900/60 mb-8">
+                {% if annonce.dateEvenement %}
+                    <div class="flex items-center gap-2 mr-6">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{{ annonce.dateEvenement|date('d F Y') }}</span>
+                    </div>
+                {% endif %}
+                
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-clock"></i>
+                    <span>Publié le {{ annonce.createdAt|date('d/m/Y') }}</span>
+                </div>
+                
+                {% if annonce.isExpired() %}
+                    <span class="ml-6 inline-flex items-center gap-1 rounded-full bg-navy-100 px-3 py-1 text-xs font-medium text-navy-800">
+                        <i class="fas fa-clock"></i>
+                        Terminé
+                    </span>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="prose prose-lg max-w-none">
+            {% if annonce.contenu %}
+                <div class="bg-white rounded-xl border border-brand-200 p-8 mb-8">
+                    <div class="prose prose-lg max-w-none text-ink-900/80">
+                        {{ annonce.contenu|raw|nl2br }}
+                    </div>
+                </div>
+            {% endif %}
+            
+            <div class="mt-8 flex flex-wrap gap-4">
+                <button onclick="window.print()" class="inline-flex items-center gap-2 rounded-lg border border-navy-300 bg-white px-5 py-2.5 text-sm font-medium text-navy-700 hover:bg-navy-50 transition-colors">
+                    <i class="fas fa-print"></i>
+                    Imprimer
+                </button>
+                
+                <button onclick="shareContent()" class="inline-flex items-center gap-2 rounded-lg border border-navy-300 bg-white px-5 py-2.5 text-sm font-medium text-navy-700 hover:bg-navy-50 transition-colors">
+                    <i class="fas fa-share-alt"></i>
+                    Partager
+                </button>
+                
+                {% if annonce.getDureeLabel() %}
+                    <div class="inline-flex items-center gap-2 rounded-lg bg-navy-100 px-5 py-2.5 text-sm font-medium text-navy-800">
+                        <i class="fas fa-hourglass-half"></i>
+                        Durée: {{ annonce.getDureeLabel() }}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="mt-16 pt-12 border-t border-navy-200">
+            <h2 class="font-display text-2xl font-semibold text-navy-900 mb-8">Autres actualités</h2>
+            
+            <div class="grid gap-6 md:grid-cols-3">
+                {% for i in 1..3 %}
+                    <div class="bg-white rounded-xl border border-brand-200 p-6 hover:border-brand-400 transition-colors">
+                        <div class="inline-flex items-center rounded-full bg-navy-100 px-3 py-1 text-xs font-medium text-navy-800 mb-4">
+                            Événement
+                        </div>
+                        <h3 class="font-display text-lg font-semibold text-navy-900 mb-3">Titre de l'actualité {{ i }}</h3>
+                        <p class="text-sm text-ink-900/70 mb-4 line-clamp-2 leading-relaxed">
+                            Brève description de l'actualité avec quelques détails importants...
+                        </p>
+                        <a href="#" class="inline-flex items-center text-brand-700 font-medium hover:text-brand-800 text-sm">
+                            Lire la suite
+                            <i class="fas fa-arrow-right ml-2 text-xs"></i>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </article>
+    
+    <script>
+    function shareContent() {
+        if (navigator.share) {
+            navigator.share({
+                title: '{{ annonce.titre }}',
+                text: '{{ annonce.titre }} - HAKI YETU asbl',
+                url: window.location.href
+            });
+        } else {
+            // Fallback pour les navigateurs qui ne supportent pas l'API Web Share
+            const textArea = document.createElement('textarea');
+            textArea.value = window.location.href;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Lien copié dans le presse-papier !');
+        }
+    }
+    </script>
+{% endblock %}

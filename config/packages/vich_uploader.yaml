@@ -31,3 +31,13 @@ vich_uploader:
             uri_prefix: /uploads/candidatures/autres
             upload_destination: '%kernel.project_dir%/public/uploads/candidatures/autres'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+
+        rapport_fichiers:
+            uri_prefix: /uploads/rapports
+            upload_destination: '%kernel.project_dir%/public/uploads/rapports'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
+
+        partenaire_logos:
+            uri_prefix: /uploads/partenaires
+            upload_destination: '%kernel.project_dir%/public/uploads/partenaires'
+            namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

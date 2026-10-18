@@ -1,0 +1,345 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ urgence.titre }} — Appel d'urgence HAKI YETU{% endblock %}
+
+{% block meta_description %}{{ urgence.description|slice(0, 150) }}... Soutenez notre intervention d'urgence pour les personnes handicapées à {{ urgence.lieu }}.{% endblock %}
+
+{% block og_title %}{{ urgence.titre }} — Appel d'urgence HAKI YETU{% endblock %}
+{% block og_description %}Soutenez cette intervention d'urgence pour aider les personnes handicapées à {{ urgence.lieu }}.{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-gradient-to-b from-brand-50/30 to-white">
+    <!-- Emergency Header -->
+    <div class="relative overflow-hidden bg-gradient-to-r from-red-600 to-orange-600">
+        <div class="absolute inset-0 bg-pattern opacity-10"></div>
+        <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+            <div class="text-center text-white">
+                <div class="flex items-center justify-center gap-3 mb-6">
+                    <span class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                        <i class="fas fa-exclamation-triangle text-xl"></i>
+                    </span>
+                    <span class="text-lg font-semibold uppercase tracking-wide">
+                        Appel d'urgence
+                    </span>
+                </div>
+                
+                <h1 class="text-4xl font-display font-bold sm:text-5xl lg:text-6xl mb-6">
+                    {{ urgence.titre }}
+                </h1>
+                
+                <div class="max-w-3xl mx-auto">
+                    <p class="text-xl opacity-90 mb-8">
+                        {{ urgence.lieu }} · {{ urgence.dateDebut|date('d/m/Y') }}
+                    </p>
+                    
+                    <!-- Status Badge -->
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3 mb-8">
+                        <span class="h-3 w-3 rounded-full 
+                            {% if urgence.statut == 'en_cours' %}bg-yellow-500
+                            {% elseif urgence.statut == 'collecte_terminee' %}bg-green-500
+                            {% elseif urgence.statut == 'urgence_terminee' %}bg-blue-500
+                            {% else %}bg-gray-500{% endif %}">
+                        </span>
+                        <span class="font-medium">
+                            {{ urgence.statut|replace({'_': ' '})|title }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Left Column - Content -->
+            <div class="lg:col-span-2">
+                <!-- Progress Section -->
+                <div class="mb-12 overflow-hidden rounded-2xl border border-navy-200 bg-white shadow-xl">
+                    <div class="border-b border-navy-200 bg-navy-50 px-8 py-6">
+                        <h2 class="text-2xl font-display font-bold text-navy-900">Progression de la collecte</h2>
+                    </div>
+                    <div class="p-8">
+                        <!-- Progress Bar -->
+                        <div class="mb-8">
+                            <div class="flex justify-between text-lg font-medium text-navy-900 mb-4">
+                                <span>{{ urgence.getPourcentageCollecte }}% atteint</span>
+                                <span>{{ urgence.montantCollecte|number_format(0, ',', ' ') }} CDF</span>
+                            </div>
+                            <div class="h-6 overflow-hidden rounded-full bg-navy-100">
+                                <div class="h-full bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 rounded-full transition-all duration-500" 
+                                     style="width: {{ urgence.getPourcentageCollecte }}%"></div>
+                            </div>
+                            <div class="flex justify-between mt-4 text-sm text-navy-600">
+                                <span>0 CDF</span>
+                                <span class="font-bold">Objectif : {{ urgence.montantCible|number_format(0, ',', ' ') }} CDF</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Stats Grid -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div class="text-center">
+                                <div class="text-3xl font-display font-bold text-brand-600 mb-2">
+                                    {{ urgence.montantCollecte|number_format(0, ',', ' ') }}
+                                </div>
+                                <div class="text-sm font-medium text-navy-700">CDF collectés</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-display font-bold text-navy-600 mb-2">
+                                    {{ urgence.montantCible|number_format(0, ',', ' ') }}
+                                </div>
+                                <div class="text-sm font-medium text-navy-700">Objectif total</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-display font-bold text-green-600 mb-2">
+                                    {{ urgence.getPourcentageCollecte }}%
+                                </div>
+                                <div class="text-sm font-medium text-navy-700">Progression</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-3xl font-display font-bold 
+                                    {% if urgence.getJoursRestants and urgence.getJoursRestants < 10 %}text-red-600
+                                    {% elseif urgence.getJoursRestants and urgence.getJoursRestants < 30 %}text-orange-600
+                                    {% else %}text-navy-600{% endif %} mb-2">
+                                    {{ urgence.getJoursRestants ?? '∞' }}
+                                </div>
+                                <div class="text-sm font-medium text-navy-700">Jours restants</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Description Section -->
+                <div class="mb-12">
+                    <h2 class="text-3xl font-display font-bold text-navy-900 mb-8">Situation d'urgence</h2>
+                    
+                    <div class="prose prose-lg max-w-none text-navy-700">
+                        <p class="text-xl leading-relaxed mb-8">
+                            {{ urgence.description|nl2br }}
+                        </p>
+                        
+                        <!-- Impact Details -->
+                        <div class="bg-gradient-to-br from-brand-50 to-sage-50 rounded-2xl p-8 mb-8">
+                            <h3 class="text-2xl font-display font-bold text-navy-900 mb-6">Impact sur la communauté</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="flex items-start gap-4">
+                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-brand-500 text-white">
+                                        <i class="fas fa-wheelchair text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-navy-900 mb-2">Personnes handicapées affectées</h4>
+                                        <p class="text-navy-600">Priorité à l'assistance aux personnes vivant avec handicap et leurs familles</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start gap-4">
+                                    <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-red-500 text-white">
+                                        <i class="fas fa-home text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-display font-bold text-navy-900 mb-2">Besoins immédiats</h4>
+                                        <p class="text-navy-600">Distribution d'aide d'urgence : nourriture, eau, médicaments, abris</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="mb-12">
+                    <div class="bg-gradient-to-r from-brand-600 to-sage-600 rounded-2xl p-8 text-center text-white">
+                        <h3 class="text-2xl font-display font-bold mb-4">Votre soutien fait la différence</h3>
+                        <p class="text-lg opacity-90 mb-8 max-w-2xl mx-auto">
+                            Chaque contribution, quelle que soit sa taille, nous permet de fournir une assistance vitale aux personnes handicapées en situation d'urgence.
+                        </p>
+                        <div class="flex flex-wrap justify-center gap-4">
+                            <a href="{{ path('app_urgence_don', {'id': urgence.id}) }}" 
+                               class="btn-humanitarian bg-white text-brand-600 hover:bg-brand-50 hover:text-brand-700 text-lg px-8 py-4">
+                                <i class="fas fa-heart mr-3"></i>Soutenir cette urgence
+                            </a>
+                            <a href="{{ path('app_don') }}" 
+                               class="btn-humanitarian-secondary bg-white/20 hover:bg-white/30 text-lg px-8 py-4">
+                                <i class="fas fa-share-alt mr-3"></i>Partager l'appel
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column - Sidebar -->
+            <div class="space-y-8">
+                <!-- Emergency Info Card -->
+                <div class="overflow-hidden rounded-2xl border border-navy-200 bg-white shadow-lg">
+                    <div class="border-b border-navy-200 bg-navy-50 px-6 py-4">
+                        <h3 class="text-lg font-display font-bold text-navy-900">Détails de l'urgence</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-6">
+                            <div>
+                                <div class="text-sm font-medium text-navy-500 mb-1">Type d'urgence</div>
+                                <div class="flex items-center gap-3">
+                                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-red-100 text-red-600">
+                                        <i class="fas fa-exclamation-circle"></i>
+                                    </span>
+                                    <span class="font-medium text-navy-900">{{ urgence.type|replace({'_': ' '})|title }}</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm font-medium text-navy-500 mb-1">Localisation</div>
+                                <div class="flex items-center gap-3">
+                                    <span class="h-8 w-8 flex items-center justify-center rounded-lg bg-brand-100 text-brand-600">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                    </span>
+                                    <span class="font-medium text-navy-900">{{ urgence.lieu }}</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm font-medium text-navy-500 mb-1">Dates</div>
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-navy-700">Date de début :</span>
+                                        <span class="font-medium">{{ urgence.dateDebut|date('d/m/Y') }}</span>
+                                    </div>
+                                    {% if urgence.dateFin %}
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-navy-700">Date de fin prévue :</span>
+                                            <span class="font-medium">{{ urgence.dateFin|date('d/m/Y') }}</span>
+                                        </div>
+                                    {% endif %}
+                                    {% if urgence.updatedAt %}
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-navy-700">Dernière mise à jour :</span>
+                                            <span class="font-medium">{{ urgence.updatedAt|date('d/m/Y') }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <div class="text-sm font-medium text-navy-500 mb-1">Statut</div>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <span class="h-8 w-8 flex items-center justify-center rounded-lg 
+                                            {% if urgence.estActive %}bg-green-100 text-green-600
+                                            {% else %}bg-gray-100 text-gray-600{% endif %}">
+                                            <i class="fas {% if urgence.estActive %}fa-check-circle{% else %}fa-times-circle{% endif %}"></i>
+                                        </span>
+                                        <span class="font-medium text-navy-900">
+                                            {{ urgence.estActive ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </div>
+                                    <span class="text-xs px-2 py-1 rounded-full 
+                                        {% if urgence.statut == 'en_cours' %}bg-yellow-100 text-yellow-800
+                                        {% elseif urgence.statut == 'collecte_terminee' %}bg-green-100 text-green-800
+                                        {% elseif urgence.statut == 'urgence_terminee' %}bg-blue-100 text-blue-800
+                                        {% else %}bg-gray-100 text-gray-800{% endif %}">
+                                        {{ urgence.statut|replace({'_': ' '})|title }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Donations -->
+                <div class="overflow-hidden rounded-2xl border border-navy-200 bg-white shadow-lg">
+                    <div class="border-b border-navy-200 bg-navy-50 px-6 py-4">
+                        <h3 class="text-lg font-display font-bold text-navy-900">Montants suggérés</h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="space-y-4">
+                            {% set montants = [50000, 100000, 250000, 500000, 1000000] %}
+                            {% for montant in montants %}
+                                {% set pourcentage = (montant / urgence.montantCible) * 100 %}
+                                <a href="{{ path('app_don', {'urgence': urgence.id, 'montant_suggestion': montant}) }}" 
+                                   class="block rounded-xl border-2 border-navy-200 bg-white p-4 hover:border-brand-500 hover:bg-brand-50 transition-all duration-200">
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <div class="font-display font-bold text-navy-900 text-lg">{{ montant|number_format(0, ',', ' ') }} CDF</div>
+                                            <div class="text-sm text-navy-600">
+                                                {% if pourcentage < 1 %}
+                                                    Petite contribution
+                                                {% elseif pourcentage < 5 %}
+                                                    Contribution significative
+                                                {% else %}
+                                                    Contribution majeure
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="text-right">
+                                            <div class="text-sm text-navy-600">{% if pourcentage < 0.1 %}< 0.1%{% else %}{{ pourcentage|number_format(1) }}%{% endif %}</div>
+                                            <div class="text-xs text-navy-500">de l'objectif</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                            
+                            <!-- Custom Amount -->
+                            <div class="mt-6">
+                                <div class="text-center">
+                                    <a href="{{ path('app_don', {'urgence': urgence.id}) }}" 
+                                       class="inline-flex items-center gap-2 text-brand-600 hover:text-brand-700 font-medium">
+                                        <i class="fas fa-edit"></i>
+                                        Montant personnalisé
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Section -->
+                <div class="overflow-hidden rounded-2xl border border-navy-200 bg-gradient-to-br from-sage-50 to-brand-50 p-6">
+                    <h3 class="text-lg font-display font-bold text-navy-900 mb-4">Partager cet appel</h3>
+                    <p class="text-navy-700 mb-6 text-sm">
+                        Aidez-nous à diffuser cet appel d'urgence pour atteindre plus de personnes généreuses.
+                    </p>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="#" class="flex-1 min-w-[100px] btn-humanitarian-secondary text-center py-2 text-sm">
+                            <i class="fab fa-facebook-f mr-2"></i>Facebook
+                        </a>
+                        <a href="#" class="flex-1 min-w-[100px] btn-humanitarian-secondary text-center py-2 text-sm">
+                            <i class="fab fa-twitter mr-2"></i>Twitter
+                        </a>
+                        <a href="#" class="flex-1 min-w-[100px] btn-humanitarian-secondary text-center py-2 text-sm">
+                            <i class="fab fa-whatsapp mr-2"></i>WhatsApp
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Actions -->
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="border-t border-navy-200 bg-navy-50">
+            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                    <div class="text-sm text-navy-700">
+                        <span class="font-medium">Actions d'administration :</span>
+                        Gérer cette urgence
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <a href="{{ path('app_urgence_edit', {'id': urgence.id}) }}" 
+                           class="btn-humanitary bg-white text-navy-700 hover:bg-navy-50 border border-navy-300">
+                            <i class="fas fa-edit mr-2"></i>Modifier
+                        </a>
+                        <form action="{{ path('app_urgence_delete', {'id': urgence.id}) }}" method="post" 
+                              onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette urgence ?');" class="inline">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ urgence.id) }}">
+                            <button type="submit" class="btn-humanitarian-secondary bg-red-100 text-red-700 hover:bg-red-200">
+                                <i class="fas fa-trash mr-2"></i>Supprimer
+                            </button>
+                        </form>
+                        <a href="{{ path('app_urgence_index') }}" class="btn-humanitarian-secondary">
+                            <i class="fas fa-arrow-left mr-2"></i>Retour aux urgences
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

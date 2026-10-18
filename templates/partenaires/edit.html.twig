@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier {{ partenaire.nom }} - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Modifiez les informations du partenaire "{{ partenaire.nom }}" sur la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block og_title %}Modifier {{ partenaire.nom }} - HAKI YETU asbl{% endblock %}
+{% block og_description %}Modifiez les informations du partenaire "{{ partenaire.nom }}" sur la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block twitter_title %}Modifier {{ partenaire.nom }} - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}Modifiez les informations du partenaire "{{ partenaire.nom }}" sur la plateforme HAKI YETU asbl.{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-3xl px-4 py-12 sm:px-6 lg:px-8">
+    <div class="mb-8">
+        <a href="{{ path('app_partenaires_admin') }}" class="inline-flex items-center text-brand-700 hover:text-brand-800 mb-6">
+            <i class="fas fa-arrow-left mr-2"></i> Retour à la gestion
+        </a>
+        
+        <div class="mb-6">
+            <span class="section-eyebrow">Administration</span>
+            <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Modifier le partenaire</h1>
+            <p class="mt-4 prose-body">
+                Modifiez les informations du partenaire "{{ partenaire.nom }}". 
+                Les modifications seront immédiatement visibles sur le site.
+            </p>
+        </div>
+    </div>
+    
+    <div class="card-modern">
+        <div class="p-6 md:p-8">
+            {{ form_start(form) }}
+                <div class="space-y-6">
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Informations principales</h2>
+                        <div class="space-y-4">
+                            {{ form_row(form.nom) }}
+                            {{ form_row(form.description) }}
+                            {{ form_row(form.url) }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Classification</h2>
+                        <div class="grid gap-4 md:grid-cols-2">
+                            {{ form_row(form.type) }}
+                            {{ form_row(form.categorie) }}
+                            {{ form_row(form.ordreAffichage) }}
+                            {{ form_row(form.actif) }}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 class="mb-4 font-display text-xl font-bold text-navy-900">Logo du partenaire</h2>
+                        
+                        {% if partenaire.logoName %}
+                            <div class="mb-6 rounded-xl border-2 border-brand-200 bg-brand-50 p-6">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-4">
+                                        <div class="flex h-16 w-16 items-center justify-center rounded-xl bg-white shadow-md">
+                                            <img 
+                                                src="{{ asset('/uploads/partenaires/' ~ partenaire.logoName) }}" 
+                                                alt="Logo {{ partenaire.nom }}"
+                                                class="max-h-12 max-w-full object-contain"
+                                            >
+                                        </div>
+                                        <div>
+                                            <h3 class="font-display text-lg font-bold text-navy-900">Logo actuel</h3>
+                                            <p class="text-sm text-navy-600">
+                                                {{ partenaire.logoName }}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="rounded-xl border-2 border-dashed border-navy-200 bg-navy-50 p-6">
+                            <div class="mb-4 text-center">
+                                <i class="fas fa-image text-4xl text-navy-400 mb-3"></i>
+                                <h3 class="font-display text-lg font-bold text-navy-900">Nouveau logo (optionnel)</h3>
+                                <p class="mt-2 text-sm text-navy-600">
+                                    Laissez vide pour conserver le logo actuel<br>
+                                    Formats acceptés : JPG, PNG, WEBP, SVG • Taille max : 2 Mo
+                                </p>
+                            </div>
+                            {{ form_row(form.logoFile) }}
+                        </div>
+                    </div>
+                    
+                    <div class="pt-6 border-t border-navy-200">
+                        <div class="flex flex-col gap-4 sm:flex-row sm:justify-between">
+                            <a href="{{ path('app_partenaires_admin') }}" class="btn-secondary order-2 sm:order-1">
+                                <i class="fas fa-times mr-2"></i> Annuler
+                            </a>
+                            <button type="submit" class="btn-primary order-1 sm:order-2">
+                                <i class="fas fa-save mr-2"></i> Enregistrer les modifications
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+    
+    <div class="mt-8 rounded-xl bg-brand-50 border border-brand-200 p-6">
+        <h3 class="mb-3 font-display text-lg font-bold text-brand-800">
+            <i class="fas fa-exclamation-triangle mr-2"></i> À noter
+        </h3>
+        <ul class="space-y-2 text-sm text-brand-700">
+            <li class="flex items-start gap-2">
+                <i class="fas fa-info-circle mt-1"></i>
+                <span>La modification d'un partenaire ne supprime pas l'ancien logo si vous en téléchargez un nouveau</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-info-circle mt-1"></i>
+                <span>Un partenaire désactivé n'apparaîtra pas sur le site public</span>
+            </li>
+            <li class="flex items-start gap-2">
+                <i class="fas fa-info-circle mt-1"></i>
+                <span>Les modifications sont immédiatement visibles par les visiteurs du site</span>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

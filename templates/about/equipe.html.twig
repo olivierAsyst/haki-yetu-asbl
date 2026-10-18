@@ -1,0 +1,128 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Notre Équipe — HAKI YETU asbl{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="mb-12 text-center">
+            <p class="section-eyebrow">À propos</p>
+            <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">Notre Équipe</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-ink-900/80">
+                Rencontrez les personnes dévouées qui font vivre la mission de HAKI YETU au quotidien.
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3 mb-16">
+            {% for membre in membres %}
+                <div class="group bg-white rounded-2xl border border-brand-200 p-6 shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-brand-400 hover:-translate-y-1">
+                    <div class="aspect-square w-full rounded-xl bg-gradient-to-br from-navy-100 to-brand-100 mb-6 flex items-center justify-center">
+                        <div class="flex h-24 w-24 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 text-white">
+                            <i class="fas fa-user text-3xl"></i>
+                        </div>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold text-navy-900 mb-2">{{ membre.nom }}</h3>
+                    <p class="text-brand-700 font-medium mb-4">{{ membre.role }}</p>
+                    <p class="text-ink-900/70 text-sm leading-relaxed">
+                        {{ membre.description }}
+                    </p>
+                    <div class="mt-6 pt-6 border-t border-navy-100">
+                        <div class="flex space-x-3">
+                            <a href="#" class="flex h-8 w-8 items-center justify-center rounded-full bg-navy-100 text-navy-700 hover:bg-brand-100 hover:text-brand-700 transition-colors">
+                                <i class="fab fa-linkedin-in text-sm"></i>
+                            </a>
+                            <a href="#" class="flex h-8 w-8 items-center justify-center rounded-full bg-navy-100 text-navy-700 hover:bg-brand-100 hover:text-brand-700 transition-colors">
+                                <i class="fas fa-envelope text-sm"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-800 p-8 md:p-12 text-white mb-16">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="font-display text-3xl font-semibold mb-8 text-center">Structure Organisationnelle</h2>
+                <div class="grid gap-6 md:grid-cols-2">
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="font-display text-xl font-semibold mb-4">Organes de Direction</h3>
+                        <ul class="space-y-4">
+                            {% for organe in [
+                                { nom: 'Assemblée Générale', desc: 'Organe suprême de décision' },
+                                { nom: 'Conseil d\'Administration', desc: 'Orientation stratégique' },
+                                { nom: 'Commission de Contrôle', desc: 'Surveillance administrative et financière' }
+                            ] %}
+                                <li class="flex items-start gap-3">
+                                    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 mt-1">
+                                        <i class="fas fa-check text-xs text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">{{ organe.nom }}</h4>
+                                        <p class="text-sm text-brand-100/80">{{ organe.desc }}</p>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="bg-white/10 rounded-xl p-6">
+                        <h3 class="font-display text-xl font-semibold mb-4">Organes Exécutifs</h3>
+                        <ul class="space-y-4">
+                            {% for organe in [
+                                { nom: 'Secrétariat Exécutif', desc: 'Gestion quotidienne des opérations' },
+                                { nom: 'Département Programmes', desc: 'Coordination des projets' },
+                                { nom: 'Département Finances', desc: 'Gestion des ressources' },
+                                { nom: 'Département Communication', desc: 'Plaidoyer et sensibilisation' }
+                            ] %}
+                                <li class="flex items-start gap-3">
+                                    <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-500 mt-1">
+                                        <i class="fas fa-check text-xs text-white"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold">{{ organe.nom }}</h4>
+                                        <p class="text-sm text-brand-100/80">{{ organe.desc }}</p>
+                                    </div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-gradient-to-br from-brand-50 to-white rounded-2xl p-8 border border-brand-200 mb-12">
+            <h2 class="font-display text-2xl font-semibold text-navy-900 mb-8 text-center">Expertises et Compétences</h2>
+            <div class="grid gap-6 md:grid-cols-4">
+                {% for expertise in [
+                    { icon: 'fas fa-gavel', titre: 'Droits Humains', desc: 'Experts en plaidoyer et droits des personnes handicapées' },
+                    { icon: 'fas fa-chart-line', titre: 'Gestion de Projet', desc: 'Gestionnaires certifiés avec expérience terrain' },
+                    { icon: 'fas fa-hand-holding-heart', titre: 'Travail Social', desc: 'Travailleurs sociaux spécialisés en handicap' },
+                    { icon: 'fas fa-language', titre: 'Communication Inclusive', desc: 'Spécialistes en communication accessible' }
+                ] %}
+                    <div class="text-center p-6">
+                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 text-white mx-auto mb-4">
+                            <i class="{{ expertise.icon }} text-2xl"></i>
+                        </div>
+                        <h4 class="font-semibold text-navy-900 mb-2">{{ expertise.titre }}</h4>
+                        <p class="text-sm text-ink-900/70">{{ expertise.desc }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="text-center">
+            <h2 class="font-display text-2xl font-semibold text-navy-900 mb-6">Rejoignez Notre Équipe</h2>
+            <p class="text-ink-900/70 mb-8 max-w-2xl mx-auto">
+                Vous souhaitez contribuer à notre mission ? Découvrez les opportunités de bénévolat et d'emploi au sein de HAKI YETU.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{{ path('app_emplois') }}" class="inline-flex items-center justify-center rounded-xl bg-brand-700 px-6 py-3 text-sm font-semibold text-white shadow-lg hover:bg-brand-800 transition-colors">
+                    <i class="fas fa-briefcase mr-2"></i>
+                    Offres d'emploi
+                </a>
+                <a href="{{ path('app_contact') }}" class="inline-flex items-center justify-center rounded-xl border-2 border-brand-700 px-6 py-3 text-sm font-semibold text-brand-700 hover:bg-brand-50 transition-colors">
+                    <i class="fas fa-hands-helping mr-2"></i>
+                    Devenir bénévole
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

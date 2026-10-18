@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos Objectifs — HAKI YETU asbl{% endblock %}
+
+{% block body %}
+    <section class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+        <div class="mb-10 text-center">
+            <p class="section-eyebrow">À propos</p>
+            <h1 class="mt-2 font-display text-4xl font-semibold text-navy-900">Nos Objectifs</h1>
+            <p class="mt-4 max-w-2xl mx-auto text-lg text-ink-900/80">
+                Découvrez les objectifs stratégiques qui guident nos actions pour l'inclusion des personnes vivant avec handicap.
+            </p>
+        </div>
+
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {% for objectif in objectifs %}
+                <div class="group rounded-2xl border border-brand-200 bg-white p-8 shadow-lg transition-all duration-300 hover:shadow-2xl hover:border-brand-400 hover:-translate-y-1">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br from-brand-600 to-brand-800 text-white mb-6">
+                        <i class="{{ objectif.icon }} text-xl"></i>
+                    </div>
+                    <h3 class="font-display text-xl font-semibold text-navy-900 mb-3">{{ objectif.titre }}</h3>
+                    <p class="text-ink-900/70 leading-relaxed">
+                        {{ objectif.description }}
+                    </p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-16 rounded-2xl bg-gradient-to-br from-navy-800 to-navy-900 p-8 md:p-12 text-white">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="font-display text-3xl font-semibold mb-6">Notre Approche Stratégique</h2>
+                <p class="text-brand-100/90 text-lg leading-relaxed mb-8">
+                    Nos objectifs sont organisés selon une approche intégrée qui combine plaidoyer, action directe et renforcement des capacités pour créer un impact durable et mesurable.
+                </p>
+                
+                <div class="grid gap-6 md:grid-cols-3">
+                    <div class="text-center p-6 rounded-xl bg-white/10">
+                        <div class="text-4xl font-bold text-brand-300 mb-2">1</div>
+                        <h4 class="font-semibold text-white mb-2">Plaidoyer Politique</h4>
+                        <p class="text-brand-100/80 text-sm">Influencer les politiques publiques en faveur des personnes handicapées</p>
+                    </div>
+                    <div class="text-center p-6 rounded-xl bg-white/10">
+                        <div class="text-4xl font-bold text-brand-300 mb-2">2</div>
+                        <h4 class="font-semibold text-white mb-2">Action Terrain</h4>
+                        <p class="text-brand-100/80 text-sm">Programmes concrets d'appui et d'accompagnement direct</p>
+                    </div>
+                    <div class="text-center p-6 rounded-xl bg-white/10">
+                        <div class="text-4xl font-bold text-brand-300 mb-2">3</div>
+                        <h4 class="font-semibold text-white mb-2">Renforcement</h4>
+                        <p class="text-brand-100/80 text-sm">Capacitation des personnes et organisations concernées</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-16 bg-gradient-to-br from-brand-50 to-white p-8 rounded-2xl border border-brand-200">
+            <h2 class="font-display text-2xl font-semibold text-navy-900 mb-6 text-center">Indicateurs de Suivi</h2>
+            <div class="grid gap-6 md:grid-cols-4">
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-brand-700 mb-2">500+</div>
+                    <p class="text-sm text-ink-900/70">Personnes formées annuellement</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-brand-700 mb-2">80%</div>
+                    <p class="text-sm text-ink-900/70">Taux de satisfaction des bénéficiaires</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-brand-700 mb-2">15</div>
+                    <p class="text-sm text-ink-900/70">Communautés touchées</p>
+                </div>
+                <div class="text-center p-6">
+                    <div class="text-4xl font-bold text-brand-700 mb-2">10+</div>
+                    <p class="text-sm text-ink-900/70">Partenaires institutionnels</p>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}
