@@ -17,8 +17,8 @@ Session du **28 octobre 2026**. Ce document regroupe :
 |---|---|---|
 | 1 | Points bloquants (§1 de l'analyse) | ✅ Terminé et testé |
 | 2 | Sécurité et données personnelles (§2) | ✅ Terminé et testé |
-| 3 | Bugs fonctionnels (§3) | 🟡 Code écrit, **migration non appliquée, pas de rapport final** |
-| 4 | Regrouper l'administration dans EasyAdmin (§4) | ⏳ À faire |
+| 3 | Bugs fonctionnels (§3) | ✅ Terminé et testé (migration appliquée) |
+| 4 | Regrouper l'administration dans EasyAdmin (§4) | ⏳ **Prochaine étape** (ou §5 accessibilité en priorité) |
 | 5 | Accessibilité et front-end (§5) | ⏳ À faire |
 | 6 | Tests, PHPStan, nouvelles fonctionnalités (§6) | ⏳ À faire |
 
@@ -171,9 +171,9 @@ Vérifications faites : vraies requêtes sur l'application, `lint:twig`, `doctri
 
 Non testé : le blocage de la suppression de son propre compte admin (logique en place, clic non simulé).
 
-## 🟡 Étape 3 — Bugs fonctionnels (§3) — en cours
+## ✅ Étape 3 — Bugs fonctionnels (§3)
 
-Le code a été écrit, mais l'étape s'est arrêtée pendant le test de la migration : **pas de test complet ni de rapport final**.
+Terminée et testée. Point principal : **les dons sont reliés aux urgences** et le montant collecté se met à jour tout seul (don payé, montant corrigé, don annulé ou supprimé). Pour un don en USD ou EUR, l'admin voit un avertissement lui demandant de convertir et d'ajuster à la main.
 
 **Dons et urgences**
 - `Don.montant` et les montants d'`Urgence` passent en **DECIMAL**.
@@ -198,29 +198,30 @@ Le code a été écrit, mais l'étape s'est arrêtée pendant le test de la migr
 - CRUD des offres réécrit : slug, description obligatoire, PDF affiché comme un lien.
 - Slug des offres unique en base.
 - Offres désactivées masquées sur le site public.
-- Relation offre → candidatures en `orphanRemoval` (suppression d'une offre avec candidatures).
+- Supprimer une offre qui a des candidatures est **refusé** avec un message qui propose de la masquer (avant : erreur 500).
+- Date limite de candidature valable jusqu'à la fin du dernier jour (avant : fermée dès minuit).
+- La date « Expire le » d'une annonce est modifiable pour la prolonger.
 
 **Divers**
 - `MessageCrudController` : `createdAt` masqué dans le formulaire.
 - `RelationMedia::getShortDescription()` : `mb_substr` (accents préservés).
-- `doctrine.yaml` : déclaration DQL `YEAR` (MySQL) retirée.
+- `doctrine.yaml` : déclaration DQL `YEAR` (MySQL) retirée, statistiques mensuelles réécrites.
 
-**Migration** : `migrations/Version20261028120000.php` (« Montants en DECIMAL, lien don-urgence, slug unique des offres »), écrite avec l'API Schema pour SQLite et MySQL. ⚠️ **Elle n'est pas encore appliquée** sur la base locale (`doctrine:migrations:status` : 7 exécutées sur 8). Le test montée/descente/remontée sur une copie (`var/tmp-tests/`) a été lancé mais son résultat n'a pas été relevé.
+**Migration** : `migrations/Version20261028120000.php` (« Montants en DECIMAL, lien don-urgence, slug unique des offres »), écrite avec l'API Schema pour SQLite et MySQL, testée en montée et en descente, puis **appliquée** à la base locale. Sauvegarde d'avant : `var/data.db.bak-202610281321`.
 
-**Pas encore traité dans le §3** (à vérifier) : l'e-mail de confirmation des dons (`envoyerEmailConfirmation()`), l'entité `Volontaire` (code mort), la déclaration `MONTH` pour les statistiques mensuelles, les textes d'aide des tailles de fichiers (partenaires 5 Mo / 2 Mo, rapports 20 Mo / 10 Mo).
+**Vérifié** : 15 vérifications de logique sur les entités ; parcours complet sur une copie de la base (montant collecté 0 → 50 000 → 60 000 → 0 en passant en USD → 40 000 → 0 après suppression, comme attendu) ; slugs en double (`atelier-inclusion-2`) ; refus de suppression d'une offre ; pages publiques en 200 ; conteneur, Twig, YAML et mapping valides.
+
+**À savoir** :
+- Le montant collecté reste modifiable à la main (dons en espèces ou en devise étrangère).
+- Le calcul automatique ne vaut que pour les dons rattachés à partir de maintenant ; l'admin peut lier un ancien don depuis sa modification.
+- **Non traité** : `Volontaire` (entité sans page ni formulaire), considéré comme une nouvelle fonctionnalité. À vérifier aussi : l'e-mail de confirmation des dons et les textes d'aide des tailles de fichiers.
 
 ---
 
 # Partie C — Reste à faire
 
-## Pour finir l'étape 3
-1. Tester la migration sur une copie : `doctrine:migrations:migrate`, puis `migrate prev`, puis `migrate` à nouveau.
-2. L'appliquer sur la base locale : `php bin/console doctrine:migrations:migrate`.
-3. Tester les parcours : don lié à une urgence passé à « payé » → le montant collecté augmente ; modification d'une annonce → la date d'expiration ne change pas ; deux offres au même titre → slugs différents ; suppression d'une offre avec candidatures.
-4. `php bin/console lint:twig templates` et `php bin/console doctrine:schema:validate`.
-
 ## Étapes suivantes proposées
-- **Étape 4** : tout regrouper dans EasyAdmin et supprimer les pages admin du site public.
+- **Étape 4 (prochaine)** : tout regrouper dans EasyAdmin et supprimer les pages admin du site public.
 - **Étape 5** : accessibilité (menus au clavier, `aria-expanded`, WCAG 2.1 AA) et bugs front (CSS non chargé, Stimulus en double, Turbo et menu mobile).
 - **Étape 6** : PHPUnit, PHPStan, puis les nouvelles fonctionnalités du §6.
 
