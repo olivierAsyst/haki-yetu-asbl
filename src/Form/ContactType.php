@@ -41,7 +41,8 @@ class ContactType extends AbstractType
                     new NotBlank(message: 'Le message ne peut pas être vide.'),
                     new Length(min: 10, minMessage: 'Votre message est un peu court, dites-nous en un peu plus.'),
                 ],
-            ]);
+            ])
+            ->add('site_internet', HoneypotType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -41,61 +41,90 @@ class DonRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getTotalMontant(?string $statut = null): float
+    /**
+     * Totaux par devise : on n'additionne jamais des USD et des CDF entre eux.
+     *
+     * @return array<string, string> devise => total, ex. ['CDF' => '150000.00', 'USD' => '75.00']
+     */
+    public function getTotauxParDevise(?string $statut = null): array
     {
         $qb = $this->createQueryBuilder('d')
-            ->select('SUM(d.montant) as total');
+            ->select('d.devise AS devise, SUM(d.montant) AS total')
+            ->groupBy('d.devise')
+            ->orderBy('d.devise', 'ASC');
 
         if ($statut) {
             $qb->andWhere('d.statut = :statut')
                 ->setParameter('statut', $statut);
         }
 
-        $result = $qb->getQuery()->getSingleScalarResult();
+        $totaux = [];
+        foreach ($qb->getQuery()->getArrayResult() as $ligne) {
+            $totaux[$ligne['devise']] = (string) $ligne['total'];
+        }
 
-        return $result ? (float) $result : 0.0;
+        return $totaux;
     }
 
+    /**
+     * Dons payés des derniers mois, regroupés par mois et par devise.
+     * Calcul en PHP pour rester compatible SQLite et MySQL (pas de MONTH/YEAR en DQL).
+     *
+     * @return list<array{periode: string, devise: string, nombre: int, total: float}>
+     */
     public function getStatistiquesParMois(int $months = 12): array
     {
-        $date = new \DateTime();
-        $date->modify("-{$months} months");
-
-        return $this->createQueryBuilder('d')
-            ->select('MONTH(d.createdAt) as mois, YEAR(d.createdAt) as annee, COUNT(d.id) as nombre, SUM(d.montant) as total')
+        $dons = $this->createQueryBuilder('d')
             ->andWhere('d.createdAt >= :date')
             ->andWhere('d.statut = :statut')
-            ->setParameter('date', $date)
+            ->setParameter('date', new \DateTimeImmutable("-{$months} months"))
             ->setParameter('statut', 'paye')
-            ->groupBy('annee, mois')
-            ->orderBy('annee', 'DESC')
-            ->addOrderBy('mois', 'DESC')
             ->getQuery()
             ->getResult();
+
+        $stats = [];
+        foreach ($dons as $don) {
+            $periode = $don->getCreatedAt()->format('Y-m');
+            $cle = $periode.'|'.$don->getDevise();
+            $stats[$cle] ??= ['periode' => $periode, 'devise' => $don->getDevise(), 'nombre' => 0, 'total' => 0.0];
+            ++$stats[$cle]['nombre'];
+            $stats[$cle]['total'] += (float) $don->getMontant();
+        }
+        krsort($stats);
+
+        return array_values($stats);
     }
 
+    /**
+     * @return list<array{type: string, devise: string, nombre: int, total: string}>
+     */
     public function getStatistiquesParTypeDon(): array
     {
         return $this->createQueryBuilder('d')
-            ->select('d.typeDon as type, COUNT(d.id) as nombre, SUM(d.montant) as total')
+            ->select('d.typeDon AS type, d.devise AS devise, COUNT(d.id) AS nombre, SUM(d.montant) AS total')
             ->andWhere('d.statut = :statut')
             ->setParameter('statut', 'paye')
-            ->groupBy('d.typeDon')
-            ->orderBy('total', 'DESC')
+            ->groupBy('d.typeDon, d.devise')
+            ->orderBy('d.devise', 'ASC')
+            ->addOrderBy('total', 'DESC')
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
     }
 
+    /**
+     * @return list<array{methode: string, devise: string, nombre: int, total: string}>
+     */
     public function getStatistiquesParMethodePaiement(): array
     {
         return $this->createQueryBuilder('d')
-            ->select('d.methodePaiement as methode, COUNT(d.id) as nombre, SUM(d.montant) as total')
+            ->select('d.methodePaiement AS methode, d.devise AS devise, COUNT(d.id) AS nombre, SUM(d.montant) AS total')
             ->andWhere('d.statut = :statut')
             ->setParameter('statut', 'paye')
-            ->groupBy('d.methodePaiement')
-            ->orderBy('total', 'DESC')
+            ->groupBy('d.methodePaiement, d.devise')
+            ->orderBy('d.devise', 'ASC')
+            ->addOrderBy('total', 'DESC')
             ->getQuery()
-            ->getResult();
+            ->getArrayResult();
     }
 
     //    /**

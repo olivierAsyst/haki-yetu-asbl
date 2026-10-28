@@ -69,7 +69,7 @@ class PartenaireController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/{id}/edit', name: 'app_partenaires_edit', methods: ['GET', 'POST'])]
+    #[Route('/admin/{id}/edit', name: 'app_partenaires_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Partenaire $partenaire, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -91,7 +91,7 @@ class PartenaireController extends AbstractController
         ]);
     }
 
-    #[Route('/admin/{id}', name: 'app_partenaires_delete', methods: ['POST'])]
+    #[Route('/admin/{id}', name: 'app_partenaires_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Partenaire $partenaire, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -106,7 +106,7 @@ class PartenaireController extends AbstractController
         return $this->redirectToRoute('app_partenaires_admin', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/admin/{id}/toggle', name: 'app_partenaires_toggle', methods: ['POST'])]
+    #[Route('/admin/{id}/toggle', name: 'app_partenaires_toggle', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function toggleActif(Request $request, Partenaire $partenaire, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -120,5 +120,15 @@ class PartenaireController extends AbstractController
         }
 
         return $this->redirectToRoute('app_partenaires_admin', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/footer-carousel', name: 'app_partenaires_footer_carousel', methods: ['GET'])]
+    public function footerCarousel(PartenaireRepository $partenaireRepository): Response
+    {
+        $partenaires = $partenaireRepository->findForFooterCarousel();
+        
+        return $this->render('partenaires/_footer_carousel.html.twig', [
+            'partenaires' => $partenaires,
+        ]);
     }
 }

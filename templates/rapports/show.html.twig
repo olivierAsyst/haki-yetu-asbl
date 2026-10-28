@@ -139,7 +139,7 @@
                     <ul class="space-y-4">
                         <li>
                             <span class="block text-sm font-medium text-navy-700">Type</span>
-                            <span class="text-navy-900">{{ rapport.type|capitalize ?? 'Non spécifié' }}</span>
+                            <span class="text-navy-900">{{ (rapport.type ?? 'Non spécifié')|capitalize }}</span>
                         </li>
                         <li>
                             <span class="block text-sm font-medium text-navy-700">Année</span>
@@ -152,13 +152,13 @@
                                 {% elseif rapport.langue == 'en' %}Anglais
                                 {% elseif rapport.langue == 'sw' %}Swahili
                                 {% elseif rapport.langue == 'ln' %}Lingala
-                                {% else %}{{ rapport.langue|capitalize ?? 'Non spécifiée' }}
+                                {% else %}{{ (rapport.langue ?? 'Non spécifiée')|capitalize }}
                                 {% endif %}
                             </span>
                         </li>
                         <li>
                             <span class="block text-sm font-medium text-navy-700">Format</span>
-                            <span class="text-navy-900">{{ rapport.getFichierExtension()|upper ?? 'Non spécifié' }}</span>
+                            <span class="text-navy-900">{{ (rapport.getFichierExtension() ?? 'Non spécifié')|upper }}</span>
                         </li>
                         <li>
                             <span class="block text-sm font-medium text-navy-700">Taille</span>

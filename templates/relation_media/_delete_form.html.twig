@@ -1,0 +1,6 @@
+<form method="post" action="{{ path('app_relation_media_delete', {id: relation_media.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet article média ?');">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ relation_media.id) }}">
+    <button type="submit" class="btn-danger">
+        <i class="fas fa-trash mr-2"></i> Supprimer
+    </button>
+</form>

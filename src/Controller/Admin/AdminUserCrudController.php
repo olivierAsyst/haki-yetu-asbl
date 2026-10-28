@@ -6,10 +6,12 @@ use App\Entity\AdminUser;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ArrayField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AdminUserCrudController extends AbstractCrudController
 {
@@ -34,14 +36,23 @@ class AdminUserCrudController extends AbstractCrudController
     {
         yield EmailField::new('email', 'E-mail (identifiant)');
         yield TextField::new('nomComplet', 'Nom complet');
-        yield ArrayField::new('roles', 'Rôles')
-            ->setHelp('ROLE_ADMIN est toujours appliqué automatiquement.')
-            ->hideOnIndex();
+
+        // Pas de champ « rôles » : tous les comptes ont ROLE_ADMIN (voir AdminUser::getRoles()),
+        // et un champ libre permettait de s'attribuer n'importe quel rôle.
+        $contraintes = [new Length(min: 8, minMessage: 'Le mot de passe doit contenir au moins {{ limit }} caractères.')];
+        if (Crud::PAGE_NEW === $pageName) {
+            $contraintes[] = new NotBlank(message: 'Le mot de passe est obligatoire.');
+        }
+
         yield TextField::new('plainPassword', 'Mot de passe')
-            ->setFormType(\Symfony\Component\Form\Extension\Core\Type\PasswordType::class)
-            ->setFormTypeOptions(['mapped' => false, 'required' => 'new' === $pageName])
+            ->setFormType(PasswordType::class)
+            ->setFormTypeOptions([
+                'mapped' => false,
+                'required' => Crud::PAGE_NEW === $pageName,
+                'constraints' => $contraintes,
+            ])
             ->onlyOnForms()
-            ->setHelp('Laisser vide pour ne pas changer le mot de passe (en édition).');
+            ->setHelp('8 caractères minimum. En modification, laisser vide pour garder le mot de passe actuel.');
     }
 
     public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
@@ -56,16 +67,32 @@ class AdminUserCrudController extends AbstractCrudController
         parent::updateEntity($entityManager, $entityInstance);
     }
 
+    /**
+     * Appelé pour la suppression simple et la suppression groupée.
+     */
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if ($entityInstance === $this->getUser()) {
+            $this->addFlash('danger', 'Vous ne pouvez pas supprimer votre propre compte.');
+
+            return;
+        }
+
+        if ($entityManager->getRepository(AdminUser::class)->count([]) <= 1) {
+            $this->addFlash('danger', 'Impossible de supprimer le dernier compte administrateur.');
+
+            return;
+        }
+
+        parent::deleteEntity($entityManager, $entityInstance);
+    }
+
     private function hashPassword(AdminUser $user): void
     {
-        $form = $this->getContext()?->getRequest()?->request->all()['AdminUser'] ?? null;
-        $plainPassword = $form['plainPassword'] ?? null;
+        $plainPassword = $this->getContext()?->getRequest()?->request->all()['AdminUser']['plainPassword'] ?? null;
 
-        if (!empty($plainPassword)) {
+        if (\is_string($plainPassword) && '' !== $plainPassword) {
             $user->setPassword($this->passwordHasher->hashPassword($user, $plainPassword));
-        } elseif (null === $user->getPassword()) {
-            // Sécurité : un utilisateur ne doit jamais être créé sans mot de passe.
-            $user->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(16))));
         }
     }
 }

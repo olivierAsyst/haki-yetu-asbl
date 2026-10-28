@@ -140,6 +140,12 @@ class Annonce
 
     public function setDureeAffichage(?string $dureeAffichage): static
     {
+        // On ne recalcule l'expiration que si la durée change vraiment : un formulaire
+        // d'édition renvoie toujours la durée actuelle, ce qui remettait l'expiration à zéro.
+        if ($dureeAffichage === $this->dureeAffichage) {
+            return $this;
+        }
+
         $this->dureeAffichage = $dureeAffichage;
         if ($dureeAffichage) {
             $this->updateExpireAt();

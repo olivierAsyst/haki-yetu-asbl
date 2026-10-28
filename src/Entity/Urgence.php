@@ -32,15 +32,16 @@ class Urgence
     #[Assert\NotBlank(message: "Le lieu est obligatoire")]
     private ?string $lieu = null;
 
-    #[ORM\Column]
+    // Montants en DECIMAL (chaînes côté PHP, ex. "5000000.00") : pas d'erreurs d'arrondi
+    #[ORM\Column(type: Types::DECIMAL, precision: 15, scale: 2)]
     #[Assert\NotNull(message: "Le montant cible est obligatoire")]
     #[Assert\Positive(message: "Le montant doit être positif")]
-    private ?float $montantCible = null;
+    private ?string $montantCible = null;
 
-    #[ORM\Column]
+    #[ORM\Column(type: Types::DECIMAL, precision: 15, scale: 2)]
     #[Assert\NotNull(message: "Le montant collecté est obligatoire")]
     #[Assert\PositiveOrZero(message: "Le montant collecté doit être positif ou zéro")]
-    private ?float $montantCollecte = 0;
+    private ?string $montantCollecte = '0.00';
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotNull(message: "La date de début est obligatoire")]
@@ -64,7 +65,7 @@ class Urgence
     public function __construct()
     {
         $this->createdAt = new \DateTimeImmutable();
-        $this->montantCollecte = 0;
+        $this->montantCollecte = '0.00';
         $this->estActive = true;
         $this->statut = 'en_cours';
     }
@@ -122,26 +123,27 @@ class Urgence
         return $this;
     }
 
-    public function getMontantCible(): ?float
+    public function getMontantCible(): ?string
     {
         return $this->montantCible;
     }
 
-    public function setMontantCible(float $montantCible): static
+    public function setMontantCible(?string $montantCible): static
     {
         $this->montantCible = $montantCible;
 
         return $this;
     }
 
-    public function getMontantCollecte(): ?float
+    public function getMontantCollecte(): ?string
     {
         return $this->montantCollecte;
     }
 
-    public function setMontantCollecte(float $montantCollecte): static
+    public function setMontantCollecte(?string $montantCollecte): static
     {
-        $this->montantCollecte = $montantCollecte;
+        // Champ facultatif dans le formulaire : vide = 0
+        $this->montantCollecte = $montantCollecte ?? '0.00';
 
         return $this;
     }
@@ -220,22 +222,41 @@ class Urgence
 
     public function getPourcentageCollecte(): int
     {
-        if ($this->montantCible <= 0) {
+        if ((float) $this->montantCible <= 0) {
             return 0;
         }
-        
-        return (int) min(100, ($this->montantCollecte / $this->montantCible) * 100);
+
+        return (int) min(100, ((float) $this->montantCollecte / (float) $this->montantCible) * 100);
     }
 
+    /**
+     * Nombre de jours avant la date de fin : 0 si elle est passée, null si aucune date de fin.
+     */
     public function getJoursRestants(): ?int
     {
         if (!$this->dateFin) {
             return null;
         }
 
-        $now = new \DateTimeImmutable();
-        $interval = $now->diff($this->dateFin);
+        $aujourdhui = new \DateTimeImmutable('today');
+        $fin = \DateTimeImmutable::createFromInterface($this->dateFin)->setTime(0, 0);
 
-        return $interval->days;
+        if ($fin < $aujourdhui) {
+            return 0;
+        }
+
+        return $aujourdhui->diff($fin)->days;
+    }
+
+    /**
+     * Ajoute (ou retire, si négatif) un montant au total collecté, sans descendre sous zéro.
+     */
+    public function ajouterAuMontantCollecte(string $montant): static
+    {
+        $total = max(0, (float) $this->montantCollecte + (float) $montant);
+        $this->montantCollecte = number_format($total, 2, '.', '');
+        $this->updatedAt = new \DateTimeImmutable();
+
+        return $this;
     }
 }

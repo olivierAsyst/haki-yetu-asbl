@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Form\ContactType;
+use App\Security\AntiSpam;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ContactController extends AbstractController
@@ -21,18 +22,20 @@ class ContactController extends AbstractController
         Request $request,
         EntityManagerInterface $entityManager,
         MailerInterface $mailer,
+        AntiSpam $antiSpam,
         #[\Symfony\Component\DependencyInjection\Attribute\Autowire('%env(CONTACT_RECIPIENT_EMAIL)%')] string $contactRecipientEmail,
     ): Response {
         $message = new Message();
         $form = $this->createForm(ContactType::class, $message);
         $form->handleRequest($request);
+        $antiSpam->verifier($form, $request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($message);
             $entityManager->flush();
 
             try {
-                $email = (new Email())
+                $email = (new TemplatedEmail())
                     ->from(new Address($contactRecipientEmail, 'Site HAKI YETU asbl'))
                     ->to($contactRecipientEmail)
                     ->replyTo(new Address($message->getEmail(), $message->getNom()))

@@ -12,7 +12,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
                 <span class="section-eyebrow">Détails du don</span>
-                <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Don #{{ don.id|string|pad_start(6, '0') }}</h1>
+                <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Don #{{ '%06d'|format(don.id) }}</h1>
                 <p class="mt-4 prose-body">
                     Détails complets du don et gestion du statut.
                 </p>
@@ -21,9 +21,6 @@
             <div class="flex gap-2">
                 <a href="{{ path('app_don_edit', {'id': don.id}) }}" class="btn-secondary">
                     <i class="fas fa-edit mr-2"></i> Modifier
-                </a>
-                <a href="{{ path('app_don_confirmation', {'id': don.id}) }}" class="btn-tertiary" target="_blank">
-                    <i class="fas fa-eye mr-2"></i> Voir confirmation
                 </a>
             </div>
         </div>
@@ -255,13 +252,13 @@
                     <h3 class="mb-4 font-display text-xl font-bold text-navy-900">Actions</h3>
                     
                     <div class="space-y-3">
-                        <a href="mailto:{{ don.email }}?subject=Votre don à HAKI YETU asbl (DON-{{ don.id|string|pad_start(6, '0') }})" 
+                        <a href="mailto:{{ don.email }}?subject=Votre don à HAKI YETU asbl (DON-{{ '%06d'|format(don.id) }})" 
                            class="flex items-center gap-3 rounded-lg border border-navy-300 bg-white px-4 py-3 text-sm font-medium text-navy-700 hover:bg-navy-50 transition-colors">
                             <i class="fas fa-envelope text-brand-700"></i>
                             <span>Envoyer un email</span>
                         </a>
                         
-                        <button onclick="copyToClipboard('DON-{{ don.id|string|pad_start(6, '0') }}')" 
+                        <button onclick="copyToClipboard('DON-{{ '%06d'|format(don.id) }}')" 
                                 class="flex w-full items-center gap-3 rounded-lg border border-navy-300 bg-white px-4 py-3 text-sm font-medium text-navy-700 hover:bg-navy-50 transition-colors">
                             <i class="fas fa-copy text-brand-700"></i>
                             <span>Copier la référence</span>

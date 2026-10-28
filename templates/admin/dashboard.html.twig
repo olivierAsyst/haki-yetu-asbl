@@ -160,6 +160,60 @@
         </div>
     </div>
 
+    <!-- Nouvelles statistiques pour partenaires, rapports et relations médias -->
+    <div class="row mb-4">
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-indigo text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Partenaires actifs</h6>
+                            <h2 class="card-title mb-0">{{ nb_partenaires_actifs }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-handshake fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\PartenaireCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-teal text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Rapports</h6>
+                            <h2 class="card-title mb-0">{{ nb_rapports }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-file-pdf fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\RapportCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-6 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 bg-orange text-white">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h6 class="card-subtitle mb-2 text-white-50">Articles médias</h6>
+                            <h2 class="card-title mb-0">{{ nb_medias_actifs }}</h2>
+                        </div>
+                        <div class="text-white-50">
+                            <i class="fas fa-newspaper fa-2x"></i>
+                        </div>
+                    </div>
+                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\RelationMediaCrudController') }}" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row mb-4">
         <div class="col-lg-6 mb-4">
             <div class="card shadow-sm">
@@ -257,6 +311,23 @@
                         <div class="col-sm-6 col-md-3 mb-3">
                             <a href="{{ ea_url().setController('App\\Controller\\Admin\\AlbumCrudController').setAction('new') }}" class="btn btn-outline-warning w-100">
                                 <i class="fas fa-images me-2"></i> Nouvel album
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\PartenaireCrudController').setAction('new') }}" class="btn btn-outline-secondary w-100">
+                                <i class="fas fa-handshake me-2"></i> Nouveau partenaire
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\RapportCrudController').setAction('new') }}" class="btn btn-outline-dark w-100">
+                                <i class="fas fa-file-pdf me-2"></i> Nouveau rapport
+                            </a>
+                        </div>
+                        <div class="col-sm-6 col-md-3 mb-3">
+                            <a href="{{ ea_url().setController('App\\Controller\\Admin\\RelationMediaCrudController').setAction('new') }}" class="btn btn-outline-warning w-100">
+                                <i class="fas fa-newspaper me-2"></i> Nouvel article
                             </a>
                         </div>
                         <div class="col-sm-6 col-md-3 mb-3">

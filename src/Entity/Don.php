@@ -30,10 +30,17 @@ class Don
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $entreprise = null;
 
-    #[ORM\Column]
+    // DECIMAL (et non float) pour éviter les erreurs d'arrondi sur l'argent.
+    // Doctrine renvoie les DECIMAL sous forme de chaîne, ex. "25.00".
+    #[ORM\Column(type: Types::DECIMAL, precision: 15, scale: 2)]
     #[Assert\NotBlank(message: 'Le montant est obligatoire.')]
     #[Assert\Positive(message: 'Le montant doit être positif.')]
-    private ?float $montant = null;
+    private ?string $montant = null;
+
+    // Don fait en réponse à un appel d'urgence (facultatif)
+    #[ORM\ManyToOne(targetEntity: Urgence::class)]
+    #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
+    private ?Urgence $urgence = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\NotBlank(message: 'La devise est obligatoire.')]
@@ -141,16 +148,33 @@ class Don
         return $this;
     }
 
-    public function getMontant(): ?float
+    public function getMontant(): ?string
     {
         return $this->montant;
     }
 
-    public function setMontant(float $montant): static
+    public function setMontant(?string $montant): static
     {
         $this->montant = $montant;
 
         return $this;
+    }
+
+    public function getUrgence(): ?Urgence
+    {
+        return $this->urgence;
+    }
+
+    public function setUrgence(?Urgence $urgence): static
+    {
+        $this->urgence = $urgence;
+
+        return $this;
+    }
+
+    public function isPaye(): bool
+    {
+        return 'paye' === $this->statut;
     }
 
     public function getDevise(): ?string
@@ -246,7 +270,29 @@ class Don
     {
         $this->statut = $statut;
 
+        if ('paye' === $statut && null === $this->datePaiement) {
+            $this->datePaiement = new \DateTimeImmutable();
+        }
+
         return $this;
+    }
+
+    /**
+     * Un don compte dans le montant collecté d'une urgence s'il est payé, rattaché
+     * à une urgence et en CDF (la devise des objectifs d'urgence).
+     */
+    public function compteDansUrgence(): bool
+    {
+        return self::contributionUrgence($this->statut, $this->devise, $this->montant) > 0 && null !== $this->urgence;
+    }
+
+    /**
+     * Montant à compter dans l'urgence pour un état donné du don (0 si le don ne compte pas).
+     * Statique pour pouvoir l'appliquer aussi aux anciennes valeurs lors d'une modification.
+     */
+    public static function contributionUrgence(?string $statut, ?string $devise, ?string $montant): float
+    {
+        return ('paye' === $statut && 'CDF' === $devise) ? (float) $montant : 0.0;
     }
 
     public function getReferencePaiement(): ?string
@@ -333,7 +379,7 @@ class Don
 
     public function getMontantFormate(): string
     {
-        return number_format($this->montant, 2, ',', ' ') . ' ' . $this->devise;
+        return number_format((float) $this->montant, 2, ',', ' ') . ' ' . $this->devise;
     }
 
     public function getTypeDonLabel(): string

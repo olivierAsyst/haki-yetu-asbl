@@ -31,8 +31,12 @@
                         <i class="fas fa-money-bill-wave text-xl text-white"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-brand-100/80">Total collecté</p>
-                        <p class="text-2xl font-bold text-white">{{ statistiques.total|number_format(2, ',', ' ') }} USD</p>
+                        <p class="text-sm text-brand-100/80">Total payé</p>
+                        {% for devise, total in statistiques.total %}
+                            <p class="text-2xl font-bold text-white">{{ total|number_format(2, ',', ' ') }} {{ devise }}</p>
+                        {% else %}
+                            <p class="text-2xl font-bold text-white">0</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -46,7 +50,11 @@
                     </div>
                     <div>
                         <p class="text-sm text-navy-600">En attente</p>
-                        <p class="text-2xl font-bold text-navy-900">{{ statistiques.en_attente|number_format(2, ',', ' ') }} USD</p>
+                        {% for devise, total in statistiques.en_attente %}
+                            <p class="text-2xl font-bold text-navy-900">{{ total|number_format(2, ',', ' ') }} {{ devise }}</p>
+                        {% else %}
+                            <p class="text-2xl font-bold text-navy-900">0</p>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -59,8 +67,8 @@
                         <i class="fas fa-users text-xl"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-navy-600">Dons</p>
-                        <p class="text-2xl font-bold text-navy-900">{{ dons|length }}</p>
+                        <p class="text-sm text-navy-600">Dons enregistrés</p>
+                        <p class="text-2xl font-bold text-navy-900">{{ statistiques.nombre_total }}</p>
                     </div>
                 </div>
             </div>
@@ -73,14 +81,8 @@
                         <i class="fas fa-chart-line text-xl"></i>
                     </div>
                     <div>
-                        <p class="text-sm text-navy-600">Moyenne</p>
-                        <p class="text-2xl font-bold text-navy-900">
-                            {% if dons|length > 0 %}
-                                {{ (statistiques.total / dons|length)|number_format(2, ',', ' ') }} USD
-                            {% else %}
-                                0 USD
-                            {% endif %}
-                        </p>
+                        <p class="text-sm text-navy-600">Dons payés</p>
+                        <p class="text-2xl font-bold text-navy-900">{{ statistiques.nombre_payes }}</p>
                     </div>
                 </div>
             </div>
@@ -106,10 +108,10 @@
                                     {% else %}{{ stat.type }}
                                     {% endif %}
                                 </span>
-                                <span class="text-navy-900">{{ stat.total|number_format(2, ',', ' ') }} USD</span>
+                                <span class="text-navy-900">{{ stat.total|number_format(2, ',', ' ') }} {{ stat.devise }}</span>
                             </div>
                             <div class="h-2 overflow-hidden rounded-full bg-navy-100">
-                                <div class="h-full bg-brand-700 rounded-full" style="width: {{ (stat.total / statistiques.total) * 100 }}%"></div>
+                                <div class="h-full bg-brand-700 rounded-full" style="width: {{ stat.pourcentage }}%"></div>
                             </div>
                             <div class="mt-1 text-xs text-navy-500">{{ stat.nombre }} don(s)</div>
                         </div>
@@ -137,10 +139,10 @@
                                     {% else %}{{ stat.methode }}
                                     {% endif %}
                                 </span>
-                                <span class="text-navy-900">{{ stat.total|number_format(2, ',', ' ') }} USD</span>
+                                <span class="text-navy-900">{{ stat.total|number_format(2, ',', ' ') }} {{ stat.devise }}</span>
                             </div>
                             <div class="h-2 overflow-hidden rounded-full bg-navy-100">
-                                <div class="h-full bg-navy-700 rounded-full" style="width: {{ (stat.total / statistiques.total) * 100 }}%"></div>
+                                <div class="h-full bg-navy-700 rounded-full" style="width: {{ stat.pourcentage }}%"></div>
                             </div>
                             <div class="mt-1 text-xs text-navy-500">{{ stat.nombre }} don(s)</div>
                         </div>

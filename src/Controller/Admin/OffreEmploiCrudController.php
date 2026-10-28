@@ -3,23 +3,23 @@
 namespace App\Controller\Admin;
 
 use App\Entity\OffreEmploi;
+use App\Service\SlugGenerator;
+use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
-use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\String\Slugger\SluggerInterface;
 use Vich\UploaderBundle\Form\Type\VichFileType;
 
 class OffreEmploiCrudController extends AbstractCrudController
 {
     public function __construct(
-        private readonly SluggerInterface $slugger
+        private readonly SlugGenerator $slugGenerator,
     ) {
     }
 
@@ -43,8 +43,8 @@ class OffreEmploiCrudController extends AbstractCrudController
     {
         yield TextField::new('titre', 'Titre du poste');
 
+        // Obligatoire : la colonne et l'entité l'exigent
         yield TextareaField::new('description', 'Description du poste')
-            ->setRequired(false)
             ->hideOnIndex();
 
         yield TextField::new('lieu', 'Lieu');
@@ -53,12 +53,12 @@ class OffreEmploiCrudController extends AbstractCrudController
             ->setChoices(OffreEmploi::TYPES);
 
         yield DateField::new('datePublication', 'Date de publication')
-            ->setFormat('dd/MM/yyyy HH:mm');
+            ->setFormat('dd/MM/yyyy');
 
-        yield DateField::new('dateExpiration', 'Date d\'expiration de l\'offre')
+        yield DateField::new('dateExpiration', 'Fin de publication')
             ->setRequired(false)
-            ->setFormat('dd/MM/yyyy HH:mm')
-            ->setHelp('Date à laquelle l\'offre ne sera plus visible sur le site. Facultatif.');
+            ->setFormat('dd/MM/yyyy')
+            ->setHelp('L\'offre reste visible jusqu\'à la fin de cette journée. Facultatif.');
 
         yield IntegerField::new('salaire', 'Salaire (en FC)')
             ->setRequired(false)
@@ -70,13 +70,15 @@ class OffreEmploiCrudController extends AbstractCrudController
 
         yield DateField::new('fileDeadline', 'Date limite de candidature')
             ->setRequired(false)
-            ->setFormat('dd/MM/yyyy HH:mm')
-            ->setHelp('Date limite pour que les candidats puissent postuler. Après cette date, le formulaire sera désactivé. Facultatif.');
+            ->setFormat('dd/MM/yyyy')
+            ->setHelp('Les candidatures restent ouvertes jusqu\'à la fin de cette journée. Facultatif.');
 
-        yield ImageField::new('fichierOffre', 'Fichier de l\'offre')
-            ->setBasePath('/uploads/offres')
-            ->setUploadDir('public/uploads/offres')
-            ->onlyOnIndex();
+        yield TextField::new('fichierOffre', 'Fichier de l\'offre')
+            ->onlyOnIndex()
+            ->renderAsHtml()
+            ->formatValue(static fn (?string $fichier): string => $fichier
+                ? sprintf('<a href="/uploads/offres/%s" target="_blank" rel="noopener"><i class="fas fa-file"></i> Voir</a>', rawurlencode($fichier))
+                : '<span class="text-muted">—</span>');
 
         yield Field::new('fichierOffreFile', 'Fichier de l\'offre')
             ->setFormType(VichFileType::class)
@@ -91,27 +93,52 @@ class OffreEmploiCrudController extends AbstractCrudController
         yield TextField::new('slug', 'Slug (URL)')
             ->setRequired(false)
             ->hideOnIndex()
-            ->setHelp('Généré automatiquement à partir du titre. Modifiable si nécessaire.');
+            ->setHelp('Laissez vide pour le générer à partir du titre. S\'il existe déjà, un numéro est ajouté.');
 
         yield BooleanField::new('actif', 'Visible sur le site')
             ->renderAsSwitch(true);
     }
 
-    public function persistEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    public function persistEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if ($entityInstance->getTitre()) {
-            $slug = $this->slugger->slug($entityInstance->getTitre())->lower()->toString();
-            $entityInstance->setSlug($slug);
-        }
+        $this->definirSlug($entityInstance);
         parent::persistEntity($entityManager, $entityInstance);
     }
 
-    public function updateEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    public function updateEntity(EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if ($entityInstance->getTitre() && (!$entityInstance->getSlug() || $entityInstance->getSlug() === '')) {
-            $slug = $this->slugger->slug($entityInstance->getTitre())->lower()->toString();
-            $entityInstance->setSlug($slug);
-        }
+        $this->definirSlug($entityInstance);
         parent::updateEntity($entityManager, $entityInstance);
+    }
+
+    /**
+     * Une offre qui a reçu des candidatures ne peut pas être supprimée (la base l'interdit,
+     * et on perdrait les dossiers des candidats). On propose de la masquer à la place.
+     */
+    public function deleteEntity(EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $nombre = $entityInstance->getCandidatures()->count();
+        if ($nombre > 0) {
+            $this->addFlash('danger', sprintf(
+                'L\'offre « %s » a reçu %d candidature(s) : elle ne peut pas être supprimée. Décochez « Visible sur le site » pour la masquer, ou supprimez d\'abord ses candidatures.',
+                $entityInstance->getTitre(),
+                $nombre
+            ));
+
+            return;
+        }
+
+        parent::deleteEntity($entityManager, $entityInstance);
+    }
+
+    /**
+     * Slug saisi par l'admin (respecté), sinon tiré du titre ; toujours rendu unique.
+     */
+    private function definirSlug(OffreEmploi $offre): void
+    {
+        $source = $offre->getSlug() ?: $offre->getTitre();
+        if ($source) {
+            $offre->setSlug($this->slugGenerator->unique(OffreEmploi::class, $source, $offre->getId()));
+        }
     }
 }

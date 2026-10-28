@@ -21,7 +21,7 @@ class PartenaireRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('p')
             ->andWhere('p.actif = :actif')
             ->setParameter('actif', true)
-            ->orderBy('p.ordreAffichage', 'ASC')
+            ->orderBy('p.ordre', 'ASC')
             ->addOrderBy('p.nom', 'ASC')
             ->getQuery()
             ->getResult();
@@ -32,7 +32,7 @@ class PartenaireRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->andWhere('p.actif = :actif')
             ->setParameter('actif', true)
-            ->orderBy('p.ordreAffichage', 'ASC')
+            ->orderBy('p.ordre', 'ASC')
             ->addOrderBy('p.nom', 'ASC');
 
         if ($categorie) {
@@ -79,4 +79,17 @@ class PartenaireRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+
+    public function findForFooterCarousel(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.actif = :actif')
+            ->setParameter('actif', true)
+            ->andWhere('p.afficherDansFooter = :footer')
+            ->setParameter('footer', true)
+            ->orderBy('p.ordre', 'ASC')
+            ->addOrderBy('p.nom', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

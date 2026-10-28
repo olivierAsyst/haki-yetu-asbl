@@ -80,44 +80,49 @@
             <div class="mb-10">
                 <h2 class="font-display text-2xl font-bold text-navy-900 mb-6">Choisissez votre impact</h2>
                 <div class="grid gap-6 md:grid-cols-3">
-                    <div class="bg-gradient-to-b from-brand-50 to-white rounded-xl border-2 border-brand-200 p-6 text-center">
+                    <div class="bg-gradient-to-b from-brand-50 to-white rounded-2xl border-2 border-brand-200 p-6 text-center">
                         <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-100 text-brand-700 mx-auto mb-4">
                             <i class="fas fa-hands-helping text-xl"></i>
                         </div>
                         <h3 class="font-display text-xl font-bold text-navy-900 mb-2">Don Basique</h3>
                         <p class="text-3xl font-bold text-brand-700 mb-3">25 USD</p>
-                        <p class="text-sm text-ink-900/70 mb-4">
+                        <p class="text-sm text-ink-900/70 mb-4 leading-relaxed">
                             Fournit un kit scolaire complet pour un enfant handicapé pendant 3 mois
                         </p>
-                        <button type="button" data-montant="25" class="w-full rounded-lg bg-brand-100 text-brand-700 px-4 py-2.5 text-sm font-semibold hover:bg-brand-200 transition-colors">
+                        <button type="button" data-montant="25" class="montant-btn-modern w-full">
                             Donner 25 USD
                         </button>
                     </div>
                     
-                    <div class="bg-gradient-to-b from-brand-100 to-white rounded-xl border-2 border-brand-400 p-6 text-center shadow-md">
+                    <div class="bg-gradient-to-b from-brand-100 to-white rounded-2xl border-2 border-brand-400 p-6 text-center shadow-lg relative">
+                        <div class="absolute -top-3 left-1/2 -translate-x-1/2">
+                            <span class="inline-flex items-center rounded-full bg-brand-600 px-4 py-1.5 text-xs font-semibold text-white">
+                                <i class="fas fa-star mr-1.5"></i> Populaire
+                            </span>
+                        </div>
                         <div class="flex h-14 w-14 items-center justify-center rounded-full bg-brand-200 text-brand-800 mx-auto mb-4">
                             <i class="fas fa-heart text-xl"></i>
                         </div>
                         <h3 class="font-display text-xl font-bold text-navy-900 mb-2">Don Standard</h3>
                         <p class="text-3xl font-bold text-brand-800 mb-3">50 USD</p>
-                        <p class="text-sm text-ink-900/70 mb-4">
+                        <p class="text-sm text-ink-900/70 mb-4 leading-relaxed">
                             Finance une formation professionnelle d'une semaine pour une personne handicapée
                         </p>
-                        <button type="button" data-montant="50" class="w-full rounded-lg bg-brand-700 text-white px-4 py-2.5 text-sm font-semibold hover:bg-brand-800 transition-colors">
+                        <button type="button" data-montant="50" class="montant-btn-modern w-full active">
                             Donner 50 USD
                         </button>
                     </div>
                     
-                    <div class="bg-gradient-to-b from-navy-50 to-white rounded-xl border-2 border-navy-200 p-6 text-center">
+                    <div class="bg-gradient-to-b from-navy-50 to-white rounded-2xl border-2 border-navy-200 p-6 text-center">
                         <div class="flex h-14 w-14 items-center justify-center rounded-full bg-navy-100 text-navy-700 mx-auto mb-4">
                             <i class="fas fa-star text-xl"></i>
                         </div>
                         <h3 class="font-display text-xl font-bold text-navy-900 mb-2">Don Premium</h3>
                         <p class="text-3xl font-bold text-navy-700 mb-3">100 USD</p>
-                        <p class="text-sm text-ink-900/70 mb-4">
+                        <p class="text-sm text-ink-900/70 mb-4 leading-relaxed">
                             Offre un micro-crédit pour démarrer une activité génératrice de revenus
                         </p>
-                        <button type="button" data-montant="100" class="w-full rounded-lg bg-navy-700 text-white px-4 py-2.5 text-sm font-semibold hover:bg-navy-800 transition-colors">
+                        <button type="button" data-montant="100" class="montant-btn-modern w-full">
                             Donner 100 USD
                         </button>
                     </div>
@@ -125,112 +130,257 @@
             </div>
 
             <!-- Formulaire de don -->
-            <div class="bg-white rounded-2xl border border-brand-200 p-8 shadow-sm">
-                <h2 class="font-display text-2xl font-bold text-navy-900 mb-6">Formulaire de don</h2>
+            <div class="form-card-modern">
+                <h2 class="font-display text-2xl font-bold text-navy-900 mb-8">Formulaire de don</h2>
                 
-                {{ form_start(form, {'attr': {'class': 'space-y-8', 'id': 'don-form'}}) }}
-                    <div class="space-y-6">
-                        <!-- Informations personnelles -->
-                        <div>
-                            <h3 class="mb-4 flex items-center font-display text-xl font-bold text-navy-900">
-                                <span class="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-navy-700 text-sm font-bold text-white">1</span>
-                                Informations personnelles
-                            </h3>
-                            <div class="space-y-4">
-                                {{ form_row(form.typePersonne) }}
-                                {{ form_row(form.nom) }}
-                                {{ form_row(form.email) }}
-                                {{ form_row(form.telephone) }}
-                                
-                                <div id="entreprise-fields" class="hidden space-y-4">
-                                    {{ form_row(form.entreprise) }}
+                {{ form_start(form, {'attr': {'class': 'space-y-10', 'id': 'don-form'}}) }}
+                {{ include('_form_errors_globales.html.twig') }}
+                {% if urgence %}
+                    <div class="rounded-lg border border-brand-700/30 bg-brand-700/10 px-4 py-3 text-sm text-brand-800">
+                        <i class="fas fa-hand-holding-heart mr-2" aria-hidden="true"></i>
+                        Votre don soutient l'appel d'urgence <strong>« {{ urgence.titre }} »</strong> ({{ urgence.lieu }}).
+                        Les dons en francs congolais (CDF) sont ajoutés au montant collecté dès réception du paiement.
+                    </div>
+                {% endif %}
+                    <!-- Informations personnelles -->
+                    <div class="form-section-modern">
+                        <div class="form-section-header">
+                            <div class="form-section-number">1</div>
+                            <h3 class="form-section-title">Informations personnelles</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Type de personne - Radio boutons améliorés -->
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">Je suis un(e)</label>
+                                <div class="radio-group-inline">
+                                    {% for child in form.typePersonne %}
+                                        {{ form_widget(child, {'attr': {'class': 'form-radio-modern'}}) }}
+                                        {{ form_label(child, null, {
+                                            'label_attr': {
+                                                'class': 'inline-flex items-center gap-3'
+                                            }
+                                        }) }}
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            
+                            <!-- Nom et email -->
+                            <div class="grid gap-6 md:grid-cols-2">
+                                <div class="form-group-modern">
+                                    {{ form_label(form.nom, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    {{ form_widget(form.nom, {'attr': {'class': 'form-input-modern', 'placeholder': 'Ex: Jean Dupont'}}) }}
                                 </div>
                                 
-                                <div class="grid gap-4 md:grid-cols-2">
-                                    {{ form_row(form.adresse) }}
-                                    {{ form_row(form.ville) }}
-                                    {{ form_row(form.pays) }}
+                                <div class="form-group-modern">
+                                    {{ form_label(form.email, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    {{ form_widget(form.email, {'attr': {'class': 'form-input-modern', 'placeholder': 'exemple@email.com'}}) }}
+                                </div>
+                            </div>
+                            
+                            <!-- Téléphone -->
+                            <div class="form-group-modern">
+                                {{ form_label(form.telephone, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                {{ form_widget(form.telephone, {'attr': {'class': 'form-input-modern', 'placeholder': '+243 99 123 4567'}}) }}
+                            </div>
+                            
+                            <!-- Champs entreprise (caché par défaut) -->
+                            <div id="entreprise-fields" class="hidden form-group-modern">
+                                {{ form_label(form.entreprise, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                {{ form_widget(form.entreprise, {'attr': {'class': 'form-input-modern', 'placeholder': 'Ex: Société ABC'}}) }}
+                            </div>
+                            
+                            <!-- Adresse -->
+                            <div class="grid gap-6 md:grid-cols-3">
+                                <div class="form-group-modern">
+                                    {{ form_label(form.adresse, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    {{ form_widget(form.adresse, {'attr': {'class': 'form-input-modern', 'placeholder': 'Ex: Av. du Congo, N°68'}}) }}
+                                </div>
+                                
+                                <div class="form-group-modern">
+                                    {{ form_label(form.ville, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    {{ form_widget(form.ville, {'attr': {'class': 'form-input-modern', 'placeholder': 'Ex: Uvira'}}) }}
+                                </div>
+                                
+                                <div class="form-group-modern">
+                                    {{ form_label(form.pays, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    {{ form_widget(form.pays, {'attr': {'class': 'form-input-modern', 'placeholder': 'Ex: RD Congo'}}) }}
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Montant du don -->
-                        <div>
-                            <h3 class="mb-4 flex items-center font-display text-xl font-bold text-navy-900">
-                                <span class="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-navy-700 text-sm font-bold text-white">2</span>
-                                Montant du don
-                            </h3>
-                            <div class="space-y-4">
-                                {{ form_row(form.typeDon) }}
-                                
-                                <div class="grid gap-4 md:grid-cols-2">
-                                    {{ form_row(form.montant) }}
-                                    {{ form_row(form.devise) }}
+                    <!-- Montant du don -->
+                    <div class="form-section-modern">
+                        <div class="form-section-header">
+                            <div class="form-section-number">2</div>
+                            <h3 class="form-section-title">Montant du don</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Type de don - Select amélioré -->
+                            <div class="form-group-modern">
+                                {{ form_label(form.typeDon, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                <div class="relative">
+                                    <i class="fas fa-gift absolute left-4 top-1/2 -translate-y-1/2 text-navy-500"></i>
+                                    {{ form_widget(form.typeDon, {'attr': {'class': 'form-select-modern pl-12'}}) }}
+                                </div>
+                            </div>
+                            
+                            <!-- Montant et devise -->
+                            <div class="grid gap-6 md:grid-cols-2">
+                                <div class="form-group-modern">
+                                    {{ form_label(form.montant, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    <div class="relative">
+                                        <i class="fas fa-money-bill-wave absolute left-4 top-1/2 -translate-y-1/2 text-navy-500"></i>
+                                        {{ form_widget(form.montant, {'attr': {'class': 'form-input-modern pl-12', 'placeholder': '50.00'}}) }}
+                                    </div>
+                                    <p class="form-help-text">Le montant minimum est de 1 USD</p>
                                 </div>
                                 
-                                <!-- Montants suggérés -->
-                                <div class="mt-4">
-                                    <p class="mb-3 text-sm font-medium text-navy-700">Montants suggérés :</p>
-                                    <div class="flex flex-wrap gap-2">
-                                        {% set montants = [10, 25, 50, 100, 250, 500] %}
-                                        {% for montant in montants %}
-                                            <button type="button" 
-                                                    class="montant-btn rounded-lg border-2 border-navy-300 px-4 py-2 text-sm font-medium text-navy-700 transition-all duration-300 hover:border-brand-700 hover:bg-brand-50 hover:text-brand-700"
-                                                    data-montant="{{ montant }}">
-                                                {{ montant }} USD
-                                            </button>
-                                        {% endfor %}
+                                <div class="form-group-modern">
+                                    {{ form_label(form.devise, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                    <div class="relative">
+                                        <i class="fas fa-globe absolute left-4 top-1/2 -translate-y-1/2 text-navy-500"></i>
+                                        {{ form_widget(form.devise, {'attr': {'class': 'form-select-modern pl-12'}}) }}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Montants suggérés -->
+                            <div class="form-group-modern">
+                                <label class="form-label-modern">Montants suggérés :</label>
+                                <div class="flex flex-wrap gap-3">
+                                    {# Montants adaptés à la devise : CDF pour un appel d'urgence, USD sinon #}
+                                    {% set devise_suggestion = urgence ? 'CDF' : 'USD' %}
+                                    {% set montants = urgence ? [10000, 25000, 50000, 100000, 250000, 500000] : [10, 25, 50, 100, 250, 500] %}
+                                    {% for montant in montants %}
+                                        <button type="button"
+                                                class="montant-btn-modern {{ (form.montant.vars.value ?: 50) == montant ? 'active' : '' }}"
+                                                data-montant="{{ montant }}">
+                                            {{ montant|number_format(0, ',', ' ') }} {{ devise_suggestion }}
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Méthode de paiement -->
+                    <div class="form-section-modern">
+                        <div class="form-section-header">
+                            <div class="form-section-number">3</div>
+                            <h3 class="form-section-title">Méthode de paiement</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <div class="form-group-modern">
+                                {{ form_label(form.methodePaiement, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                <div class="relative">
+                                    <i class="fas fa-credit-card absolute left-4 top-1/2 -translate-y-1/2 text-navy-500"></i>
+                                    {{ form_widget(form.methodePaiement, {'attr': {'class': 'form-select-modern pl-12'}}) }}
+                                </div>
+                            </div>
+                            
+                            <div id="instructions-paiement" class="hidden rounded-2xl bg-gradient-to-r from-brand-50 to-white p-6 border border-brand-200">
+                                <h4 class="font-display text-lg font-bold text-navy-900 mb-4">Instructions de paiement :</h4>
+                                <div class="space-y-4 text-sm text-navy-700">
+                                    <div id="instructions-mobile" class="hidden">
+                                        <div class="flex items-start gap-3">
+                                            <i class="fas fa-mobile-alt text-brand-600 mt-1"></i>
+                                            <div>
+                                                <p class="font-semibold">Mobile Money</p>
+                                                <p class="mt-1"><strong>Orange Money:</strong> +243 994 116 041</p>
+                                                <p><strong>Airtel Money:</strong> +243 999 644 524</p>
+                                                <p><strong>M-Pesa:</strong> +243 810 000 000</p>
+                                                <p class="mt-2 text-xs text-navy-600"><em>Veuillez indiquer "Don HAKI YETU" dans le message</em></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="instructions-bancaire" class="hidden">
+                                        <div class="flex items-start gap-3">
+                                            <i class="fas fa-university text-brand-600 mt-1"></i>
+                                            <div>
+                                                <p class="font-semibold">Virement bancaire</p>
+                                                <p class="mt-1"><strong>Banque:</strong> Banque Commerciale du Congo</p>
+                                                <p><strong>Nom du compte:</strong> HAKI YETU asbl</p>
+                                                <p><strong>Numéro de compte:</strong> 123-456-789-0</p>
+                                                <p><strong>IBAN:</strong> CD12345678901234567890</p>
+                                                <p><strong>Swift/BIC:</strong> BCDC CD KI</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="instructions-western" class="hidden">
+                                        <div class="flex items-start gap-3">
+                                            <i class="fas fa-exchange-alt text-brand-600 mt-1"></i>
+                                            <div>
+                                                <p class="font-semibold">Western Union / MoneyGram</p>
+                                                <p class="mt-1"><strong>Bénéficiaire:</strong> HAKI YETU asbl</p>
+                                                <p><strong>Ville:</strong> Uvira, Sud-Kivu</p>
+                                                <p><strong>Pays:</strong> République Démocratique du Congo</p>
+                                                <p><strong>Téléphone:</strong> +243 994 116 041</p>
+                                                <p><strong>Adresse:</strong> Qt Kimanga, Av du Congo, N°68</p>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Méthode de paiement -->
-                        <div>
-                            <h3 class="mb-4 flex items-center font-display text-xl font-bold text-navy-900">
-                                <span class="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-navy-700 text-sm font-bold text-white">3</span>
-                                Méthode de paiement
-                            </h3>
+                    <!-- Options supplémentaires -->
+                    <div class="form-section-modern">
+                        <div class="form-section-header">
+                            <div class="form-section-number">4</div>
+                            <h3 class="form-section-title">Options supplémentaires</h3>
+                        </div>
+                        
+                        <div class="space-y-6">
+                            <!-- Message -->
+                            <div class="form-group-modern">
+                                {{ form_label(form.message, null, {'label_attr': {'class': 'form-label-modern'}}) }}
+                                {{ form_widget(form.message, {'attr': {'class': 'form-input-modern min-h-[120px]', 'placeholder': 'Un message pour l\'équipe de HAKI YETU...', 'rows': 4}}) }}
+                            </div>
+                            
+                            <!-- Checkboxes améliorées -->
                             <div class="space-y-4">
-                                {{ form_row(form.methodePaiement) }}
+                                <div class="flex items-start gap-3">
+                                    {{ form_widget(form.anonyme, {'attr': {'class': 'form-checkbox-modern mt-1'}}) }}
+                                    <div>
+                                        {{ form_label(form.anonyme, null, {'label_attr': {'class': 'text-sm font-medium text-navy-900 cursor-pointer'}}) }}
+                                        <p class="text-xs text-navy-600 mt-1">Votre nom n'apparaîtra pas dans nos publications</p>
+                                    </div>
+                                </div>
                                 
-                                <div id="instructions-paiement" class="hidden rounded-xl bg-navy-50 p-4">
-                                    <h4 class="mb-2 font-display text-lg font-bold text-navy-900">Instructions de paiement :</h4>
-                                    <div class="space-y-3 text-sm text-navy-600">
-                                        <p id="instructions-mobile" class="hidden">
-                                            <!-- Les instructions seront remplies par JavaScript -->
-                                        </p>
-                                        <p id="instructions-bancaire" class="hidden">
-                                            <!-- Les instructions seront remplies par JavaScript -->
-                                        </p>
-                                        <p id="instructions-western" class="hidden">
-                                            <!-- Les instructions seront remplies par JavaScript -->
-                                        </p>
+                                <div class="flex items-start gap-3">
+                                    {{ form_widget(form.receiptDemande, {'attr': {'class': 'form-checkbox-modern mt-1'}}) }}
+                                    <div>
+                                        {{ form_label(form.receiptDemande, null, {'label_attr': {'class': 'text-sm font-medium text-navy-900 cursor-pointer'}}) }}
+                                        <p class="text-xs text-navy-600 mt-1">Pour déduction fiscale selon la législation en vigueur</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="flex items-start gap-3">
+                                    {{ form_widget(form.recevoirNewsletter, {'attr': {'class': 'form-checkbox-modern mt-1'}}) }}
+                                    <div>
+                                        {{ form_label(form.recevoirNewsletter, null, {'label_attr': {'class': 'text-sm font-medium text-navy-900 cursor-pointer'}}) }}
+                                        <p class="text-xs text-navy-600 mt-1">Recevez nos actualités et rapports d'impact</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Options supplémentaires -->
-                        <div>
-                            <h3 class="mb-4 flex items-center font-display text-xl font-bold text-navy-900">
-                                <span class="mr-3 flex h-8 w-8 items-center justify-center rounded-full bg-navy-700 text-sm font-bold text-white">4</span>
-                                Options supplémentaires
-                            </h3>
-                            <div class="space-y-4">
-                                {{ form_row(form.message) }}
-                                {{ form_row(form.anonyme) }}
-                                {{ form_row(form.receiptDemande) }}
-                                {{ form_row(form.recevoirNewsletter) }}
-                            </div>
-                        </div>
-
-                        <!-- Bouton de soumission -->
-                        <div class="pt-6 border-t border-navy-200">
-                            <button type="submit" class="btn-humanitarian w-full py-4 text-lg">
-                                <i class="fas fa-heart mr-2"></i> Faire mon don maintenant
-                            </button>
-                        </div>
+                    <!-- Bouton de soumission -->
+                    <div class="pt-8 border-t border-navy-200">
+                        <button type="submit" class="btn-humanitarian w-full py-4 text-lg font-semibold">
+                            <i class="fas fa-heart mr-3"></i> Faire mon don maintenant
+                        </button>
+                        <p class="mt-4 text-center text-sm text-navy-600">
+                            <i class="fas fa-lock mr-1.5"></i> Vos informations sont sécurisées et confidentielles
+                        </p>
                     </div>
                 {{ form_end(form) }}
             </div>
@@ -239,84 +389,94 @@
         <!-- Colonne droite: Informations complémentaires -->
         <div class="space-y-8">
             <!-- Statistiques -->
-            <div class="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-800 p-6 text-white">
+            <div class="rounded-2xl bg-gradient-to-br from-navy-900 to-navy-800 p-6 text-white shadow-lg">
                 <h3 class="font-display text-xl font-bold mb-6">Impact de vos dons</h3>
-                <div class="space-y-4">
-                    <div class="flex items-center justify-between">
+                <div class="space-y-5">
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                            <i class="fas fa-users text-xl"></i>
+                        </div>
                         <div>
                             <p class="text-2xl font-bold">500+</p>
                             <p class="text-sm text-brand-100/80">Bénéficiaires directs</p>
                         </div>
-                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                            <i class="fas fa-users"></i>
-                        </div>
                     </div>
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                            <i class="fas fa-project-diagram text-xl"></i>
+                        </div>
                         <div>
                             <p class="text-2xl font-bold">12+</p>
                             <p class="text-sm text-brand-100/80">Projets financés</p>
                         </div>
-                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                            <i class="fas fa-project-diagram"></i>
-                        </div>
                     </div>
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4 p-4 rounded-xl bg-white/10 hover:bg-white/15 transition-colors">
+                        <div class="flex h-14 w-14 items-center justify-center rounded-full bg-white/20 backdrop-blur-sm">
+                            <i class="fas fa-chart-line text-xl"></i>
+                        </div>
                         <div>
                             <p class="text-2xl font-bold">100%</p>
                             <p class="text-sm text-brand-100/80">Transparence</p>
-                        </div>
-                        <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
-                            <i class="fas fa-chart-line"></i>
                         </div>
                     </div>
                 </div>
             </div>
 
             <!-- Pourquoi donner -->
-            <div class="rounded-2xl bg-gradient-to-br from-brand-50 to-white p-6 border border-brand-200">
-                <h3 class="font-display text-xl font-bold text-navy-900 mb-4">Pourquoi donner ?</h3>
-                <ul class="space-y-3">
+            <div class="rounded-2xl bg-gradient-to-br from-brand-50 to-white p-6 border border-brand-200 shadow-sm">
+                <h3 class="font-display text-xl font-bold text-navy-900 mb-5">Pourquoi donner ?</h3>
+                <ul class="space-y-4">
                     <li class="flex items-start gap-3">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1 flex-shrink-0">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        <span class="text-sm text-ink-900/70">100% de votre don est utilisé sur le terrain</span>
+                        <span class="text-sm text-ink-900/70 leading-relaxed">100% de votre don est utilisé sur le terrain</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1 flex-shrink-0">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        <span class="text-sm text-ink-900/70">Reçu fiscal disponible pour déduction</span>
+                        <span class="text-sm text-ink-900/70 leading-relaxed">Reçu fiscal disponible pour déduction</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1 flex-shrink-0">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        <span class="text-sm text-ink-900/70">Rapports réguliers sur l'utilisation des fonds</span>
+                        <span class="text-sm text-ink-900/70 leading-relaxed">Rapports réguliers sur l'utilisation des fonds</span>
                     </li>
                     <li class="flex items-start gap-3">
-                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1">
+                        <div class="flex h-6 w-6 items-center justify-center rounded-full bg-brand-100 text-brand-700 mt-1 flex-shrink-0">
                             <i class="fas fa-check text-xs"></i>
                         </div>
-                        <span class="text-sm text-ink-900/70">Impact mesurable et concret</span>
+                        <span class="text-sm text-ink-900/70 leading-relaxed">Impact mesurable et concret</span>
                     </li>
                 </ul>
             </div>
 
             <!-- Contact -->
-            <div class="rounded-2xl bg-white p-6 border border-navy-200">
+            <div class="rounded-2xl bg-white p-6 border border-navy-200 shadow-sm">
                 <h3 class="font-display text-xl font-bold text-navy-900 mb-4">Questions ?</h3>
-                <p class="text-sm text-ink-900/70 mb-4">
+                <p class="text-sm text-ink-900/70 mb-5 leading-relaxed">
                     Notre équipe est à votre disposition pour toute question concernant votre don.
                 </p>
-                <div class="space-y-3">
-                    <a href="tel:+243994116041" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700 transition-colors">
-                        <i class="fas fa-phone text-brand-700"></i>
-                        <span>+243 994 116 041</span>
+                <div class="space-y-4">
+                    <a href="tel:+243994116041" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700 transition-colors group">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-700 group-hover:bg-brand-200 transition-colors">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">+243 994 116 041</p>
+                            <p class="text-xs text-navy-600">Appel et WhatsApp</p>
+                        </div>
                     </a>
-                    <a href="mailto:hakiyetuass@yahoo.fr" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700 transition-colors">
-                        <i class="fas fa-envelope text-brand-700"></i>
-                        <span>hakiyetuass@yahoo.fr</span>
+                    <a href="mailto:hakiyetuass@yahoo.fr" class="flex items-center gap-3 text-sm text-navy-700 hover:text-brand-700 transition-colors group">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-brand-700 group-hover:bg-brand-200 transition-colors">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div>
+                            <p class="font-medium">hakiyetuass@yahoo.fr</p>
+                            <p class="text-xs text-navy-600">Réponse sous 24h</p>
+                        </div>
                     </a>
                 </div>
             </div>
@@ -360,7 +520,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 5000);
     
     // Boutons de montants
-    const montantBtns = document.querySelectorAll('.montant-btn, [data-montant]');
+    const montantBtns = document.querySelectorAll('.montant-btn-modern');
     const montantInput = document.querySelector('input[name="don[montant]"]');
     
     montantBtns.forEach(btn => {
@@ -370,27 +530,34 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Mettre en évidence le bouton sélectionné
             montantBtns.forEach(b => {
-                b.classList.remove('bg-brand-700', 'text-white', 'border-brand-700');
-                b.classList.add('border-navy-300', 'text-navy-700');
+                b.classList.remove('active');
             });
             
-            this.classList.remove('border-navy-300', 'text-navy-700');
-            this.classList.add('bg-brand-700', 'text-white', 'border-brand-700');
+            this.classList.add('active');
         });
     });
     
     // Gestion du type de personne
-    const typePersonneSelect = document.querySelector('select[name="don[typePersonne]"]');
+    const typePersonneRadios = document.querySelectorAll('input[name="don[typePersonne]"]');
     const entrepriseFields = document.getElementById('entreprise-fields');
     
-    if (typePersonneSelect) {
-        typePersonneSelect.addEventListener('change', function() {
+    typePersonneRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
             if (this.value === 'entreprise') {
                 entrepriseFields.classList.remove('hidden');
+                entrepriseFields.classList.add('block');
             } else {
+                entrepriseFields.classList.remove('block');
                 entrepriseFields.classList.add('hidden');
             }
         });
+    });
+    
+    // Initialiser l'état du champ entreprise
+    const selectedType = document.querySelector('input[name="don[typePersonne]"]:checked');
+    if (selectedType && selectedType.value === 'entreprise') {
+        entrepriseFields.classList.remove('hidden');
+        entrepriseFields.classList.add('block');
     }
     
     // Gestion des méthodes de paiement
@@ -407,40 +574,42 @@ document.addEventListener('DOMContentLoaded', function() {
             instructionsBancaire.classList.add('hidden');
             instructionsWestern.classList.add('hidden');
             
-            instructionsPaiement.classList.remove('hidden');
-            
-            switch(this.value) {
-                case 'mobile_money':
-                    instructionsMobile.classList.remove('hidden');
-                    instructionsMobile.innerHTML = `
-                        <p><strong>Orange Money:</strong> +243 994 116 041</p>
-                        <p><strong>Airtel Money:</strong> +243 999 644 524</p>
-                        <p><strong>M-Pesa:</strong> +243 810 000 000</p>
-                        <p class="mt-2"><em>Veuillez indiquer "Don HAKI YETU" dans le message</em></p>
-                    `;
-                    break;
-                case 'virement_bancaire':
-                    instructionsBancaire.classList.remove('hidden');
-                    instructionsBancaire.innerHTML = `
-                        <p><strong>Banque:</strong> Banque Commerciale du Congo</p>
-                        <p><strong>Nom du compte:</strong> HAKI YETU asbl</p>
-                        <p><strong>Numéro de compte:</strong> 123-456-789-0</p>
-                        <p><strong>IBAN:</strong> CD12345678901234567890</p>
-                        <p><strong>Swift/BIC:</strong> BCDC CD KI</p>
-                    `;
-                    break;
-                case 'western_union':
-                    instructionsWestern.classList.remove('hidden');
-                    instructionsWestern.innerHTML = `
-                        <p><strong>Bénéficiaire:</strong> HAKI YETU asbl</p>
-                        <p><strong>Ville:</strong> Uvira, Sud-Kivu</p>
-                        <p><strong>Pays:</strong> République Démocratique du Congo</p>
-                        <p><strong>Téléphone:</strong> +243 994 116 041</p>
-                        <p><strong>Adresse:</strong> Qt Kimanga, Av du Congo, N°68</p>
-                    `;
-                    break;
+            if (this.value) {
+                instructionsPaiement.classList.remove('hidden');
+                instructionsPaiement.classList.add('block');
+                
+                switch(this.value) {
+                    case 'mobile_money':
+                        instructionsMobile.classList.remove('hidden');
+                        instructionsMobile.classList.add('block');
+                        break;
+                    case 'virement_bancaire':
+                        instructionsBancaire.classList.remove('hidden');
+                        instructionsBancaire.classList.add('block');
+                        break;
+                    case 'western_union':
+                    case 'moneygram':
+                        instructionsWestern.classList.remove('hidden');
+                        instructionsWestern.classList.add('block');
+                        // Ajuster le titre selon la méthode
+                        const title = this.value === 'western_union' ? 'Western Union' : 'MoneyGram';
+                        instructionsWestern.querySelector('.font-semibold').textContent = title + ' / ' + (this.value === 'western_union' ? 'MoneyGram' : 'Western Union');
+                        break;
+                    default:
+                        instructionsPaiement.classList.remove('block');
+                        instructionsPaiement.classList.add('hidden');
+                        break;
+                }
+            } else {
+                instructionsPaiement.classList.remove('block');
+                instructionsPaiement.classList.add('hidden');
             }
         });
+        
+        // Initialiser si une valeur est déjà sélectionnée
+        if (methodePaiementSelect.value) {
+            methodePaiementSelect.dispatchEvent(new Event('change'));
+        }
     }
 });
 </script>

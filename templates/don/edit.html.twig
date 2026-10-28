@@ -11,7 +11,7 @@
         
         <div class="mb-6">
             <span class="section-eyebrow">Administration</span>
-            <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Modifier le don #{{ don.id|string|pad_start(6, '0') }}</h1>
+            <h1 class="mt-2 font-display text-3xl font-bold text-navy-900 md:text-4xl">Modifier le don #{{ '%06d'|format(don.id) }}</h1>
             <p class="mt-4 prose-body">
                 Modifiez les informations de ce don. Les modifications seront enregistrées immédiatement.
             </p>
@@ -32,6 +32,7 @@
                             {{ form_row(form.methodePaiement) }}
                             {{ form_row(form.statut) }}
                             {{ form_row(form.referencePaiement) }}
+                            {{ form_row(form.urgence) }}
                         </div>
                     </div>
                     

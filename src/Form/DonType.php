@@ -3,6 +3,8 @@
 namespace App\Form;
 
 use App\Entity\Don;
+use App\Entity\Urgence;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -105,7 +107,9 @@ class DonType extends AbstractType
             ])
             ->add('montant', MoneyType::class, [
                 'label' => 'Montant du don',
-                'currency' => 'USD',
+                // Pas de devise fixe ici : elle est choisie dans le champ « Devise »
+                'currency' => false,
+                'input' => 'string',
                 'scale' => 2,
                 'attr' => [
                     'placeholder' => '50.00',
@@ -113,7 +117,7 @@ class DonType extends AbstractType
                     'step' => 0.01,
                     'class' => 'input-modern',
                 ],
-                'help' => 'Le montant minimum est de 1 USD',
+                'help' => 'Dans la devise choisie ci-dessous',
             ])
             ->add('devise', ChoiceType::class, [
                 'label' => 'Devise',
@@ -177,12 +181,52 @@ class DonType extends AbstractType
                 ],
             ])
         ;
+
+        if (!$options['admin']) {
+            $builder->add('site_internet', HoneypotType::class);
+        }
+
+        // Champs de suivi réservés à l'administration (jamais dans le formulaire public)
+        if ($options['admin']) {
+            $builder
+                ->add('statut', ChoiceType::class, [
+                    'label' => 'Statut',
+                    'choices' => [
+                        'En attente' => 'en_attente',
+                        'Confirmé' => 'confirme',
+                        'Payé' => 'paye',
+                        'Annulé' => 'annule',
+                        'Remboursé' => 'rembourse',
+                    ],
+                    'attr' => ['class' => 'input-modern'],
+                ])
+                ->add('urgence', EntityType::class, [
+                    'label' => 'Appel d\'urgence lié',
+                    'class' => Urgence::class,
+                    'choice_label' => 'titre',
+                    'required' => false,
+                    'placeholder' => 'Aucun (don général)',
+                    'help' => 'Si le don est payé en CDF, il est ajouté automatiquement au montant collecté de l\'urgence.',
+                    'attr' => ['class' => 'input-modern'],
+                ])
+                ->add('referencePaiement', TextType::class, [
+                    'label' => 'Référence du paiement',
+                    'required' => false,
+                    'attr' => [
+                        'placeholder' => 'Ex: n° de transaction Mobile Money',
+                        'class' => 'input-modern',
+                    ],
+                ])
+            ;
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Don::class,
+            'admin' => false,
         ]);
+        $resolver->setAllowedTypes('admin', 'bool');
     }
 }

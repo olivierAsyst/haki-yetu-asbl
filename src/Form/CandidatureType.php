@@ -56,7 +56,8 @@ class CandidatureType extends AbstractType
                 'label' => 'Message',
                 'required' => false,
                 'attr' => ['class' => 'w-full px-4 py-3 rounded-lg border border-navy-200 focus:border-brand-700 focus:ring-2 focus:ring-brand-700/20 outline-none transition', 'rows' => 4, 'placeholder' => 'Ajoutez un message supplémentaire si nécessaire...'],
-            ]);
+            ])
+            ->add('site_internet', HoneypotType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

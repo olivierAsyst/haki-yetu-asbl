@@ -10,13 +10,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ImageField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
-use Symfony\Component\String\Slugger\SluggerInterface;
+use App\Service\SlugGenerator;
 use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class ActiviteCrudController extends AbstractCrudController
 {
     public function __construct(
-        private readonly SluggerInterface $slugger
+        private readonly SlugGenerator $slugGenerator
     ) {
     }
 
@@ -77,19 +77,26 @@ class ActiviteCrudController extends AbstractCrudController
             ->setHelp('Formats acceptés : JPEG, PNG, WEBP (5 Mo max). Facultatif.');
     }
 
+    public function persistEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        $this->definirSlug($entityInstance);
+        parent::persistEntity($entityManager, $entityInstance);
+    }
+
     public function updateEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
     {
-        if ($entityInstance->getTitre() && !$entityInstance->getSlug()) {
-            $entityInstance->setSlug($this->slugger->slug($entityInstance->getTitre())->lower()->toString());
-        }
+        $this->definirSlug($entityInstance);
         parent::updateEntity($entityManager, $entityInstance);
     }
 
-    public function persistEntity(\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    /**
+     * Slug saisi par l'admin, sinon tiré du titre ; toujours rendu unique.
+     */
+    private function definirSlug(Activite $activite): void
     {
-        if ($entityInstance->getTitre() && !$entityInstance->getSlug()) {
-            $entityInstance->setSlug($this->slugger->slug($entityInstance->getTitre())->lower()->toString());
+        $source = $activite->getSlug() ?: $activite->getTitre();
+        if ($source) {
+            $activite->setSlug($this->slugGenerator->unique(Activite::class, $source, $activite->getId()));
         }
-        parent::persistEntity($entityManager, $entityInstance);
     }
 }

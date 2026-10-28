@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Test d'intégration - HAKI YETU</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        .section { margin-bottom: 30px; padding: 20px; border: 1px solid #ddd; border-radius: 5px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .warning { background-color: #fff3cd; border-color: #ffeaa7; color: #856404; }
+        .checklist { margin-left: 20px; }
+        .checklist li { margin-bottom: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Test d'intégration - HAKI YETU asbl</h1>
+    
+    <div class="section success">
+        <h2>✓ Section Relations Médias créée</h2>
+        <ul class="checklist">
+            <li>Entité RelationMedia créée</li>
+            <li>Contrôleur RelationMediaController créé</li>
+            <li>Templates Twig créés</li>
+            <li>Migration exécutée</li>
+            <li>Menu mis à jour</li>
+        </ul>
+    </div>
+    
+    <div class="section success">
+        <h2>✓ Back-office EasyAdmin mis à jour</h2>
+        <ul class="checklist">
+            <li>PartenaireCrudController créé</li>
+            <li>RapportCrudController créé</li>
+            <li>RelationMediaCrudController créé</li>
+            <li>Menu EasyAdmin mis à jour</li>
+            <li>Dashboard avec nouvelles statistiques</li>
+        </ul>
+    </div>
+    
+    <div class="section success">
+        <h2>✓ Carrousel de partenaires dans le footer</h2>
+        <ul class="checklist">
+            <li>Méthode footerCarousel ajoutée au contrôleur</li>
+            <li>Template _footer_carousel.html.twig créé</li>
+            <li>Styles d'animation ajoutés</li>
+            <li>Effets de survol et tooltips</li>
+            <li>Carrousel automatique aller-retour</li>
+            <li>Liens externes optionnels</li>
+        </ul>
+    </div>
+    
+    <div class="section warning">
+        <h2>⚠ Vérifications nécessaires</h2>
+        <ul class="checklist">
+            <li>Exécuter la migration : <code>php bin/console doctrine:migrations:migrate</code></li>
+            <li>Vérifier les routes EasyAdmin : <code>php bin/console debug:router</code></li>
+            <li>Tester le carrousel avec des partenaires</li>
+            <li>Tester l'interface d'administration</li>
+        </ul>
+    </div>
+    
+    <div class="section">
+        <h2>Instructions d'utilisation</h2>
+        <h3>Pour ajouter un partenaire :</h3>
+        <ol>
+            <li>Connectez-vous au back-office (/admin)</li>
+            <li>Allez dans "Relations institutionnelles" → "Partenaires"</li>
+            <li>Cliquez sur "Ajouter un partenaire"</li>
+            <li>Remplissez les informations (le logo est obligatoire, le lien est optionnel)</li>
+            <li>Le partenaire apparaîtra automatiquement dans le carrousel du footer si "Afficher dans footer" est activé</li>
+        </ol>
+        
+        <h3>Caractéristiques du carrousel :</h3>
+        <ul>
+            <li>Animation automatique en boucle infinie</li>
+            <li>Deux couches de défilement (aller et retour)</li>
+            <li>Effets au survol : zoom, désaturation, tooltip</li>
+            <li>Les logos cliquables ouvrent le site du partenaire dans un nouvel onglet</li>
+            <li>Le carrousel s'arrête au survol pour faciliter l'interaction</li>
+        </ul>
+    </div>
+</body>
+</html>

@@ -17,19 +17,22 @@ vich_uploader:
             upload_destination: '%kernel.project_dir%/public/uploads/offres'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 
+        # Documents des candidats : données personnelles, stockées HORS de public/.
+        # Ils ne sont accessibles que via le back-office (CandidatureCrudController::telecharger).
+        # Pensez à sauvegarder var/uploads/ en production.
         candidature_cv:
-            uri_prefix: /uploads/candidatures/cv
-            upload_destination: '%kernel.project_dir%/public/uploads/candidatures/cv'
+            uri_prefix: /admin/candidature-fichier/cv
+            upload_destination: '%kernel.project_dir%/var/uploads/candidatures/cv'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 
         candidature_lettre:
-            uri_prefix: /uploads/candidatures/lettres
-            upload_destination: '%kernel.project_dir%/public/uploads/candidatures/lettres'
+            uri_prefix: /admin/candidature-fichier/lettre
+            upload_destination: '%kernel.project_dir%/var/uploads/candidatures/lettres'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 
         candidature_autres:
-            uri_prefix: /uploads/candidatures/autres
-            upload_destination: '%kernel.project_dir%/public/uploads/candidatures/autres'
+            uri_prefix: /admin/candidature-fichier/autres
+            upload_destination: '%kernel.project_dir%/var/uploads/candidatures/autres'
             namer: Vich\UploaderBundle\Naming\SmartUniqueNamer
 
         rapport_fichiers:

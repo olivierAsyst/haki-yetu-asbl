@@ -25,7 +25,9 @@ class EmploiController extends AbstractController
         PaginatorInterface $paginator,
         Request $request
     ): Response {
+        // Les offres désactivées dans l'admin ne sont pas listées (les expirées restent visibles, avec un badge)
         $query = $offreEmploiRepository->createQueryBuilder('o')
+            ->andWhere('o.actif = true')
             ->orderBy('o.datePublication', 'DESC')
             ->getQuery();
 
@@ -44,6 +46,10 @@ class EmploiController extends AbstractController
     public function show(
         #[MapEntity(mapping: ['slug' => 'slug'])] OffreEmploi $offre
     ): Response {
+        if (!$offre->isActif()) {
+            throw $this->createNotFoundException('Cette offre n\'est plus disponible.');
+        }
+
         $whatsappUrl = $this->generateWhatsAppShareLink($offre);
 
         return $this->render('emplois/show.html.twig', [

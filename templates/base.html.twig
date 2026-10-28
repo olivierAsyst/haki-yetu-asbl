@@ -65,6 +65,7 @@
 
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }}
+        <link rel="stylesheet" href="{{ asset('styles/form-styles.css') }}">
     {% endblock %}
 
     {% block javascripts %}
@@ -88,7 +89,7 @@
             </span>
             <span class="leading-tight">
                 <span class="block font-display text-xl font-bold text-navy-900">HAKI YETU</span>
-                <span class="block text-xs font-semibold uppercase tracking-wide text-brand-700">asbl — Uvira, RD Congo</span>
+                {# <span class="block text-xs font-semibold uppercase tracking-wide text-brand-700">asbl — Uvira, RD Congo</span> #}
             </span>
         </a>
 
@@ -137,7 +138,8 @@
                 </button>
                 <div class="absolute left-0 mt-2 w-48 rounded-lg border border-navy-200 bg-white py-2 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
                     <a href="{{ path('app_annonces_index') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Actualités</a>
-                    <a href="{{ path('app_galerie') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Médias</a>
+                    <a href="{{ path('app_galerie') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Galerie</a>
+                    <a href="{{ path('app_relation_media') }}" class="block px-4 py-2 text-sm text-navy-900 hover:bg-brand-50 hover:text-brand-700">Relations Médias</a>
                 </div>
             </div>
             
@@ -213,7 +215,8 @@
                 </summary>
                 <div class="ml-4 mt-2 space-y-2">
                     <a href="{{ path('app_annonces_index') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Actualités</a>
-                    <a href="{{ path('app_galerie') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Médias</a>
+                    <a href="{{ path('app_galerie') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Galerie</a>
+                    <a href="{{ path('app_relation_media') }}" class="block rounded-xl px-4 py-2 text-sm text-navy-900 hover:bg-brand-50">Relations Médias</a>
                 </div>
             </details>
             
@@ -252,6 +255,11 @@
 </main>
 
 <footer class="mt-20 border-t border-navy-800 bg-gradient-to-br from-navy-900 to-navy-800 text-brand-50">
+    <!-- Carrousel des partenaires -->
+    {% if app.request.attributes.get('_route') != 'app_admin' %}
+        {{ render(controller('App\\Controller\\PartenaireController::footerCarousel')) }}
+    {% endif %}
+    
     <div class="mx-auto grid max-w-6xl gap-12 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
         <div>
             <div class="flex items-center gap-3 mb-4">

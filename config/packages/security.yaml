@@ -13,8 +13,9 @@ security:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
 
-        admin:
-            pattern: ^/admin
+        # Un seul pare-feu pour tout le site : la session admin est ainsi reconnue
+        # aussi sur les pages hors /admin (dons, partenaires, rapports, urgences...).
+        main:
             lazy: true
             provider: app_admin_provider
             custom_authenticator: App\Security\AdminAuthenticator
@@ -23,10 +24,6 @@ security:
                 target: admin_login
             login_throttling:
                 max_attempts: 5
-
-        main:
-            lazy: true
-            provider: app_admin_provider
 
     access_control:
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }

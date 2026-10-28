@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ relation_media.titre }} - Relations Médias - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}{{ relation_media.shortDescription(160) }}{% endblock %}
+
+{% block og_title %}{{ relation_media.titre }} - Relations Médias - HAKI YETU asbl{% endblock %}
+{% block og_description %}{{ relation_media.shortDescription(160) }}{% endblock %}
+{% block og_image %}{% if relation_media.logoMedia %}{{ absolute_url(relation_media.logoMedia) }}{% else %}{{ absolute_url(asset('images/haki.png')) }}{% endif %}{% endblock %}
+
+{% block twitter_title %}{{ relation_media.titre }} - Relations Médias - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}{{ relation_media.shortDescription(160) }}{% endblock %}
+{% block twitter_image %}{% if relation_media.logoMedia %}{{ absolute_url(relation_media.logoMedia) }}{% else %}{{ absolute_url(asset('images/haki.png')) }}{% endif %}{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-4xl px-4 py-14 sm:px-6 lg:px-8">
+    <!-- Navigation -->
+    <div class="mb-6">
+        <a href="{{ path('app_relation_media') }}" class="inline-flex items-center text-sm font-semibold text-brand-700 hover:text-brand-800">
+            <i class="fas fa-arrow-left mr-2"></i> Retour aux articles
+        </a>
+    </div>
+
+    <!-- Carte de l'article -->
+    <div class="rounded-2xl border border-navy-200 bg-white shadow-xl overflow-hidden">
+        <!-- En-tête avec logo du média -->
+        <div class="bg-gradient-to-r from-navy-900 to-navy-800 p-8 text-white">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="flex items-center gap-4">
+                    {% if relation_media.logoMedia %}
+                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-white p-3 shadow-lg">
+                            <img src="{{ relation_media.logoMedia }}" alt="{{ relation_media.nomDeMedia }}" class="h-10 w-auto object-contain">
+                        </div>
+                    {% else %}
+                        <div class="flex h-16 w-16 items-center justify-center rounded-full bg-brand-500">
+                            <i class="fas fa-newspaper text-2xl text-white"></i>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <span class="block text-sm font-semibold uppercase tracking-wide text-brand-300">{{ relation_media.typeMedia|default('Média') }}</span>
+                        <h1 class="font-display text-3xl font-bold">{{ relation_media.nomDeMedia }}</h1>
+                    </div>
+                </div>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="flex gap-2">
+                        <a href="{{ path('app_relation_media_edit', {id: relation_media.id}) }}" 
+                           class="inline-flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-sm font-medium text-white hover:bg-white/30 transition-colors">
+                            <i class="fas fa-edit"></i> Modifier
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Contenu principal -->
+        <div class="p-8">
+            <!-- Titre de l'article -->
+            <h2 class="mb-6 font-display text-4xl font-bold text-navy-900">
+                {{ relation_media.titre }}
+            </h2>
+
+            <!-- Métadonnées -->
+            <div class="mb-8 grid gap-4 border-b border-navy-100 pb-6 md:grid-cols-3">
+                {% if relation_media.datePublication %}
+                    <div class="flex items-center gap-3">
+                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div>
+                            <span class="block text-sm text-navy-600">Date de publication</span>
+                            <span class="font-semibold text-navy-900">{{ relation_media.datePublication|date('d/m/Y') }}</span>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div>
+                        <span class="block text-sm text-navy-600">Date d'ajout</span>
+                        <span class="font-semibold text-navy-900">{{ relation_media.createdAt|date('d/m/Y') }}</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-brand-50 text-brand-700">
+                        <i class="fas fa-link"></i>
+                    </div>
+                    <div>
+                        <span class="block text-sm text-navy-600">Lien vers l'article</span>
+                        <span class="font-semibold text-navy-900">{{ relation_media.getDomainFromLien|default('Site web') }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            {% if relation_media.description %}
+                <div class="mb-8">
+                    <h3 class="mb-4 font-display text-2xl font-bold text-navy-900">Description</h3>
+                    <div class="prose max-w-none text-navy-700">
+                        {{ relation_media.description|nl2br }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <!-- Boutons d'action -->
+            <div class="flex flex-wrap gap-4">
+                <a href="{{ relation_media.lien }}" 
+                   target="_blank" 
+                   rel="noopener noreferrer"
+                   class="btn-primary">
+                    <i class="fas fa-external-link-alt mr-2"></i> Lire l'article original
+                </a>
+                
+                <a href="{{ path('app_relation_media') }}" class="btn-secondary">
+                    <i class="fas fa-list mr-2"></i> Voir tous les articles
+                </a>
+
+                {% if is_granted('ROLE_ADMIN') %}
+                    <button type="button" 
+                            onclick="if(confirm('Êtes-vous sûr de vouloir supprimer cet article média ?')) { document.getElementById('delete-form').submit(); }"
+                            class="btn-danger">
+                        <i class="fas fa-trash mr-2"></i> Supprimer
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Section d'appel à l'action -->
+    <div class="mt-12 rounded-xl border border-brand-200 bg-gradient-to-r from-brand-50 to-white p-8">
+        <div class="text-center">
+            <h3 class="mb-4 font-display text-2xl font-bold text-navy-900">Vous avez vu un article sur nous ?</h3>
+            <p class="mb-6 text-navy-700">
+                Si vous avez trouvé un article, reportage ou média parlant de HAKI YETU asbl 
+                qui n'est pas encore dans notre liste, n'hésitez pas à nous le signaler.
+            </p>
+            <div class="flex flex-wrap justify-center gap-4">
+                <a href="{{ path('app_contact') }}" class="btn-primary">
+                    <i class="fas fa-envelope mr-2"></i> Nous contacter
+                </a>
+                <a href="{{ path('app_relation_media_new') }}" class="btn-tertiary">
+                    <i class="fas fa-plus mr-2"></i> Ajouter un article
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Formulaire de suppression (caché) -->
+{% if is_granted('ROLE_ADMIN') %}
+<form id="delete-form" action="{{ path('app_relation_media_delete', {id: relation_media.id}) }}" method="post" class="hidden">
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ relation_media.id) }}">
+</form>
+{% endif %}
+{% endblock %}

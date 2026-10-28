@@ -41,8 +41,9 @@ class Partenaire
     #[Vich\UploadableField(mapping: 'partenaire_logos', fileNameProperty: 'logoName', size: 'logoSize')]
     #[Assert\Image(
         maxSize: '2M',
-        mimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'],
-        mimeTypesMessage: 'Veuillez déposer un logo valide (JPEG, PNG, WEBP ou SVG).'
+        // Pas de SVG : un fichier SVG peut contenir du JavaScript (XSS)
+        mimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
+        mimeTypesMessage: 'Veuillez déposer un logo valide (JPEG, PNG ou WEBP).'
     )]
     private ?File $logoFile = null;
 
@@ -56,10 +57,13 @@ class Partenaire
     private bool $actif = true;
 
     #[ORM\Column(nullable: true)]
-    private ?int $ordreAffichage = null;
+    private ?int $ordre = null;
 
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $categorie = null;
+
+    #[ORM\Column]
+    private bool $afficherDansFooter = true;
 
     public function __construct()
     {
@@ -190,14 +194,14 @@ class Partenaire
         return $this;
     }
 
-    public function getOrdreAffichage(): ?int
+    public function getOrdre(): ?int
     {
-        return $this->ordreAffichage;
+        return $this->ordre;
     }
 
-    public function setOrdreAffichage(?int $ordreAffichage): static
+    public function setOrdre(?int $ordre): static
     {
-        $this->ordreAffichage = $ordreAffichage;
+        $this->ordre = $ordre;
 
         return $this;
     }
@@ -210,6 +214,18 @@ class Partenaire
     public function setCategorie(?string $categorie): static
     {
         $this->categorie = $categorie;
+
+        return $this;
+    }
+
+    public function isAfficherDansFooter(): bool
+    {
+        return $this->afficherDansFooter;
+    }
+
+    public function setAfficherDansFooter(bool $afficherDansFooter): static
+    {
+        $this->afficherDansFooter = $afficherDansFooter;
 
         return $this;
     }

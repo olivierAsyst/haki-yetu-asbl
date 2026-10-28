@@ -28,9 +28,14 @@ class AnnonceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_annonces_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_annonces_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Annonce $annonce): Response
     {
+        // Une annonce désactivée dans l'admin ne doit plus être visible, même par lien direct
+        if (!$annonce->isActif()) {
+            throw $this->createNotFoundException('Cette annonce n\'est plus disponible.');
+        }
+
         return $this->render('annonces/show.html.twig', [
             'annonce' => $annonce,
         ]);

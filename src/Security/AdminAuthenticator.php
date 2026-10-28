@@ -45,7 +45,11 @@ class AdminAuthenticator extends AbstractLoginFormAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        // Toujours rediriger vers le dashboard après connexion
+        // Retour à la page protégée demandée (ex. /don/admin), sinon le tableau de bord
+        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+            return new RedirectResponse($targetPath);
+        }
+
         return new RedirectResponse($this->urlGenerator->generate('admin_dashboard'));
     }
 

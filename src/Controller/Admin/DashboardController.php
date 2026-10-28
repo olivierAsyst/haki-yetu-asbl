@@ -10,12 +10,18 @@ use App\Entity\AdminUser;
 use App\Entity\Message;
 use App\Entity\OffreEmploi;
 use App\Entity\Candidature;
+use App\Entity\Partenaire;
+use App\Entity\Rapport;
+use App\Entity\RelationMedia;
 use App\Repository\ActiviteRepository;
 use App\Repository\AlbumRepository;
 use App\Repository\AnnonceRepository;
 use App\Repository\MessageRepository;
 use App\Repository\OffreEmploiRepository;
 use App\Repository\CandidatureRepository;
+use App\Repository\PartenaireRepository;
+use App\Repository\RapportRepository;
+use App\Repository\RelationMediaRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
@@ -30,7 +36,10 @@ class DashboardController extends AbstractDashboardController
         private readonly AlbumRepository $albumRepository,
         private readonly AnnonceRepository $annonceRepository,
         private readonly OffreEmploiRepository $offreEmploiRepository,
-        private readonly CandidatureRepository $candidatureRepository
+        private readonly CandidatureRepository $candidatureRepository,
+        private readonly PartenaireRepository $partenaireRepository,
+        private readonly RapportRepository $rapportRepository,
+        private readonly RelationMediaRepository $relationMediaRepository
     ) {
     }
 
@@ -50,6 +59,10 @@ class DashboardController extends AbstractDashboardController
             'latest_activites' => $this->activiteRepository->findBy([], ['createdAt' => 'DESC'], 3),
             'latest_messages' => $this->messageRepository->findBy(['lu' => false], ['createdAt' => 'DESC'], 5),
             'latest_candidatures' => $this->candidatureRepository->findBy([], ['createdAt' => 'DESC'], 5),
+            'nb_partenaires_actifs' => $this->partenaireRepository->count(['actif' => true]),
+            // Rapport n'a pas de champ « public » : tous les rapports sont publiés
+            'nb_rapports' => $this->rapportRepository->count([]),
+            'nb_medias_actifs' => $this->relationMediaRepository->count(['actif' => true]),
         ]);
     }
 
@@ -80,5 +93,9 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Recrutement');
         yield MenuItem::linkToCrud('Offres d\'emploi', 'fa fa-briefcase', OffreEmploi::class);
         yield MenuItem::linkToCrud('Candidatures', 'fa fa-users', Candidature::class);
+        yield MenuItem::section('Relations institutionnelles');
+        yield MenuItem::linkToCrud('Partenaires', 'fa fa-handshake', Partenaire::class);
+        yield MenuItem::linkToCrud('Rapports', 'fa fa-file-alt', Rapport::class);
+        yield MenuItem::linkToCrud('Relations médias', 'fa fa-newspaper', RelationMedia::class);
     }
 }

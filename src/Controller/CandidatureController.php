@@ -5,22 +5,28 @@ namespace App\Controller;
 use App\Entity\Candidature;
 use App\Entity\OffreEmploi;
 use App\Form\CandidatureType;
-use App\Repository\OffreEmploiRepository;
 use App\Repository\CandidatureRepository;
+use App\Security\AntiSpam;
+use Psr\Log\LoggerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 
 class CandidatureController extends AbstractController
 {
     public function __construct(
-        private readonly OffreEmploiRepository $offreEmploiRepository,
         private readonly CandidatureRepository $candidatureRepository,
-        private readonly MailerInterface $mailer
+        private readonly MailerInterface $mailer,
+        private readonly LoggerInterface $logger,
+        private readonly AntiSpam $antiSpam,
+        #[Autowire('%env(CONTACT_RECIPIENT_EMAIL)%')]
+        private readonly string $recipientEmail,
     ) {
     }
 
@@ -42,41 +48,49 @@ class CandidatureController extends AbstractController
 
         $form = $this->createForm(CandidatureType::class, $candidature);
         $form->handleRequest($request);
+        $this->antiSpam->verifier($form, $request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
                 $this->candidatureRepository->save($candidature, true);
-
-                // Send notification email (optional, won't block if fails)
-                try {
-                    $email = (new TemplatedEmail())
-                        ->from('noreply@hakiyetuasbl.cd')
-                        ->to('moiserukabo@gmail.com')
-                        ->subject('Nouvelle candidature : ' . $candidature->getNom() . ' ' . $candidature->getPrenom())
-                        ->htmlTemplate('emails/candidature_notification.html.twig')
-                        ->context([
-                            'candidature' => $candidature,
-                            'offre' => $offre,
-                        ]);
-
-                    $this->mailer->send($email);
-                } catch (\Exception $e) {
-                    // Log error but don't prevent the application from being saved
-                    error_log('Email sending failed: ' . $e->getMessage());
-                }
-
-                $this->addFlash('success', 'Votre candidature a été envoyée avec succès. Nous vous contacterons si votre profil correspond au poste.');
-
-                return $this->redirectToRoute('app_emplois_show', ['slug' => $offre->getSlug()]);
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
+                $this->logger->error('Enregistrement de la candidature impossible', ['exception' => $e]);
                 $this->addFlash('error', 'Une erreur est survenue lors de l\'envoi de votre candidature. Veuillez réessayer.');
-                error_log('Candidature save failed: ' . $e->getMessage());
+
+                return $this->render('candidature/new.html.twig', [
+                    'offre' => $offre,
+                    'form' => $form,
+                ], new Response(null, Response::HTTP_INTERNAL_SERVER_ERROR));
             }
+
+            // La notification ne doit pas bloquer la candidature, déjà enregistrée
+            try {
+                $email = (new TemplatedEmail())
+                    // Même adresse en expéditeur et destinataire pour passer les contrôles SPF/DMARC du SMTP
+                    ->from(new Address($this->recipientEmail, 'Site HAKI YETU asbl'))
+                    ->to($this->recipientEmail)
+                    ->replyTo(new Address($candidature->getEmail(), $candidature->getPrenom().' '.$candidature->getNom()))
+                    ->subject('[Site web] Nouvelle candidature : '.$candidature->getPrenom().' '.$candidature->getNom().' — '.$offre->getTitre())
+                    ->htmlTemplate('emails/candidature_notification.html.twig')
+                    ->context([
+                        'candidature' => $candidature,
+                        'offre' => $offre,
+                    ]);
+
+                $this->mailer->send($email);
+            } catch (\Throwable $e) {
+                $this->logger->error('Envoi de la notification de candidature impossible', ['exception' => $e]);
+            }
+
+            $this->addFlash('success', 'Votre candidature a été envoyée avec succès. Nous vous contacterons si votre profil correspond au poste.');
+
+            return $this->redirectToRoute('app_emplois_show', ['slug' => $offre->getSlug()], Response::HTTP_SEE_OTHER);
         }
 
+        // Passer le formulaire (et non createView) renvoie un code 422 en cas d'erreur, attendu par Turbo
         return $this->render('candidature/new.html.twig', [
             'offre' => $offre,
-            'form' => $form->createView(),
+            'form' => $form,
         ]);
     }
 }

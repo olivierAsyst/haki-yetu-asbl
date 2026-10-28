@@ -46,6 +46,7 @@ class MessageCrudController extends AbstractCrudController
         yield BooleanField::new('lu', 'Lu')
             ->renderAsSwitch(true);
         yield DateTimeField::new('createdAt', 'Reçu le')
+            ->hideOnForm()
             ->setFormat('dd/MM/yyyy HH:mm');
     }
 }

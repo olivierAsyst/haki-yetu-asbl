@@ -82,11 +82,12 @@ class OffreEmploi
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $updatedAt = null;
 
-    #[ORM\Column(nullable: true)]
+    // Unique : l'URL /emplois/{slug} doit désigner une seule offre
+    #[ORM\Column(length: 255, unique: true, nullable: true)]
     private ?string $slug = null;
 
-    #[ORM\OneToMany(mappedBy: 'offreEmploi', targetEntity: Candidature::class)]
-    private $candidatures;
+    #[ORM\OneToMany(mappedBy: 'offreEmploi', targetEntity: Candidature::class, orphanRemoval: true)]
+    private Collection $candidatures;
 
     public function __construct()
     {
@@ -171,14 +172,22 @@ class OffreEmploi
         return $this;
     }
 
+    /**
+     * Les dates sont saisies sans heure (minuit) : on les considère valables jusqu'à la fin de la journée.
+     */
     public function isExpired(): bool
     {
-        return $this->dateExpiration !== null && $this->dateExpiration < new \DateTimeImmutable();
+        return self::estPasse($this->dateExpiration);
     }
 
     public function isFileExpired(): bool
     {
-        return $this->fileDeadline !== null && $this->fileDeadline < new \DateTimeImmutable();
+        return self::estPasse($this->fileDeadline);
+    }
+
+    private static function estPasse(?\DateTimeImmutable $date): bool
+    {
+        return null !== $date && $date->setTime(23, 59, 59) < new \DateTimeImmutable();
     }
 
     public function isAvailable(): bool
@@ -340,11 +349,9 @@ class OffreEmploi
 
     public function removeCandidature(Candidature $candidature): static
     {
-        if ($this->candidatures->removeElement($candidature)) {
-            if ($candidature->getOffreEmploi() === $this) {
-                $candidature->setOffreEmploi(null);
-            }
-        }
+        // Une candidature appartient toujours à une offre (colonne non nulle) : la retirer
+        // de la collection la supprime (orphanRemoval), au lieu de laisser une offre vide.
+        $this->candidatures->removeElement($candidature);
 
         return $this;
     }

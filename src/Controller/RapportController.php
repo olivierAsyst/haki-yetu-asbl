@@ -59,7 +59,7 @@ class RapportController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_rapports_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_rapports_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Rapport $rapport): Response
     {
         return $this->render('rapports/show.html.twig', [
@@ -67,7 +67,7 @@ class RapportController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_rapports_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_rapports_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -89,7 +89,7 @@ class RapportController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_rapports_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_rapports_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Rapport $rapport, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
@@ -104,7 +104,7 @@ class RapportController extends AbstractController
         return $this->redirectToRoute('app_rapports_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/{id}/download', name: 'app_rapports_download', methods: ['GET'])]
+    #[Route('/{id}/download', name: 'app_rapports_download', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function download(Rapport $rapport): Response
     {
         $filePath = $this->getParameter('rapports_directory') . '/' . $rapport->getFichierName();

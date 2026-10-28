@@ -1,0 +1,176 @@
+/* Styles améliorés pour les formulaires */
+.form-select-modern {
+    @apply w-full rounded-xl border border-navy-300 bg-white px-4 py-3.5 text-sm 
+           focus:border-brand-600 focus:ring-2 focus:ring-brand-500/30 transition-all duration-300 
+           hover:border-brand-500 hover:shadow-sm cursor-pointer appearance-none
+           bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20"%3E%3Cpath stroke="%232a4c6e" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="m6 8 4 4 4-4"/%3E%3C/svg%3E')] 
+           bg-no-repeat bg-[length:20px] bg-[center_right_1rem];
+}
+
+.form-input-modern {
+    @apply w-full rounded-xl border border-navy-300 bg-white px-4 py-3.5 text-sm 
+           focus:border-brand-600 focus:ring-2 focus:ring-brand-500/30 transition-all duration-300 
+           hover:border-brand-500 hover:shadow-sm;
+}
+
+.form-radio-modern {
+    @apply sr-only;
+}
+
+.form-radio-modern + label {
+    @apply inline-flex items-center gap-3 rounded-xl border-2 border-navy-300 bg-white px-5 py-4 
+           text-sm font-medium text-navy-700 cursor-pointer transition-all duration-300 
+           hover:border-brand-500 hover:bg-brand-50 hover:text-brand-700 hover:shadow-sm;
+}
+
+.form-radio-modern:checked + label {
+    @apply border-brand-600 bg-brand-50 text-brand-700 shadow-sm ring-2 ring-brand-500/20;
+}
+
+.form-radio-modern + label .radio-icon {
+    @apply flex h-5 w-5 items-center justify-center rounded-full border-2 border-navy-400;
+}
+
+.form-radio-modern:checked + label .radio-icon {
+    @apply border-brand-600 bg-brand-600;
+}
+
+.form-radio-modern:checked + label .radio-icon::after {
+    content: '';
+    @apply h-2 w-2 rounded-full bg-white;
+}
+
+.form-checkbox-modern {
+    @apply h-5 w-5 rounded border-2 border-navy-300 text-brand-600 
+           focus:ring-2 focus:ring-brand-500/30 focus:ring-offset-0 
+           transition-all duration-300 cursor-pointer;
+}
+
+.form-checkbox-modern:checked {
+    @apply border-brand-600 bg-brand-600;
+}
+
+.form-checkbox-modern:focus {
+    @apply ring-2 ring-brand-500/30 ring-offset-0;
+}
+
+.form-label-modern {
+    @apply block text-sm font-semibold text-navy-900 mb-2;
+}
+
+.form-help-text {
+    @apply mt-2 text-xs text-navy-600;
+}
+
+.form-error-text {
+    @apply mt-2 text-xs text-red-600;
+}
+
+/* Styles pour les boutons de montant */
+.montant-btn-modern {
+    @apply rounded-xl border-2 border-navy-300 bg-white px-5 py-3 text-sm font-medium 
+           text-navy-700 transition-all duration-300 hover:border-brand-600 
+           hover:bg-brand-50 hover:text-brand-700 hover:shadow-sm;
+}
+
+.montant-btn-modern.active {
+    @apply border-brand-600 bg-brand-600 text-white hover:bg-brand-700 hover:border-brand-700;
+}
+
+/* Card moderne pour les formulaires */
+.form-card-modern {
+    @apply bg-white rounded-2xl border border-brand-200 p-8 shadow-sm hover:shadow-md transition-shadow duration-300;
+}
+
+/* Groupe de formulaire */
+.form-group-modern {
+    @apply space-y-3;
+}
+
+/* Section de formulaire */
+.form-section-modern {
+    @apply space-y-6;
+}
+
+.form-section-header {
+    @apply flex items-center gap-4 mb-6;
+}
+
+.form-section-number {
+    @apply flex h-10 w-10 items-center justify-center rounded-full bg-navy-900 text-sm font-bold text-white;
+}
+
+.form-section-title {
+    @apply font-display text-xl font-semibold text-navy-900;
+}
+
+/* Amélioration des boutons radio inline */
+.radio-group-inline {
+    @apply flex flex-wrap gap-3;
+}
+
+/* Amélioration des selects avec icônes */
+.select-with-icon {
+    @apply pl-12;
+}
+
+.select-icon-container {
+    @apply absolute left-4 top-1/2 -translate-y-1/2 text-navy-500;
+}
+
+
+/* Animations pour le carrousel de partenaires dans le footer */
+@keyframes scroll-infinite {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.animate-scroll-infinite {
+    display: flex;
+    animation: scroll-infinite 40s linear infinite;
+    will-change: transform;
+}
+
+.animate-scroll-infinite-reverse {
+    display: flex;
+    animation: scroll-infinite 50s linear infinite reverse;
+    will-change: transform;
+}
+
+.animate-scroll-infinite:hover,
+.animate-scroll-infinite-reverse:hover {
+    animation-play-state: paused;
+}
+
+/* Styles pour les partenaires dans le footer */
+.partenaire-card-footer {
+    @apply flex-shrink-0 group relative;
+}
+
+.partenaire-logo-footer {
+    @apply h-20 w-40 flex items-center justify-center rounded-xl bg-white/5 p-4 backdrop-blur-sm border border-white/10 
+           transition-all duration-500 hover:border-brand-500/50 hover:bg-white/10 hover:scale-110;
+}
+
+.partenaire-logo-img-footer {
+    @apply max-h-12 max-w-full object-contain grayscale opacity-80 
+           transition-all duration-500 group-hover:grayscale-0 group-hover:opacity-100;
+}
+
+.partenaire-tooltip-footer {
+    @apply absolute -top-12 left-1/2 transform -translate-x-1/2 opacity-0 
+           group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-30;
+}
+
+.partenaire-tooltip-content {
+    @apply bg-navy-900 text-brand-100 text-xs rounded-lg py-2 px-3 whitespace-nowrap 
+           shadow-xl border border-white/10;
+}
+
+.partenaire-tooltip-arrow {
+    @apply w-2 h-2 bg-navy-900 transform rotate-45 absolute -bottom-1 left-1/2 -translate-x-1/2;
+}

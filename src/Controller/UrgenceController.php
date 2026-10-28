@@ -27,7 +27,7 @@ class UrgenceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_urgence_show', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_urgence_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Urgence $urgence): Response
     {
         return $this->render('urgence/show.html.twig', [
@@ -35,7 +35,7 @@ class UrgenceController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/don', name: 'app_urgence_don', methods: ['GET'])]
+    #[Route('/{id}/don', name: 'app_urgence_don', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function don(Urgence $urgence): Response
     {
         return $this->redirectToRoute('app_don', [
@@ -68,7 +68,7 @@ class UrgenceController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/{id}/edit', name: 'app_urgence_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'app_urgence_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Urgence $urgence, EntityManagerInterface $entityManager): Response
     {
         $form = $this->createForm(UrgenceType::class, $urgence);
@@ -90,7 +90,7 @@ class UrgenceController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/{id}', name: 'app_urgence_delete', methods: ['POST'])]
+    #[Route('/{id}', name: 'app_urgence_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(Request $request, Urgence $urgence, EntityManagerInterface $entityManager): Response
     {
         if ($this->isCsrfTokenValid('delete'.$urgence->getId(), $request->getPayload()->getString('_token'))) {

@@ -1,0 +1,8 @@
+{# Erreurs qui concernent tout le formulaire (ex. limite anti-spam atteinte) #}
+{% if form.vars.errors|length > 0 %}
+    <div role="alert" class="mb-6 rounded-lg border border-brand-700/30 bg-brand-700/10 px-4 py-3 text-sm text-brand-800">
+        {% for error in form.vars.errors %}
+            <p>{{ error.message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}

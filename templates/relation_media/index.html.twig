@@ -1,0 +1,158 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Relations Médias - HAKI YETU asbl{% endblock %}
+
+{% block meta_description %}Articles de presse et médias parlant de HAKI YETU asbl. Couverture médiatique de nos activités pour l'inclusion des personnes handicapées à Uvira, Fizi et Mwenga.{% endblock %}
+
+{% block og_title %}Relations Médias - HAKI YETU asbl{% endblock %}
+{% block og_description %}Découvrez les articles de presse et médias qui parlent de notre travail pour l'inclusion des personnes handicapées à Uvira, Fizi et Mwenga.{% endblock %}
+
+{% block twitter_title %}Relations Médias - HAKI YETU asbl{% endblock %}
+{% block twitter_description %}Articles de presse et médias parlant de HAKI YETU asbl et de notre travail pour l'inclusion des personnes handicapées au Sud-Kivu.{% endblock %}
+
+{% block body %}
+<div class="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+    <!-- En-tête avec titre et introduction -->
+    <div class="mb-12 text-center">
+        <h1 class="font-display text-5xl font-bold text-navy-900">Relations Médias</h1>
+        <p class="mx-auto mt-4 max-w-3xl text-lg text-navy-700">
+            Découvrez les articles de presse, reportages et médias qui parlent du travail de HAKI YETU asbl 
+            pour l'inclusion des personnes handicapées à Uvira, Fizi et Mwenga.
+        </p>
+    </div>
+
+    <!-- Section des logos médias partenaires -->
+    {% if distinct_media|length > 0 %}
+    <div class="mb-16 rounded-2xl border border-navy-200 bg-gradient-to-r from-brand-50 to-white p-8 shadow-lg">
+        <h2 class="mb-8 text-center font-display text-3xl font-bold text-navy-900">Médias qui nous parlent</h2>
+        <div class="flex flex-wrap items-center justify-center gap-8">
+            {% for media in distinct_media %}
+                {% if media.logoMedia %}
+                <div class="flex flex-col items-center">
+                    <div class="flex h-20 w-20 items-center justify-center rounded-full bg-white p-4 shadow-lg transition-all duration-300 hover:shadow-xl">
+                        <img src="{{ media.logoMedia }}" alt="{{ media.nomDeMedia }}" class="h-12 w-auto object-contain">
+                    </div>
+                    <span class="mt-2 text-sm font-medium text-navy-700">{{ media.nomDeMedia }}</span>
+                </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Liste des articles média -->
+    <div class="mb-12">
+        <div class="mb-8 flex items-center justify-between">
+            <h2 class="font-display text-3xl font-bold text-navy-900">Tous les articles</h2>
+            {% if is_granted('ROLE_ADMIN') %}
+                <a href="{{ path('app_relation_media_new') }}" class="btn-primary">
+                    <i class="fas fa-plus mr-2"></i> Ajouter un article
+                </a>
+            {% endif %}
+        </div>
+
+        {% if relation_media|length > 0 %}
+        <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {% for article in relation_media %}
+                <div class="card-modern group overflow-hidden transition-all duration-500 hover:shadow-2xl hover:scale-[1.02]">
+                    <div class="p-6">
+                        <!-- Logo du média -->
+                        <div class="mb-4">
+                            <div class="inline-flex items-center gap-3">
+                                {% if article.logoMedia %}
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-white p-2 shadow-md">
+                                        <img src="{{ article.logoMedia }}" alt="{{ article.nomDeMedia }}" class="h-8 w-auto object-contain">
+                                    </div>
+                                {% else %}
+                                    <div class="flex h-12 w-12 items-center justify-center rounded-full bg-brand-100 text-brand-700">
+                                        <i class="fas fa-newspaper text-xl"></i>
+                                    </div>
+                                {% endif %}
+                                <div>
+                                    <span class="block font-semibold text-navy-900">{{ article.nomDeMedia }}</span>
+                                    {% if article.typeMedia %}
+                                        <span class="text-xs text-navy-600">{{ article.typeMedia }}</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Date de publication -->
+                        {% if article.datePublication %}
+                            <div class="mb-3 text-sm text-navy-600">
+                                <i class="fas fa-calendar mr-2 text-brand-600"></i>
+                                Publié le {{ article.datePublication|date('d/m/Y') }}
+                            </div>
+                        {% endif %}
+
+                        <!-- Titre de l'article -->
+                        <h3 class="mb-3 font-display text-xl font-bold text-navy-900 group-hover:text-brand-700 transition-colors duration-300">
+                            {{ article.titre }}
+                        </h3>
+
+                        <!-- Description -->
+                        {% if article.description %}
+                            <p class="mb-4 text-navy-700 line-clamp-3">
+                                {{ article.shortDescription(120) }}
+                            </p>
+                        {% endif %}
+
+                        <!-- Boutons d'action -->
+                        <div class="flex items-center justify-between pt-4 border-t border-navy-100">
+                            <a href="{{ article.lien }}" 
+                               target="_blank" 
+                               rel="noopener noreferrer" 
+                               class="btn-tertiary text-sm">
+                                Lire l'article
+                                <i class="fas fa-external-link-alt ml-2"></i>
+                            </a>
+                            
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <div class="flex gap-2">
+                                    <a href="{{ path('app_relation_media_edit', {id: article.id}) }}" 
+                                       class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-brand-50 text-brand-700 hover:bg-brand-100 transition-colors">
+                                        <i class="fas fa-edit text-sm"></i>
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="rounded-xl border border-dashed border-navy-300 bg-white/50 p-12 text-center">
+                <div class="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-brand-50">
+                    <i class="fas fa-newspaper text-2xl text-brand-600"></i>
+                </div>
+                <h3 class="mb-2 text-lg font-semibold text-navy-900">Aucun article média disponible</h3>
+                <p class="mb-6 text-navy-700">
+                    Les articles de presse concernant HAKI YETU asbl seront affichés ici.
+                </p>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_relation_media_new') }}" class="btn-primary inline-flex">
+                        <i class="fas fa-plus mr-2"></i> Ajouter le premier article
+                    </a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Section d'appel à l'action -->
+    <div class="mt-16 rounded-2xl bg-gradient-to-r from-navy-900 to-navy-800 p-8 text-center text-white shadow-xl">
+        <h2 class="font-display text-3xl font-bold">Votre média souhaite parler de nous ?</h2>
+        <p class="mx-auto mt-4 max-w-2xl text-brand-100">
+            Journaliste, blogueur ou média local ? Contactez-nous pour organiser une interview, 
+            un reportage ou obtenir des informations sur nos activités.
+        </p>
+        <div class="mt-8 flex flex-wrap justify-center gap-4">
+            <a href="{{ path('app_contact') }}" class="btn-outline-white">
+                <i class="fas fa-envelope mr-2"></i> Nous contacter
+            </a>
+            <a href="{{ path('app_activites') }}" class="btn-outline-white">
+                <i class="fas fa-running mr-2"></i> Nos activités
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

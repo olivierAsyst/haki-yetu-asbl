@@ -6,7 +6,7 @@ use App\Entity\Partenaire;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\UrlType;
@@ -87,10 +87,9 @@ class PartenaireType extends AbstractType
                     'class' => 'input-modern',
                 ],
             ])
-            ->add('ordreAffichage', NumberType::class, [
+            ->add('ordre', IntegerType::class, [
                 'label' => 'Ordre d\'affichage',
                 'required' => false,
-                'html5' => true,
                 'attr' => [
                     'placeholder' => '0, 1, 2, ...',
                     'min' => 0,
@@ -100,6 +99,13 @@ class PartenaireType extends AbstractType
             ])
             ->add('actif', CheckboxType::class, [
                 'label' => 'Actif',
+                'required' => false,
+                'attr' => [
+                    'class' => 'rounded border-navy-300 text-brand-700 focus:ring-brand-700',
+                ],
+            ])
+            ->add('afficherDansFooter', CheckboxType::class, [
+                'label' => 'Afficher le logo dans le carrousel du pied de page',
                 'required' => false,
                 'attr' => [
                     'class' => 'rounded border-navy-300 text-brand-700 focus:ring-brand-700',

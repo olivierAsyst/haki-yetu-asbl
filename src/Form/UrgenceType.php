@@ -64,6 +64,7 @@ class UrgenceType extends AbstractType
             ->add('montantCible', MoneyType::class, [
                 'label' => 'Montant cible (CDF)',
                 'currency' => 'CDF',
+                'input' => 'string',
                 'scale' => 0,
                 'attr' => [
                     'placeholder' => 'Ex: 5000000',
@@ -73,7 +74,9 @@ class UrgenceType extends AbstractType
             ])
             ->add('montantCollecte', MoneyType::class, [
                 'label' => 'Montant déjà collecté (CDF)',
+                'help' => 'Mis à jour automatiquement quand un don en CDF rattaché à cette urgence passe à « Payé ». Ajustez-le à la main pour les dons en espèces ou dans une autre devise.',
                 'currency' => 'CDF',
+                'input' => 'string',
                 'scale' => 0,
                 'required' => false,
                 'attr' => [
